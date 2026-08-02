@@ -3,152 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moni Dresses | Admin App</title>
+    <title>Moni Dresses | Enterprise Admin Dashboard</title>
+    <!-- Tailwind CSS & FontAwesome Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        brandRed: '#D62828',
                         brandPurple: '#6A0572',
+                        brandRed: '#D62828',
+                        darkNavy: '#1E1E2D',
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-gray-100 font-sans pb-10">
+<body class="bg-gray-100 text-gray-800 font-sans antialiased">
 
-    <!-- Header -->
-    <header class="bg-brandPurple text-white p-4 sticky top-0 z-30 shadow-md flex justify-between items-center">
-        <div>
-            <span class="bg-brandRed text-[10px] font-black px-2 py-0.5 rounded uppercase">Admin Panel</span>
-            <h1 class="text-base font-bold leading-tight mt-0.5">Moni Dresses</h1>
+    <!-- TOP NAV BAR -->
+    <header class="bg-darkNavy text-white h-16 px-4 flex items-center justify-between sticky top-0 z-50 shadow-md">
+        <div class="flex items-center gap-3">
+            <button onclick="toggleSidebar()" class="text-gray-300 hover:text-white md:hidden"><i class="fa-solid fa-bars text-xl"></i></button>
+            <div class="w-8 h-8 rounded-lg bg-brandRed flex items-center justify-center font-black text-lg">M</div>
+            <span class="font-extrabold text-base tracking-wide">MONI DRESSES <span class="text-xs bg-brandPurple px-2 py-0.5 rounded ml-2 font-normal">ADMIN</span></span>
         </div>
-        <button onclick="alert('Logged Out')" class="text-xs bg-red-600 px-3 py-1.5 rounded font-bold">Logout</button>
+        <div class="flex items-center gap-4 text-xs">
+            <span class="hidden sm:inline-block bg-green-500/20 text-green-400 font-semibold px-2.5 py-1 rounded-full border border-green-500/30">● System Live</span>
+            <button onclick="alert('Admin Session Ended')" class="bg-brandRed px-3 py-1.5 rounded font-bold hover:bg-red-700 transition">Logout</button>
+        </div>
     </header>
 
-    <!-- Mobile Top Navigation Tabs -->
-    <div class="bg-white border-b border-gray-200 sticky top-14 z-20 shadow-sm flex justify-around">
-        <button id="btn-add-product" onclick="showSection('add-product')" class="flex-1 py-3 text-xs font-bold text-brandPurple border-b-2 border-brandPurple text-center">
-            <i class="fa-solid fa-plus-circle block text-base mb-1"></i> Add Product
-        </button>
-        <button id="btn-view-orders" onclick="showSection('view-orders')" class="flex-1 py-3 text-xs font-bold text-gray-500 border-b-2 border-transparent text-center">
-            <i class="fa-solid fa-list-check block text-base mb-1"></i> Orders
-        </button>
-        <button id="btn-gateways" onclick="showSection('gateways')" class="flex-1 py-3 text-xs font-bold text-gray-500 border-b-2 border-transparent text-center">
-            <i class="fa-solid fa-key block text-base mb-1"></i> API Keys
-        </button>
+    <div class="flex min-h-[calc(100vh-4rem)]">
+
+        <!-- SIDEBAR NAVIGATION -->
+        <aside id="sidebar" class="w-64 bg-darkNavy text-gray-400 flex-shrink-0 hidden md:block border-t border-gray-800 transition-all">
+            <div class="p-4 space-y-6">
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500 block mb-2">Main Menu</span>
+                    <nav class="space-y-1">
+                        <button onclick="switchTab('analytics')" id="nav-analytics" class="w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold bg-brandPurple text-white flex items-center gap-3">
+                            <i class="fa-solid fa-chart-line text-sm"></i> Analytics & Overview
+                        </button>
+                        <button onclick="switchTab('products')" id="nav-products" class="w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold hover:bg-gray-800 hover:text-white flex items-center gap-3">
+                            <i class="fa-solid fa-boxes-stacked text-sm"></i> Inventory Management
+                        </button>
+                        <button onclick="switchTab('orders')" id="nav-orders" class="w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold hover:bg-gray-800 hover:text-white flex items-center gap-3">
+                            <i class="fa-solid fa-cart-flatbed text-sm"></i> Order Fulfillment
+                        </button>
+                    </nav>
+                </div>
+
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500 block mb-2">Operations</span>
+                    <nav class="space-y-1">
+                        <button onclick="switchTab('franchise')" id="nav-franchise" class="w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold hover:bg-gray-800 hover:text-white flex items-center gap-3">
+                            <i class="fa-solid fa-warehouse text-sm"></i> Franchise & Pincodes
+                        </button>
+                        <button onclick="switchTab('integrations')" id="nav-integrations" class="w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold hover:bg-gray-800 hover:text-white flex items-center gap-3">
+                            <i class="fa-solid fa-plug text-sm"></i> Razorpay & Shiprocket
+                        </button>
+                    </nav>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN DASHBOARD CONTENT -->
+        <main class="flex-1 p-4 md:p-6 overflow-y-auto">
+
+            <!-- 1. ANALYTICS & OVERVIEW TAB -->
+            <section id="sec-analytics" class="space-y-6">
+                <!-- Metrics Grid -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                        <span class="text-xs font-bold text-gray-400 block uppercase">Total Sales Today</span>
+                        <span class="text-xl font-extrabold text-gray-900 mt-1 block">₹42,850</span>
+                        <span class="text-[10px] font-bold text-green-600 mt-1 block">▲ +12% vs yesterday</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                        <span class="text-xs font-bold text-gray-400 block uppercase">Pending Orders</span>
+                        <span class="text-xl font-extrabold text-brandRed mt-1 block">18 Orders</span>
+                        <span class="text-[10px] font-bold text-gray-500 mt-1 block">Requires Dispatch</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                        <span class="text-xs font-bold text-gray-400 block uppercase">Active Franchise Hubs</span>
+                        <span class="text-xl font-extrabold text-brandPurple mt-1 block">12 Warehouses</span>
+                        <span class="text-[10px] font-bold text-green-600 mt-1 block">Chakdaha, Kolkata...</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                        <span class="text-xs font-bold text-gray-400 block uppercase">Low Stock Alert</span>
+                        <span class="text-xl font-extrabold text-amber-600 mt-1 block">3 Items</span>
+                        <span class="text-[10px] font-bold text-amber-600 mt-1 block">Under 10 units</span>
+                    </div>
+                </div>
+
+                <!-- Sales Analytics Chart Placeholder -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                    <h3 class="text-sm font-bold text-gray-800 mb-4"><i class="fa-solid fa-chart-area text-brandPurple mr-2"></i>Weekly Sales & Order Analytics</h3>
+                    <div class="h-56 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+                        <canvas id="salesChart" class="w-full h-full p-2"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. INVENTORY MANAGEMENT TAB -->
+            <section id="sec-products" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-base font-bold text-gray-800"><i class="fa-solid fa-boxes-stacked text-brandPurple mr-2"></i>Product Catalog & Stock</h2>
+                    <button onclick="toggleModal('modal-add-product')" class="bg-brandPurple text-white px-4 py-2 rounded-lg text-xs font-bold shadow hover:bg-purple-900 transition">+ Add New Product</button>
+                </div>
+
+                <!-- Product Table -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-500 font-bold border-b border-gray-200 uppercase">
+                                <th class="p-3">Product</th>
+                                <th class="p-3">Category</th>
+                                <th class="p-3">Price</th>
+                                <th class="p-3">Stock Units</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 font-medium">
+                            <tr>
+                                <td class="p-3 flex items-center gap-3">
+                                    <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=100" class="w-10 h-10 rounded object-cover">
+                                    <div>
+                                        <span class="font-bold text-gray-800 block">Pure Cotton Blouse (Red)</span>
+                                        <span class="text-[10px] text-gray-400">SKU: MD-BL01</span>
+                                    </div>
+                                </td>
+                                <td class="p-3">Cotton Blouse</td>
+                                <td class="p-3 font-bold text-brandPurple">₹299</td>
+                                <td class="p-3 font-bold">45 units</td>
+                                <td class="p-3"><span class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-[10px] font-bold">In Stock</span></td>
+                                <td class="p-3 text-right space-x-2">
+                                    <button class="text-blue-600 font-bold hover:underline">Edit</button>
+                                    <button class="text-red-600 font-bold hover:underline">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 flex items-center gap-3">
+                                    <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=100" class="w-10 h-10 rounded object-cover">
+                                    <div>
+                                        <span class="font-bold text-gray-800 block">Cotton Petticoat Bundle (Set of 6)</span>
+                                        <span class="text-[10px] text-gray-400">SKU: MD-PT06</span>
+                                    </div>
+                                </td>
+                                <td class="p-3">Petticoat</td>
+                                <td class="p-3 font-bold text-brandPurple">₹1,199</td>
+                                <td class="p-3 font-bold text-amber-600">8 units</td>
+                                <td class="p-3"><span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded text-[10px] font-bold">Low Stock</span></td>
+                                <td class="p-3 text-right space-x-2">
+                                    <button class="text-blue-600 font-bold hover:underline">Edit</button>
+                                    <button class="text-red-600 font-bold hover:underline">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 3. ORDERS FULFILLMENT TAB -->
+            <section id="sec-orders" class="hidden space-y-6">
+                <h2 class="text-base font-bold text-gray-800"><i class="fa-solid fa-cart-flatbed text-brandPurple mr-2"></i>Live Order Dispatch & Routing</h2>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-500 font-bold border-b border-gray-200 uppercase">
+                                <th class="p-3">Order ID</th>
+                                <th class="p-3">Customer Details</th>
+                                <th class="p-3">Pincode</th>
+                                <th class="p-3">Fulfillment Route</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3">Update Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 font-medium">
+                            <tr>
+                                <td class="p-3 font-bold text-brandPurple">#MD-9082</td>
+                                <td class="p-3">
+                                    <span class="block font-bold">Avijit Chakraborty</span>
+                                    <span class="text-[10px] text-gray-400">+91 9832XXXXXX</span>
+                                </td>
+                                <td class="p-3 font-bold">741222</td>
+                                <td class="p-3"><span class="bg-purple-100 text-brandPurple px-2 py-0.5 rounded font-bold">Chakdaha Franchise</span></td>
+                                <td class="p-3"><span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold">Processing</span></td>
+                                <td class="p-3">
+                                    <select class="border rounded p-1 text-[11px] font-bold bg-white">
+                                        <option>Processing</option>
+                                        <option>Shipped via Franchise</option>
+                                        <option>Delivered</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold text-brandPurple">#MD-9083</td>
+                                <td class="p-3">
+                                    <span class="block font-bold">Rohan Sen</span>
+                                    <span class="text-[10px] text-gray-400">+91 9123XXXXXX</span>
+                                </td>
+                                <td class="p-3 font-bold">700001</td>
+                                <td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">Shiprocket Central</span></td>
+                                <td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">In Transit</span></td>
+                                <td class="p-3">
+                                    <select class="border rounded p-1 text-[11px] font-bold bg-white">
+                                        <option>In Transit</option>
+                                        <option>Delivered</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 4. FRANCHISE WAREHOUSE & PINCODES -->
+            <section id="sec-franchise" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-base font-bold text-gray-800"><i class="fa-solid fa-warehouse text-brandPurple mr-2"></i>Hyperlocal Franchise Hub Mapping</h2>
+                    <button class="bg-brandRed text-white px-3 py-1.5 rounded text-xs font-bold">+ Map New Pincode</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                        <div class="flex justify-between items-center border-b pb-2 mb-2">
+                            <span class="font-bold text-sm text-brandPurple">Chakdaha Express Hub</span>
+                            <span class="text-[10px] bg-green-100 text-green-800 font-bold px-2 py-0.5 rounded">Active</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-2">Mapped Pincodes: <span class="font-bold text-gray-800">741222, 741223</span></p>
+                        <span class="text-[11px] text-gray-400">Total Orders Fulfilled: 142</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. INTEGRATIONS (RAZORPAY / SHIPROCKET) -->
+            <section id="sec-integrations" class="hidden max-w-xl space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 space-y-4">
+                    <h2 class="text-sm font-bold text-gray-800 border-b pb-2"><i class="fa-solid fa-plug text-brandPurple mr-2"></i>Payment Gateway & Logistics Keys</h2>
+                    
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold text-gray-600">Razorpay Key ID (Live)</label>
+                            <input type="text" value="rzp_live_98327429842" class="w-full border p-2 rounded text-xs mt-1 font-mono">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-600">Shiprocket API Secret Token</label>
+                            <input type="password" value="************************" class="w-full border p-2 rounded text-xs mt-1">
+                        </div>
+                        <button onclick="alert('Keys Saved Successfully!')" class="bg-brandPurple text-white px-4 py-2 rounded text-xs font-bold">Update API Keys</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
     </div>
 
-    <!-- Main Form Container -->
-    <main class="p-4 max-w-lg mx-auto">
-
-        <!-- 1. ADD PRODUCT SECTION -->
-        <div id="sec-add-product" class="space-y-4">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200 space-y-4">
-                <h2 class="text-sm font-bold text-brandPurple flex items-center gap-2 border-b pb-2">
-                    <i class="fa-solid fa-box"></i> Add New Product to Store
-                </h2>
-                
-                <form class="space-y-3" onsubmit="event.preventDefault(); alert('Product Added!');">
+    <!-- ADD PRODUCT MODAL -->
+    <div id="modal-add-product" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="font-bold text-sm text-gray-800">Add New Product to Store</h3>
+                <button onclick="toggleModal('modal-add-product')" class="text-gray-400 text-lg">✕</button>
+            </div>
+            <form class="space-y-3 text-xs" onsubmit="event.preventDefault(); alert('Product Added!'); toggleModal('modal-add-product');">
+                <div>
+                    <label class="font-bold text-gray-600">Product Name</label>
+                    <input type="text" placeholder="e.g. Cotton Blouse" class="w-full border p-2 rounded mt-1" required>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="text-xs font-bold text-gray-600">Product Title</label>
-                        <input type="text" placeholder="e.g. Pure Cotton Blouse" class="w-full border border-gray-300 p-2.5 rounded-xl text-xs mt-1 focus:outline-none focus:border-brandPurple" required>
-                    </div>
-
-                    <div>
-                        <label class="text-xs font-bold text-gray-600">Category</label>
-                        <select class="w-full border border-gray-300 p-2.5 rounded-xl text-xs mt-1 bg-white focus:outline-none focus:border-brandPurple">
+                        <label class="font-bold text-gray-600">Category</label>
+                        <select class="w-full border p-2 rounded mt-1 bg-white">
                             <option>Cotton Blouse</option>
                             <option>Petticoat</option>
-                            <option>Kanjivaram Saree</option>
-                            <option>Bundle Pack</option>
+                            <option>Saree</option>
                         </select>
                     </div>
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="text-xs font-bold text-gray-600">Price (₹)</label>
-                            <input type="number" placeholder="299" class="w-full border border-gray-300 p-2.5 rounded-xl text-xs mt-1 focus:outline-none focus:border-brandPurple" required>
-                        </div>
-                        <div>
-                            <label class="text-xs font-bold text-gray-600">Stock (Units)</label>
-                            <input type="number" placeholder="50" class="w-full border border-gray-300 p-2.5 rounded-xl text-xs mt-1 focus:outline-none focus:border-brandPurple" required>
-                        </div>
-                    </div>
-
                     <div>
-                        <label class="text-xs font-bold text-gray-600">Image URL</label>
-                        <input type="url" placeholder="https://..." class="w-full border border-gray-300 p-2.5 rounded-xl text-xs mt-1 focus:outline-none focus:border-brandPurple" required>
+                        <label class="font-bold text-gray-600">Price (₹)</label>
+                        <input type="number" placeholder="299" class="w-full border p-2 rounded mt-1" required>
                     </div>
-
-                    <button type="submit" class="w-full bg-brandPurple text-white font-bold py-3 rounded-xl text-xs shadow-md active:scale-95 transition">
-                        Publish Product
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- 2. ORDERS SECTION -->
-        <div id="sec-view-orders" class="hidden space-y-3">
-            <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Live Customer Orders</h2>
-            
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 space-y-2">
-                <div class="flex justify-between items-center border-b pb-2">
-                    <span class="font-black text-xs text-brandPurple">#MD-9082</span>
-                    <span class="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 font-bold rounded">Packed</span>
                 </div>
-                <div class="text-xs space-y-1">
-                    <p class="font-bold text-gray-800">Cotton Blouse Pack (x2)</p>
-                    <p class="text-gray-500">Amount: <span class="font-bold text-gray-800">₹598</span> (COD)</p>
-                    <p class="text-xs text-green-700 font-semibold"><i class="fa-solid fa-truck-fast"></i> Chakdaha Franchise Hub</p>
+                <div>
+                    <label class="font-bold text-gray-600">Image URL</label>
+                    <input type="url" placeholder="https://..." class="w-full border p-2 rounded mt-1" required>
                 </div>
-            </div>
+                <button type="submit" class="w-full bg-brandPurple text-white font-bold py-2.5 rounded text-xs">Publish to Website</button>
+            </form>
         </div>
+    </div>
 
-        <!-- 3. API KEYS SECTION -->
-        <div id="sec-gateways" class="hidden space-y-4">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200 space-y-4">
-                <h2 class="text-sm font-bold text-brandPurple flex items-center gap-2 border-b pb-2">
-                    <i class="fa-solid fa-key"></i> Payment & Shipping Settings
-                </h2>
-                
-                <div class="space-y-3">
-                    <div>
-                        <label class="text-xs font-bold text-gray-600">Razorpay Key ID</label>
-                        <input type="text" placeholder="rzp_live_xxxxxxxx" class="w-full border border-gray-300 p-2.5 rounded-xl text-xs mt-1">
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-gray-600">Shiprocket API Token</label>
-                        <input type="password" value="****************" class="w-full border border-gray-300 p-2.5 rounded-xl text-xs mt-1">
-                    </div>
-                    <button onclick="alert('API Keys Saved!')" class="w-full bg-brandRed text-white font-bold py-3 rounded-xl text-xs shadow-md">
-                        Save Keys
-                    </button>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Tab Switcher JS -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        function showSection(sec) {
-            ['add-product', 'view-orders', 'gateways'].forEach(s => {
-                document.getElementById(`sec-${s}`).classList.add('hidden');
-                const btn = document.getElementById(`btn-${s}`);
-                btn.classList.remove('text-brandPurple', 'border-brandPurple');
-                btn.classList.add('text-gray-500', 'border-transparent');
-            });
-            
-            document.getElementById(`sec-${sec}`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`btn-${sec}`);
-            activeBtn.classList.remove('text-gray-500', 'border-transparent');
-            activeBtn.classList.add('text-brandPurple', 'border-brandPurple');
-        }
-    </script>
-</body>
-</html>
+        function switchTab(tab) {
+            ['analytics', 'products', 'orders', 'franchise', 'integrations'].forEach(t => {
+                document.getElementById(`sec-${t}`).classList.add('hidden');
+                const btn = document.getElementBy
