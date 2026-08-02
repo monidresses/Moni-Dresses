@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moni Dresses | Enterprise Control Panel</title>
-    <!-- Tailwind CSS & FontAwesome CDN -->
+    <title>Moni Dresses | Master Admin Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -14,7 +13,6 @@
                     colors: {
                         brandPurple: '#6A0572',
                         brandRed: '#D62828',
-                        darkBg: '#121212'
                     }
                 }
             }
@@ -23,31 +21,33 @@
 </head>
 <body class="bg-gray-100 font-sans pb-20">
 
-    <!-- 1. LOGIN SCREEN OVERLAY (Admin & Client Auth) -->
-    <div id="login-overlay" class="fixed inset-0 bg-gradient-to-br from-brandPurple to-purple-950 z-50 flex items-center justify-center p-4">
+    <!-- 1. PURE ADMIN LOGIN SCREEN -->
+    <div id="login-overlay" class="fixed inset-0 bg-purple-950 z-50 flex items-center justify-center p-4">
         <div class="bg-white max-w-sm w-full rounded-3xl p-6 shadow-2xl space-y-4">
             <div class="text-center">
                 <div class="w-12 h-12 bg-brandRed text-white font-black text-2xl rounded-2xl flex items-center justify-center mx-auto mb-2">M</div>
                 <h2 class="text-lg font-black text-gray-800">MONI DRESSES</h2>
-                <p class="text-xs text-gray-500">Control Panel Authentication</p>
+                <p class="text-xs text-brandPurple font-bold">Admin Portal Access</p>
             </div>
 
-            <div class="flex bg-gray-100 p-1 rounded-xl text-xs font-bold text-center">
-                <button onclick="setLoginRole('admin')" id="role-admin" class="flex-1 py-2 rounded-lg bg-brandPurple text-white">Admin Login</button>
-                <button onclick="setLoginRole('client')" id="role-client" class="flex-1 py-2 rounded-lg text-gray-500">Franchise Login</button>
+            <div id="login-error" class="hidden bg-red-100 text-red-700 p-2.5 rounded-xl text-xs font-bold text-center">
+                Invalid Username or Password!
             </div>
 
-            <form onsubmit="handleLogin(event)" class="space-y-3 text-xs">
+            <form onsubmit="handleAdminLogin(event)" class="space-y-3 text-xs">
                 <div>
-                    <label class="font-bold text-gray-600">Username / Phone</label>
-                    <input type="text" id="login-user" value="admin" class="w-full border p-2.5 rounded-xl mt-1 focus:outline-none focus:border-brandPurple" required>
+                    <label class="font-bold text-gray-600">Admin Username</label>
+                    <input type="text" id="admin-user" placeholder="admin" class="w-full border border-gray-300 p-3 rounded-xl mt-1 focus:outline-none focus:border-brandPurple font-bold" required>
                 </div>
                 <div>
-                    <label class="font-bold text-gray-600">Password / PIN</label>
-                    <input type="password" id="login-pass" value="1234" class="w-full border p-2.5 rounded-xl mt-1 focus:outline-none focus:border-brandPurple" required>
+                    <label class="font-bold text-gray-600">Password</label>
+                    <input type="password" id="admin-pass" placeholder="••••" class="w-full border border-gray-300 p-3 rounded-xl mt-1 focus:outline-none focus:border-brandPurple font-bold" required>
                 </div>
-                <button type="submit" class="w-full bg-brandPurple text-white py-3 rounded-xl font-bold shadow-lg hover:bg-purple-900 transition">Access Control Panel</button>
+                <button type="submit" class="w-full bg-brandPurple text-white py-3 rounded-xl font-bold shadow-lg hover:bg-purple-900 active:scale-95 transition text-sm">
+                    Login to Dashboard
+                </button>
             </form>
+            <p class="text-[10px] text-center text-gray-400">Default Credentials: admin / 1234</p>
         </div>
     </div>
 
@@ -57,15 +57,15 @@
             <div class="w-8 h-8 rounded-lg bg-brandRed flex items-center justify-center font-black text-sm">M</div>
             <div>
                 <h1 class="text-sm font-extrabold leading-none">MONI DRESSES</h1>
-                <span id="active-role-badge" class="text-[9px] bg-purple-800 text-purple-200 px-1.5 py-0.5 rounded font-bold uppercase">Master Admin</span>
+                <span class="text-[9px] bg-brandRed text-white px-1.5 py-0.5 rounded font-bold uppercase">Master Admin</span>
             </div>
         </div>
-        <button onclick="handleLogout()" class="text-xs bg-red-600 px-3 py-1.5 rounded-xl font-bold hover:bg-red-700 transition">
+        <button onclick="handleAdminLogout()" class="text-xs bg-red-600 px-3 py-1.5 rounded-xl font-bold hover:bg-red-700 active:scale-95 transition">
             <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
         </button>
     </header>
 
-    <!-- 3. NAVIGATION TAB BAR -->
+    <!-- 3. TOP NAVIGATION MENU -->
     <div class="bg-white shadow-sm border-b sticky top-14 z-30 flex overflow-x-auto no-scrollbar text-center text-xs font-bold">
         <button onclick="switchTab('analytics')" id="tab-analytics" class="flex-1 min-w-[80px] py-3 text-brandPurple border-b-2 border-brandPurple">
             <i class="fa-solid fa-chart-line block text-base mb-0.5"></i> Analytics
@@ -80,17 +80,17 @@
             <i class="fa-solid fa-warehouse block text-base mb-0.5"></i> Branches
         </button>
         <button onclick="switchTab('siteedit')" id="tab-siteedit" class="flex-1 min-w-[80px] py-3 text-gray-400 border-b-2 border-transparent">
-            <i class="fa-solid fa-pen-to-square block text-base mb-0.5"></i> Website Edit
+            <i class="fa-solid fa-pen-to-square block text-base mb-0.5"></i> Site Edit
         </button>
         <button onclick="switchTab('plugins')" id="tab-plugins" class="flex-1 min-w-[80px] py-3 text-gray-400 border-b-2 border-transparent">
-            <i class="fa-solid fa-plug block text-base mb-0.5"></i> Integrations
+            <i class="fa-solid fa-plug block text-base mb-0.5"></i> Plugins
         </button>
     </div>
 
-    <!-- 4. DASHBOARD MAIN CONTENT -->
-    <main class="p-4 max-w-2xl mx-auto">
+    <!-- 4. DASHBOARD CONTENT -->
+    <main class="p-4 max-w-xl mx-auto">
 
-        <!-- ================= ANALYTICS SECTION ================= -->
+        <!-- ANALYTICS -->
         <section id="sec-analytics" class="space-y-4">
             <div class="bg-gradient-to-r from-brandPurple to-purple-900 text-white p-5 rounded-3xl shadow-lg">
                 <span class="text-xs text-purple-200 uppercase font-bold tracking-wider">Total Sales Today</span>
@@ -101,25 +101,23 @@
                 </div>
             </div>
 
-            <!-- Customers Count Box -->
             <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-2">
                 <div class="flex justify-between items-center border-b pb-2">
-                    <h3 class="font-bold text-xs text-gray-800"><i class="fa-solid fa-users text-brandPurple mr-1"></i> Customer Stats</h3>
-                    <span class="text-[10px] bg-green-100 text-green-800 font-bold px-2 py-0.5 rounded-full">1,240 Total Registered</span>
+                    <h3 class="font-bold text-xs text-gray-800"><i class="fa-solid fa-users text-brandPurple mr-1"></i> Customers Summary</h3>
+                    <span class="text-[10px] bg-green-100 text-green-800 font-bold px-2 py-0.5 rounded-full">1,240 Registered</span>
                 </div>
-                <p class="text-xs text-gray-500">Retail Buyers: <b>1,180</b> | B2B Franchise Partners: <b>60</b></p>
+                <p class="text-xs text-gray-500">Retail Buyers: <b>1,180</b> | B2B Wholesale: <b>60</b></p>
             </div>
         </section>
 
-        <!-- ================= INVENTORY & ADD ITEM SECTION ================= -->
+        <!-- INVENTORY -->
         <section id="sec-inventory" class="hidden space-y-4">
             <div class="flex justify-between items-center">
-                <h2 class="text-sm font-bold text-gray-800">Master Stock & Products</h2>
+                <h2 class="text-sm font-bold text-gray-800">Master Products</h2>
                 <button onclick="openModal('modal-add-product')" class="bg-brandPurple text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">+ Add Product</button>
             </div>
 
             <div id="product-list" class="space-y-3">
-                <!-- Product Item Card 1 -->
                 <div class="bg-white p-3 rounded-2xl shadow-sm border flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=100" class="w-12 h-12 rounded-xl object-cover">
@@ -129,25 +127,22 @@
                             <span class="text-[10px] text-gray-400 block">Stock: 45 units</span>
                         </div>
                     </div>
-                    <div class="space-x-1">
-                        <button onclick="deleteProduct(this)" class="text-red-500 hover:bg-red-50 p-2 rounded-xl text-xs"><i class="fa-solid fa-trash-can"></i></button>
-                    </div>
+                    <button onclick="deleteProduct(this)" class="text-red-500 hover:bg-red-50 p-2 rounded-xl text-xs"><i class="fa-solid fa-trash-can"></i></button>
                 </div>
             </div>
         </section>
 
-        <!-- ================= ORDERS & FULFILLMENT SECTION ================= -->
+        <!-- ORDERS -->
         <section id="sec-orders" class="hidden space-y-3">
-            <h2 class="text-sm font-bold text-gray-800">Customer Orders</h2>
+            <h2 class="text-sm font-bold text-gray-800">Orders to Dispatch</h2>
 
-            <!-- Order Card 1 -->
             <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-2">
                 <div class="flex justify-between items-center border-b pb-2">
                     <span class="font-bold text-xs text-brandPurple">#MD-9082</span>
                     <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Pending</span>
                 </div>
                 <div class="text-xs space-y-1">
-                    <p class="font-bold text-gray-800">Customer: Avijit Chakraborty (+91 9832XXXXXX)</p>
+                    <p class="font-bold text-gray-800">Avijit Chakraborty (+91 9832XXXXXX)</p>
                     <p class="text-gray-500">Items: Ready-made Blouse (Set of 2) | Price: <b>₹598</b></p>
                     <p class="text-purple-900 font-bold text-[11px]"><i class="fa-solid fa-truck-fast mr-1"></i> Routed Hub: Chakdaha Franchise (741222)</p>
                 </div>
@@ -158,73 +153,65 @@
             </div>
         </section>
 
-        <!-- ================= BRANCHES & LOCAL INVENTORY SECTION ================= -->
+        <!-- BRANCHES -->
         <section id="sec-branches" class="hidden space-y-4">
             <div class="flex justify-between items-center">
-                <h2 class="text-sm font-bold text-gray-800">Franchise Warehouses</h2>
+                <h2 class="text-sm font-bold text-gray-800">Branch Warehouses</h2>
                 <button onclick="openModal('modal-add-branch')" class="bg-brandRed text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">+ Add Branch</button>
             </div>
 
             <div id="branch-list" class="space-y-3">
-                <!-- Branch Card -->
                 <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-2">
                     <div class="flex justify-between items-center border-b pb-2">
                         <span class="font-bold text-xs text-brandPurple">Chakdaha Local Hub</span>
                         <span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Active</span>
                     </div>
                     <p class="text-xs text-gray-500">Serviceable Pincodes: <b>741222, 741223</b></p>
-                    <p class="text-xs text-gray-500">Branch Stock Allocated: <b>120 Units</b></p>
                 </div>
             </div>
         </section>
 
-        <!-- ================= WEBSITE LIVE EDITOR SECTION ================= -->
+        <!-- SITE EDIT -->
         <section id="sec-siteedit" class="hidden space-y-4">
             <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-3">
-                <h3 class="font-bold text-xs text-gray-800 border-b pb-2"><i class="fa-solid fa-pen-to-square text-brandPurple mr-1"></i>Edit Website Branding & Content</h3>
-                
+                <h3 class="font-bold text-xs text-gray-800 border-b pb-2"><i class="fa-solid fa-pen-to-square text-brandPurple mr-1"></i>Edit Website Banner</h3>
                 <div>
                     <label class="text-xs font-bold text-gray-600">Store Banner Heading Text</label>
-                    <input type="text" id="edit-banner" value="Premium Cotton Blouses & Petticoats" class="w-full border p-2 rounded-xl text-xs mt-1">
+                    <input type="text" value="Premium Cotton Blouses & Petticoats" class="w-full border p-2 rounded-xl text-xs mt-1">
                 </div>
-                <div>
-                    <label class="text-xs font-bold text-gray-600">Logo Image URL</label>
-                    <input type="url" id="edit-logo" placeholder="https://..." class="w-full border p-2 rounded-xl text-xs mt-1">
-                </div>
-                <button onclick="alert('Website Live Content Updated!')" class="w-full bg-brandPurple text-white py-2.5 rounded-xl font-bold text-xs">Save Website Changes</button>
+                <button onclick="alert('Website Banner Updated!')" class="w-full bg-brandPurple text-white py-2.5 rounded-xl font-bold text-xs">Save Changes</button>
             </div>
         </section>
 
-        <!-- ================= PAYMENT & SHIPROCKET PLUGINS SECTION ================= -->
+        <!-- PLUGINS -->
         <section id="sec-plugins" class="hidden space-y-4">
             <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-3">
-                <h3 class="font-bold text-xs text-gray-800 border-b pb-2"><i class="fa-solid fa-plug text-brandPurple mr-1"></i>Razorpay & Shiprocket Plugin Connection</h3>
-                
+                <h3 class="font-bold text-xs text-gray-800 border-b pb-2"><i class="fa-solid fa-plug text-brandPurple mr-1"></i>Razorpay & Shiprocket Keys</h3>
                 <div>
                     <label class="text-xs font-bold text-gray-600">Razorpay Key ID</label>
                     <input type="text" value="rzp_live_98327429842" class="w-full border p-2 rounded-xl text-xs mt-1 font-mono">
                 </div>
                 <div>
-                    <label class="text-xs font-bold text-gray-600">Shiprocket API Token</label>
+                    <label class="text-xs font-bold text-gray-600">Shiprocket Token</label>
                     <input type="password" value="****************" class="w-full border p-2 rounded-xl text-xs mt-1">
                 </div>
-                <button onclick="alert('API Integrations Saved!')" class="w-full bg-brandRed text-white py-2.5 rounded-xl font-bold text-xs">Save Gateway Credentials</button>
+                <button onclick="alert('API Credentials Saved!')" class="w-full bg-brandRed text-white py-2.5 rounded-xl font-bold text-xs">Save Gateway Credentials</button>
             </div>
         </section>
 
     </main>
 
-    <!-- MODAL: ADD PRODUCT WITH IMAGE UPLOAD -->
+    <!-- MODAL: ADD PRODUCT -->
     <div id="modal-add-product" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3 shadow-2xl">
             <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-xs text-gray-800">Add New Item to Inventory</h3>
+                <h3 class="font-bold text-xs text-gray-800">Add Item to Inventory</h3>
                 <button onclick="closeModal('modal-add-product')" class="text-gray-400 font-bold">✕</button>
             </div>
             <form onsubmit="handleAddProduct(event)" class="space-y-3 text-xs">
                 <div>
                     <label class="font-bold text-gray-600">Product Title</label>
-                    <input type="text" id="p-title" placeholder="e.g. Cotton Petticoat" class="w-full border p-2 rounded-xl mt-1" required>
+                    <input type="text" id="p-title" placeholder="Cotton Petticoat" class="w-full border p-2 rounded-xl mt-1" required>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
@@ -240,7 +227,7 @@
                     <label class="font-bold text-gray-600">Product Image URL</label>
                     <input type="url" id="p-img" placeholder="https://..." class="w-full border p-2 rounded-xl mt-1" required>
                 </div>
-                <button type="submit" class="w-full bg-brandPurple text-white py-3 rounded-xl font-bold">Upload to Inventory</button>
+                <button type="submit" class="w-full bg-brandPurple text-white py-3 rounded-xl font-bold">Upload Product</button>
             </form>
         </div>
     </div>
@@ -249,17 +236,17 @@
     <div id="modal-add-branch" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3 shadow-2xl">
             <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-xs text-gray-800">Add New Franchise Branch</h3>
+                <h3 class="font-bold text-xs text-gray-800">Add Branch Warehouse</h3>
                 <button onclick="closeModal('modal-add-branch')" class="text-gray-400 font-bold">✕</button>
             </div>
             <form onsubmit="handleAddBranch(event)" class="space-y-3 text-xs">
                 <div>
-                    <label class="font-bold text-gray-600">Branch / Warehouse Name</label>
-                    <input type="text" id="b-name" placeholder="e.g. Kolkata Hub" class="w-full border p-2 rounded-xl mt-1" required>
+                    <label class="font-bold text-gray-600">Branch Name</label>
+                    <input type="text" id="b-name" placeholder="Kolkata Hub" class="w-full border p-2 rounded-xl mt-1" required>
                 </div>
                 <div>
-                    <label class="font-bold text-gray-600">Serviceable Pincodes (Comma separated)</label>
-                    <input type="text" id="b-pins" placeholder="e.g. 700001, 700002" class="w-full border p-2 rounded-xl mt-1" required>
+                    <label class="font-bold text-gray-600">Serviceable Pincodes</label>
+                    <input type="text" id="b-pins" placeholder="700001, 700002" class="w-full border p-2 rounded-xl mt-1" required>
                 </div>
                 <button type="submit" class="w-full bg-brandRed text-white py-3 rounded-xl font-bold">Register Branch</button>
             </form>
@@ -268,28 +255,29 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        let activeRole = 'admin';
-
-        // Auth Logic
-        function setLoginRole(role) {
-            activeRole = role;
-            document.getElementById('role-admin').className = role === 'admin' ? "flex-1 py-2 rounded-lg bg-brandPurple text-white" : "flex-1 py-2 rounded-lg text-gray-500";
-            document.getElementById('role-client').className = role === 'client' ? "flex-1 py-2 rounded-lg bg-brandPurple text-white" : "flex-1 py-2 rounded-lg text-gray-500";
-        }
-
-        function handleLogin(e) {
+        // AUTH LOGIC
+        function handleAdminLogin(e) {
             e.preventDefault();
-            document.getElementById('login-overlay').classList.add('hidden');
-            document.getElementById('active-role-badge').innerText = activeRole === 'admin' ? "Master Admin" : "Franchise Partner";
-        }
+            const u = document.getElementById('admin-user').value.trim();
+            const p = document.getElementById('admin-pass').value.trim();
+            const err = document.getElementById('login-error');
 
-        function handleLogout() {
-            if(confirm('Logout from Moni Dresses Control Panel?')) {
-                document.getElementById('login-overlay').classList.remove('hidden');
+            if (u === 'admin' && p === '1234') {
+                document.getElementById('login-overlay').classList.add('hidden');
+                err.classList.add('hidden');
+            } else {
+                err.classList.remove('hidden');
             }
         }
 
-        // Tab Navigation
+        function handleAdminLogout() {
+            if (confirm('Logout from Moni Dresses Admin Panel?')) {
+                document.getElementById('login-overlay').classList.remove('hidden');
+                document.getElementById('admin-pass').value = '';
+            }
+        }
+
+        // TAB SWITCHER
         function switchTab(tab) {
             ['analytics', 'inventory', 'orders', 'branches', 'siteedit', 'plugins'].forEach(t => {
                 document.getElementById(`sec-${t}`).classList.add('hidden');
@@ -304,11 +292,11 @@
             activeBtn.classList.remove('text-gray-400', 'border-transparent');
         }
 
-        // Modal Utilities
+        // MODAL UTILITIES
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-        // Dynamic Product Add & Delete
+        // PRODUCT MANAGEMENT
         function handleAddProduct(e) {
             e.preventDefault();
             const title = document.getElementById('p-title').value;
@@ -328,4 +316,50 @@
                         <span class="text-[10px] text-gray-400 block">Stock: ${stock} units</span>
                     </div>
                 </div>
-                <button onclick="deleteProduct(this)" class="text-red-500 hover:bg-red-50 p-2 rounded-xl text-xs"><i class="fa-so
+                <button onclick="deleteProduct(this)" class="text-red-500 hover:bg-red-50 p-2 rounded-xl text-xs"><i class="fa-solid fa-trash-can"></i></button>
+            `;
+            list.prepend(newCard);
+            closeModal('modal-add-product');
+            alert('Item added to Inventory!');
+        }
+
+        function deleteProduct(btn) {
+            if(confirm('Delete item?')) {
+                btn.closest('.bg-white').remove();
+            }
+        }
+
+        // BRANCH MANAGEMENT
+        function handleAddBranch(e) {
+            e.preventDefault();
+            const name = document.getElementById('b-name').value;
+            const pins = document.getElementById('b-pins').value;
+
+            const list = document.getElementById('branch-list');
+            const newBranch = document.createElement('div');
+            newBranch.className = "bg-white p-4 rounded-2xl shadow-sm border space-y-2";
+            newBranch.innerHTML = `
+                <div class="flex justify-between items-center border-b pb-2">
+                    <span class="font-bold text-xs text-brandPurple">${name}</span>
+                    <span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Active</span>
+                </div>
+                <p class="text-xs text-gray-500">Serviceable Pincodes: <b>${pins}</b></p>
+            `;
+            list.prepend(newBranch);
+            closeModal('modal-add-branch');
+            alert('Branch Registered!');
+        }
+
+        // ORDER MANAGEMENT
+        function updateOrderStatus(btn, status) {
+            const card = btn.closest('.bg-white');
+            const badge = card.querySelector('.bg-amber-100, .bg-green-100, .bg-red-100');
+            if(badge) {
+                badge.className = status === 'Dispatched' ? "bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full" : "bg-red-100 text-red-800 text-[10px] font-bold px-2 py-0.5 rounded-full";
+                badge.innerText = status;
+            }
+            alert(`Order marked as ${status}`);
+        }
+    </script>
+</body>
+</html>
