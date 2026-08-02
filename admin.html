@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moni Dresses | Enterprise Admin Dashboard</title>
-    <!-- Tailwind CSS & FontAwesome Icons -->
+    <title>Moni Dresses | Enterprise Control Panel</title>
+    <!-- Tailwind CSS & FontAwesome CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
@@ -15,294 +14,318 @@
                     colors: {
                         brandPurple: '#6A0572',
                         brandRed: '#D62828',
-                        darkNavy: '#1E1E2D',
+                        darkBg: '#121212'
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans antialiased">
+<body class="bg-gray-100 font-sans pb-20">
 
-    <!-- TOP NAV BAR -->
-    <header class="bg-darkNavy text-white h-16 px-4 flex items-center justify-between sticky top-0 z-50 shadow-md">
-        <div class="flex items-center gap-3">
-            <button onclick="toggleSidebar()" class="text-gray-300 hover:text-white md:hidden"><i class="fa-solid fa-bars text-xl"></i></button>
-            <div class="w-8 h-8 rounded-lg bg-brandRed flex items-center justify-center font-black text-lg">M</div>
-            <span class="font-extrabold text-base tracking-wide">MONI DRESSES <span class="text-xs bg-brandPurple px-2 py-0.5 rounded ml-2 font-normal">ADMIN</span></span>
-        </div>
-        <div class="flex items-center gap-4 text-xs">
-            <span class="hidden sm:inline-block bg-green-500/20 text-green-400 font-semibold px-2.5 py-1 rounded-full border border-green-500/30">● System Live</span>
-            <button onclick="alert('Admin Session Ended')" class="bg-brandRed px-3 py-1.5 rounded font-bold hover:bg-red-700 transition">Logout</button>
-        </div>
-    </header>
-
-    <div class="flex min-h-[calc(100vh-4rem)]">
-
-        <!-- SIDEBAR NAVIGATION -->
-        <aside id="sidebar" class="w-64 bg-darkNavy text-gray-400 flex-shrink-0 hidden md:block border-t border-gray-800 transition-all">
-            <div class="p-4 space-y-6">
-                <div>
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500 block mb-2">Main Menu</span>
-                    <nav class="space-y-1">
-                        <button onclick="switchTab('analytics')" id="nav-analytics" class="w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold bg-brandPurple text-white flex items-center gap-3">
-                            <i class="fa-solid fa-chart-line text-sm"></i> Analytics & Overview
-                        </button>
-                        <button onclick="switchTab('products')" id="nav-products" class="w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold hover:bg-gray-800 hover:text-white flex items-center gap-3">
-                            <i class="fa-solid fa-boxes-stacked text-sm"></i> Inventory Management
-                        </button>
-                        <button onclick="switchTab('orders')" id="nav-orders" class="w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold hover:bg-gray-800 hover:text-white flex items-center gap-3">
-                            <i class="fa-solid fa-cart-flatbed text-sm"></i> Order Fulfillment
-                        </button>
-                    </nav>
-                </div>
-
-                <div>
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500 block mb-2">Operations</span>
-                    <nav class="space-y-1">
-                        <button onclick="switchTab('franchise')" id="nav-franchise" class="w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold hover:bg-gray-800 hover:text-white flex items-center gap-3">
-                            <i class="fa-solid fa-warehouse text-sm"></i> Franchise & Pincodes
-                        </button>
-                        <button onclick="switchTab('integrations')" id="nav-integrations" class="w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold hover:bg-gray-800 hover:text-white flex items-center gap-3">
-                            <i class="fa-solid fa-plug text-sm"></i> Razorpay & Shiprocket
-                        </button>
-                    </nav>
-                </div>
+    <!-- 1. LOGIN SCREEN OVERLAY (Admin & Client Auth) -->
+    <div id="login-overlay" class="fixed inset-0 bg-gradient-to-br from-brandPurple to-purple-950 z-50 flex items-center justify-center p-4">
+        <div class="bg-white max-w-sm w-full rounded-3xl p-6 shadow-2xl space-y-4">
+            <div class="text-center">
+                <div class="w-12 h-12 bg-brandRed text-white font-black text-2xl rounded-2xl flex items-center justify-center mx-auto mb-2">M</div>
+                <h2 class="text-lg font-black text-gray-800">MONI DRESSES</h2>
+                <p class="text-xs text-gray-500">Control Panel Authentication</p>
             </div>
-        </aside>
 
-        <!-- MAIN DASHBOARD CONTENT -->
-        <main class="flex-1 p-4 md:p-6 overflow-y-auto">
+            <div class="flex bg-gray-100 p-1 rounded-xl text-xs font-bold text-center">
+                <button onclick="setLoginRole('admin')" id="role-admin" class="flex-1 py-2 rounded-lg bg-brandPurple text-white">Admin Login</button>
+                <button onclick="setLoginRole('client')" id="role-client" class="flex-1 py-2 rounded-lg text-gray-500">Franchise Login</button>
+            </div>
 
-            <!-- 1. ANALYTICS & OVERVIEW TAB -->
-            <section id="sec-analytics" class="space-y-6">
-                <!-- Metrics Grid -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                        <span class="text-xs font-bold text-gray-400 block uppercase">Total Sales Today</span>
-                        <span class="text-xl font-extrabold text-gray-900 mt-1 block">₹42,850</span>
-                        <span class="text-[10px] font-bold text-green-600 mt-1 block">▲ +12% vs yesterday</span>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                        <span class="text-xs font-bold text-gray-400 block uppercase">Pending Orders</span>
-                        <span class="text-xl font-extrabold text-brandRed mt-1 block">18 Orders</span>
-                        <span class="text-[10px] font-bold text-gray-500 mt-1 block">Requires Dispatch</span>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                        <span class="text-xs font-bold text-gray-400 block uppercase">Active Franchise Hubs</span>
-                        <span class="text-xl font-extrabold text-brandPurple mt-1 block">12 Warehouses</span>
-                        <span class="text-[10px] font-bold text-green-600 mt-1 block">Chakdaha, Kolkata...</span>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                        <span class="text-xs font-bold text-gray-400 block uppercase">Low Stock Alert</span>
-                        <span class="text-xl font-extrabold text-amber-600 mt-1 block">3 Items</span>
-                        <span class="text-[10px] font-bold text-amber-600 mt-1 block">Under 10 units</span>
-                    </div>
+            <form onsubmit="handleLogin(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="font-bold text-gray-600">Username / Phone</label>
+                    <input type="text" id="login-user" value="admin" class="w-full border p-2.5 rounded-xl mt-1 focus:outline-none focus:border-brandPurple" required>
                 </div>
-
-                <!-- Sales Analytics Chart Placeholder -->
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
-                    <h3 class="text-sm font-bold text-gray-800 mb-4"><i class="fa-solid fa-chart-area text-brandPurple mr-2"></i>Weekly Sales & Order Analytics</h3>
-                    <div class="h-56 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 text-xs">
-                        <canvas id="salesChart" class="w-full h-full p-2"></canvas>
-                    </div>
+                <div>
+                    <label class="font-bold text-gray-600">Password / PIN</label>
+                    <input type="password" id="login-pass" value="1234" class="w-full border p-2.5 rounded-xl mt-1 focus:outline-none focus:border-brandPurple" required>
                 </div>
-            </section>
-
-            <!-- 2. INVENTORY MANAGEMENT TAB -->
-            <section id="sec-products" class="hidden space-y-6">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-base font-bold text-gray-800"><i class="fa-solid fa-boxes-stacked text-brandPurple mr-2"></i>Product Catalog & Stock</h2>
-                    <button onclick="toggleModal('modal-add-product')" class="bg-brandPurple text-white px-4 py-2 rounded-lg text-xs font-bold shadow hover:bg-purple-900 transition">+ Add New Product</button>
-                </div>
-
-                <!-- Product Table -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="bg-gray-50 text-gray-500 font-bold border-b border-gray-200 uppercase">
-                                <th class="p-3">Product</th>
-                                <th class="p-3">Category</th>
-                                <th class="p-3">Price</th>
-                                <th class="p-3">Stock Units</th>
-                                <th class="p-3">Status</th>
-                                <th class="p-3 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100 font-medium">
-                            <tr>
-                                <td class="p-3 flex items-center gap-3">
-                                    <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=100" class="w-10 h-10 rounded object-cover">
-                                    <div>
-                                        <span class="font-bold text-gray-800 block">Pure Cotton Blouse (Red)</span>
-                                        <span class="text-[10px] text-gray-400">SKU: MD-BL01</span>
-                                    </div>
-                                </td>
-                                <td class="p-3">Cotton Blouse</td>
-                                <td class="p-3 font-bold text-brandPurple">₹299</td>
-                                <td class="p-3 font-bold">45 units</td>
-                                <td class="p-3"><span class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-[10px] font-bold">In Stock</span></td>
-                                <td class="p-3 text-right space-x-2">
-                                    <button class="text-blue-600 font-bold hover:underline">Edit</button>
-                                    <button class="text-red-600 font-bold hover:underline">Delete</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 flex items-center gap-3">
-                                    <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=100" class="w-10 h-10 rounded object-cover">
-                                    <div>
-                                        <span class="font-bold text-gray-800 block">Cotton Petticoat Bundle (Set of 6)</span>
-                                        <span class="text-[10px] text-gray-400">SKU: MD-PT06</span>
-                                    </div>
-                                </td>
-                                <td class="p-3">Petticoat</td>
-                                <td class="p-3 font-bold text-brandPurple">₹1,199</td>
-                                <td class="p-3 font-bold text-amber-600">8 units</td>
-                                <td class="p-3"><span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded text-[10px] font-bold">Low Stock</span></td>
-                                <td class="p-3 text-right space-x-2">
-                                    <button class="text-blue-600 font-bold hover:underline">Edit</button>
-                                    <button class="text-red-600 font-bold hover:underline">Delete</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- 3. ORDERS FULFILLMENT TAB -->
-            <section id="sec-orders" class="hidden space-y-6">
-                <h2 class="text-base font-bold text-gray-800"><i class="fa-solid fa-cart-flatbed text-brandPurple mr-2"></i>Live Order Dispatch & Routing</h2>
-
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="bg-gray-50 text-gray-500 font-bold border-b border-gray-200 uppercase">
-                                <th class="p-3">Order ID</th>
-                                <th class="p-3">Customer Details</th>
-                                <th class="p-3">Pincode</th>
-                                <th class="p-3">Fulfillment Route</th>
-                                <th class="p-3">Status</th>
-                                <th class="p-3">Update Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100 font-medium">
-                            <tr>
-                                <td class="p-3 font-bold text-brandPurple">#MD-9082</td>
-                                <td class="p-3">
-                                    <span class="block font-bold">Avijit Chakraborty</span>
-                                    <span class="text-[10px] text-gray-400">+91 9832XXXXXX</span>
-                                </td>
-                                <td class="p-3 font-bold">741222</td>
-                                <td class="p-3"><span class="bg-purple-100 text-brandPurple px-2 py-0.5 rounded font-bold">Chakdaha Franchise</span></td>
-                                <td class="p-3"><span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold">Processing</span></td>
-                                <td class="p-3">
-                                    <select class="border rounded p-1 text-[11px] font-bold bg-white">
-                                        <option>Processing</option>
-                                        <option>Shipped via Franchise</option>
-                                        <option>Delivered</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-bold text-brandPurple">#MD-9083</td>
-                                <td class="p-3">
-                                    <span class="block font-bold">Rohan Sen</span>
-                                    <span class="text-[10px] text-gray-400">+91 9123XXXXXX</span>
-                                </td>
-                                <td class="p-3 font-bold">700001</td>
-                                <td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">Shiprocket Central</span></td>
-                                <td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">In Transit</span></td>
-                                <td class="p-3">
-                                    <select class="border rounded p-1 text-[11px] font-bold bg-white">
-                                        <option>In Transit</option>
-                                        <option>Delivered</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- 4. FRANCHISE WAREHOUSE & PINCODES -->
-            <section id="sec-franchise" class="hidden space-y-6">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-base font-bold text-gray-800"><i class="fa-solid fa-warehouse text-brandPurple mr-2"></i>Hyperlocal Franchise Hub Mapping</h2>
-                    <button class="bg-brandRed text-white px-3 py-1.5 rounded text-xs font-bold">+ Map New Pincode</button>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                        <div class="flex justify-between items-center border-b pb-2 mb-2">
-                            <span class="font-bold text-sm text-brandPurple">Chakdaha Express Hub</span>
-                            <span class="text-[10px] bg-green-100 text-green-800 font-bold px-2 py-0.5 rounded">Active</span>
-                        </div>
-                        <p class="text-xs text-gray-500 mb-2">Mapped Pincodes: <span class="font-bold text-gray-800">741222, 741223</span></p>
-                        <span class="text-[11px] text-gray-400">Total Orders Fulfilled: 142</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 5. INTEGRATIONS (RAZORPAY / SHIPROCKET) -->
-            <section id="sec-integrations" class="hidden max-w-xl space-y-6">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                    <h2 class="text-sm font-bold text-gray-800 border-b pb-2"><i class="fa-solid fa-plug text-brandPurple mr-2"></i>Payment Gateway & Logistics Keys</h2>
-                    
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-xs font-bold text-gray-600">Razorpay Key ID (Live)</label>
-                            <input type="text" value="rzp_live_98327429842" class="w-full border p-2 rounded text-xs mt-1 font-mono">
-                        </div>
-                        <div>
-                            <label class="text-xs font-bold text-gray-600">Shiprocket API Secret Token</label>
-                            <input type="password" value="************************" class="w-full border p-2 rounded text-xs mt-1">
-                        </div>
-                        <button onclick="alert('Keys Saved Successfully!')" class="bg-brandPurple text-white px-4 py-2 rounded text-xs font-bold">Update API Keys</button>
-                    </div>
-                </div>
-            </section>
-
-        </main>
+                <button type="submit" class="w-full bg-brandPurple text-white py-3 rounded-xl font-bold shadow-lg hover:bg-purple-900 transition">Access Control Panel</button>
+            </form>
+        </div>
     </div>
 
-    <!-- ADD PRODUCT MODAL -->
-    <div id="modal-add-product" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl max-w-md w-full p-6 space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-sm text-gray-800">Add New Product to Store</h3>
-                <button onclick="toggleModal('modal-add-product')" class="text-gray-400 text-lg">✕</button>
+    <!-- 2. MAIN HEADER BAR -->
+    <header class="bg-purple-950 text-white p-4 sticky top-0 z-40 flex justify-between items-center shadow-md">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-brandRed flex items-center justify-center font-black text-sm">M</div>
+            <div>
+                <h1 class="text-sm font-extrabold leading-none">MONI DRESSES</h1>
+                <span id="active-role-badge" class="text-[9px] bg-purple-800 text-purple-200 px-1.5 py-0.5 rounded font-bold uppercase">Master Admin</span>
             </div>
-            <form class="space-y-3 text-xs" onsubmit="event.preventDefault(); alert('Product Added!'); toggleModal('modal-add-product');">
+        </div>
+        <button onclick="handleLogout()" class="text-xs bg-red-600 px-3 py-1.5 rounded-xl font-bold hover:bg-red-700 transition">
+            <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
+        </button>
+    </header>
+
+    <!-- 3. NAVIGATION TAB BAR -->
+    <div class="bg-white shadow-sm border-b sticky top-14 z-30 flex overflow-x-auto no-scrollbar text-center text-xs font-bold">
+        <button onclick="switchTab('analytics')" id="tab-analytics" class="flex-1 min-w-[80px] py-3 text-brandPurple border-b-2 border-brandPurple">
+            <i class="fa-solid fa-chart-line block text-base mb-0.5"></i> Analytics
+        </button>
+        <button onclick="switchTab('inventory')" id="tab-inventory" class="flex-1 min-w-[80px] py-3 text-gray-400 border-b-2 border-transparent">
+            <i class="fa-solid fa-boxes-stacked block text-base mb-0.5"></i> Inventory
+        </button>
+        <button onclick="switchTab('orders')" id="tab-orders" class="flex-1 min-w-[80px] py-3 text-gray-400 border-b-2 border-transparent">
+            <i class="fa-solid fa-cart-flatbed block text-base mb-0.5"></i> Orders
+        </button>
+        <button onclick="switchTab('branches')" id="tab-branches" class="flex-1 min-w-[80px] py-3 text-gray-400 border-b-2 border-transparent">
+            <i class="fa-solid fa-warehouse block text-base mb-0.5"></i> Branches
+        </button>
+        <button onclick="switchTab('siteedit')" id="tab-siteedit" class="flex-1 min-w-[80px] py-3 text-gray-400 border-b-2 border-transparent">
+            <i class="fa-solid fa-pen-to-square block text-base mb-0.5"></i> Website Edit
+        </button>
+        <button onclick="switchTab('plugins')" id="tab-plugins" class="flex-1 min-w-[80px] py-3 text-gray-400 border-b-2 border-transparent">
+            <i class="fa-solid fa-plug block text-base mb-0.5"></i> Integrations
+        </button>
+    </div>
+
+    <!-- 4. DASHBOARD MAIN CONTENT -->
+    <main class="p-4 max-w-2xl mx-auto">
+
+        <!-- ================= ANALYTICS SECTION ================= -->
+        <section id="sec-analytics" class="space-y-4">
+            <div class="bg-gradient-to-r from-brandPurple to-purple-900 text-white p-5 rounded-3xl shadow-lg">
+                <span class="text-xs text-purple-200 uppercase font-bold tracking-wider">Total Sales Today</span>
+                <h2 class="text-3xl font-black mt-1">₹48,290</h2>
+                <div class="mt-4 grid grid-cols-2 gap-2 text-xs">
+                    <div class="bg-white/10 p-2.5 rounded-2xl">Total Orders: <b>24</b></div>
+                    <div class="bg-white/10 p-2.5 rounded-2xl">Pending Dispatch: <b>6</b></div>
+                </div>
+            </div>
+
+            <!-- Customers Count Box -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-2">
+                <div class="flex justify-between items-center border-b pb-2">
+                    <h3 class="font-bold text-xs text-gray-800"><i class="fa-solid fa-users text-brandPurple mr-1"></i> Customer Stats</h3>
+                    <span class="text-[10px] bg-green-100 text-green-800 font-bold px-2 py-0.5 rounded-full">1,240 Total Registered</span>
+                </div>
+                <p class="text-xs text-gray-500">Retail Buyers: <b>1,180</b> | B2B Franchise Partners: <b>60</b></p>
+            </div>
+        </section>
+
+        <!-- ================= INVENTORY & ADD ITEM SECTION ================= -->
+        <section id="sec-inventory" class="hidden space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-sm font-bold text-gray-800">Master Stock & Products</h2>
+                <button onclick="openModal('modal-add-product')" class="bg-brandPurple text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">+ Add Product</button>
+            </div>
+
+            <div id="product-list" class="space-y-3">
+                <!-- Product Item Card 1 -->
+                <div class="bg-white p-3 rounded-2xl shadow-sm border flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=100" class="w-12 h-12 rounded-xl object-cover">
+                        <div>
+                            <h4 class="font-bold text-xs text-gray-800">Pure Cotton Blouse (Red)</h4>
+                            <span class="text-xs font-extrabold text-brandPurple">₹299</span>
+                            <span class="text-[10px] text-gray-400 block">Stock: 45 units</span>
+                        </div>
+                    </div>
+                    <div class="space-x-1">
+                        <button onclick="deleteProduct(this)" class="text-red-500 hover:bg-red-50 p-2 rounded-xl text-xs"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ORDERS & FULFILLMENT SECTION ================= -->
+        <section id="sec-orders" class="hidden space-y-3">
+            <h2 class="text-sm font-bold text-gray-800">Customer Orders</h2>
+
+            <!-- Order Card 1 -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-2">
+                <div class="flex justify-between items-center border-b pb-2">
+                    <span class="font-bold text-xs text-brandPurple">#MD-9082</span>
+                    <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Pending</span>
+                </div>
+                <div class="text-xs space-y-1">
+                    <p class="font-bold text-gray-800">Customer: Avijit Chakraborty (+91 9832XXXXXX)</p>
+                    <p class="text-gray-500">Items: Ready-made Blouse (Set of 2) | Price: <b>₹598</b></p>
+                    <p class="text-purple-900 font-bold text-[11px]"><i class="fa-solid fa-truck-fast mr-1"></i> Routed Hub: Chakdaha Franchise (741222)</p>
+                </div>
+                <div class="pt-2 border-t flex gap-2">
+                    <button onclick="updateOrderStatus(this, 'Dispatched')" class="flex-1 bg-brandPurple text-white py-2 rounded-xl font-bold text-xs">Dispatch Order</button>
+                    <button onclick="updateOrderStatus(this, 'Cancelled')" class="bg-gray-100 text-gray-600 px-3 py-2 rounded-xl font-bold text-xs">Cancel</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= BRANCHES & LOCAL INVENTORY SECTION ================= -->
+        <section id="sec-branches" class="hidden space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-sm font-bold text-gray-800">Franchise Warehouses</h2>
+                <button onclick="openModal('modal-add-branch')" class="bg-brandRed text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">+ Add Branch</button>
+            </div>
+
+            <div id="branch-list" class="space-y-3">
+                <!-- Branch Card -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-2">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span class="font-bold text-xs text-brandPurple">Chakdaha Local Hub</span>
+                        <span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Active</span>
+                    </div>
+                    <p class="text-xs text-gray-500">Serviceable Pincodes: <b>741222, 741223</b></p>
+                    <p class="text-xs text-gray-500">Branch Stock Allocated: <b>120 Units</b></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= WEBSITE LIVE EDITOR SECTION ================= -->
+        <section id="sec-siteedit" class="hidden space-y-4">
+            <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-3">
+                <h3 class="font-bold text-xs text-gray-800 border-b pb-2"><i class="fa-solid fa-pen-to-square text-brandPurple mr-1"></i>Edit Website Branding & Content</h3>
+                
                 <div>
-                    <label class="font-bold text-gray-600">Product Name</label>
-                    <input type="text" placeholder="e.g. Cotton Blouse" class="w-full border p-2 rounded mt-1" required>
+                    <label class="text-xs font-bold text-gray-600">Store Banner Heading Text</label>
+                    <input type="text" id="edit-banner" value="Premium Cotton Blouses & Petticoats" class="w-full border p-2 rounded-xl text-xs mt-1">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-600">Logo Image URL</label>
+                    <input type="url" id="edit-logo" placeholder="https://..." class="w-full border p-2 rounded-xl text-xs mt-1">
+                </div>
+                <button onclick="alert('Website Live Content Updated!')" class="w-full bg-brandPurple text-white py-2.5 rounded-xl font-bold text-xs">Save Website Changes</button>
+            </div>
+        </section>
+
+        <!-- ================= PAYMENT & SHIPROCKET PLUGINS SECTION ================= -->
+        <section id="sec-plugins" class="hidden space-y-4">
+            <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-3">
+                <h3 class="font-bold text-xs text-gray-800 border-b pb-2"><i class="fa-solid fa-plug text-brandPurple mr-1"></i>Razorpay & Shiprocket Plugin Connection</h3>
+                
+                <div>
+                    <label class="text-xs font-bold text-gray-600">Razorpay Key ID</label>
+                    <input type="text" value="rzp_live_98327429842" class="w-full border p-2 rounded-xl text-xs mt-1 font-mono">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-600">Shiprocket API Token</label>
+                    <input type="password" value="****************" class="w-full border p-2 rounded-xl text-xs mt-1">
+                </div>
+                <button onclick="alert('API Integrations Saved!')" class="w-full bg-brandRed text-white py-2.5 rounded-xl font-bold text-xs">Save Gateway Credentials</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL: ADD PRODUCT WITH IMAGE UPLOAD -->
+    <div id="modal-add-product" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3 shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="font-bold text-xs text-gray-800">Add New Item to Inventory</h3>
+                <button onclick="closeModal('modal-add-product')" class="text-gray-400 font-bold">✕</button>
+            </div>
+            <form onsubmit="handleAddProduct(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="font-bold text-gray-600">Product Title</label>
+                    <input type="text" id="p-title" placeholder="e.g. Cotton Petticoat" class="w-full border p-2 rounded-xl mt-1" required>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="font-bold text-gray-600">Category</label>
-                        <select class="w-full border p-2 rounded mt-1 bg-white">
-                            <option>Cotton Blouse</option>
-                            <option>Petticoat</option>
-                            <option>Saree</option>
-                        </select>
+                        <label class="font-bold text-gray-600">Price (₹)</label>
+                        <input type="number" id="p-price" placeholder="299" class="w-full border p-2 rounded-xl mt-1" required>
                     </div>
                     <div>
-                        <label class="font-bold text-gray-600">Price (₹)</label>
-                        <input type="number" placeholder="299" class="w-full border p-2 rounded mt-1" required>
+                        <label class="font-bold text-gray-600">Stock Units</label>
+                        <input type="number" id="p-stock" placeholder="50" class="w-full border p-2 rounded-xl mt-1" required>
                     </div>
                 </div>
                 <div>
-                    <label class="font-bold text-gray-600">Image URL</label>
-                    <input type="url" placeholder="https://..." class="w-full border p-2 rounded mt-1" required>
+                    <label class="font-bold text-gray-600">Product Image URL</label>
+                    <input type="url" id="p-img" placeholder="https://..." class="w-full border p-2 rounded-xl mt-1" required>
                 </div>
-                <button type="submit" class="w-full bg-brandPurple text-white font-bold py-2.5 rounded text-xs">Publish to Website</button>
+                <button type="submit" class="w-full bg-brandPurple text-white py-3 rounded-xl font-bold">Upload to Inventory</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD BRANCH -->
+    <div id="modal-add-branch" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3 shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="font-bold text-xs text-gray-800">Add New Franchise Branch</h3>
+                <button onclick="closeModal('modal-add-branch')" class="text-gray-400 font-bold">✕</button>
+            </div>
+            <form onsubmit="handleAddBranch(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="font-bold text-gray-600">Branch / Warehouse Name</label>
+                    <input type="text" id="b-name" placeholder="e.g. Kolkata Hub" class="w-full border p-2 rounded-xl mt-1" required>
+                </div>
+                <div>
+                    <label class="font-bold text-gray-600">Serviceable Pincodes (Comma separated)</label>
+                    <input type="text" id="b-pins" placeholder="e.g. 700001, 700002" class="w-full border p-2 rounded-xl mt-1" required>
+                </div>
+                <button type="submit" class="w-full bg-brandRed text-white py-3 rounded-xl font-bold">Register Branch</button>
             </form>
         </div>
     </div>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
+        let activeRole = 'admin';
+
+        // Auth Logic
+        function setLoginRole(role) {
+            activeRole = role;
+            document.getElementById('role-admin').className = role === 'admin' ? "flex-1 py-2 rounded-lg bg-brandPurple text-white" : "flex-1 py-2 rounded-lg text-gray-500";
+            document.getElementById('role-client').className = role === 'client' ? "flex-1 py-2 rounded-lg bg-brandPurple text-white" : "flex-1 py-2 rounded-lg text-gray-500";
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            document.getElementById('login-overlay').classList.add('hidden');
+            document.getElementById('active-role-badge').innerText = activeRole === 'admin' ? "Master Admin" : "Franchise Partner";
+        }
+
+        function handleLogout() {
+            if(confirm('Logout from Moni Dresses Control Panel?')) {
+                document.getElementById('login-overlay').classList.remove('hidden');
+            }
+        }
+
+        // Tab Navigation
         function switchTab(tab) {
-            ['analytics', 'products', 'orders', 'franchise', 'integrations'].forEach(t => {
+            ['analytics', 'inventory', 'orders', 'branches', 'siteedit', 'plugins'].forEach(t => {
                 document.getElementById(`sec-${t}`).classList.add('hidden');
-                const btn = document.getElementBy
+                const btn = document.getElementById(`tab-${t}`);
+                btn.classList.remove('text-brandPurple', 'border-brandPurple');
+                btn.classList.add('text-gray-400', 'border-transparent');
+            });
+
+            document.getElementById(`sec-${tab}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tab}`);
+            activeBtn.classList.add('text-brandPurple', 'border-brandPurple');
+            activeBtn.classList.remove('text-gray-400', 'border-transparent');
+        }
+
+        // Modal Utilities
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        // Dynamic Product Add & Delete
+        function handleAddProduct(e) {
+            e.preventDefault();
+            const title = document.getElementById('p-title').value;
+            const price = document.getElementById('p-price').value;
+            const stock = document.getElementById('p-stock').value;
+            const img = document.getElementById('p-img').value;
+
+            const list = document.getElementById('product-list');
+            const newCard = document.createElement('div');
+            newCard.className = "bg-white p-3 rounded-2xl shadow-sm border flex items-center justify-between";
+            newCard.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <img src="${img}" class="w-12 h-12 rounded-xl object-cover" onerror="this.src='https://via.placeholder.com/100'">
+                    <div>
+                        <h4 class="font-bold text-xs text-gray-800">${title}</h4>
+                        <span class="text-xs font-extrabold text-brandPurple">₹${price}</span>
+                        <span class="text-[10px] text-gray-400 block">Stock: ${stock} units</span>
+                    </div>
+                </div>
+                <button onclick="deleteProduct(this)" class="text-red-500 hover:bg-red-50 p-2 rounded-xl text-xs"><i class="fa-so
