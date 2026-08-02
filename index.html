@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moni Dresses | Ready-made Blouse, Petticoat & Saree</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandRed: '#D62828',
+                        brandPurple: '#6A0572',
+                        brandPurpleDark: '#4A0052',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 pb-20 md:pb-0">
+
+    <!-- 1. HEADER & NAVIGATION -->
+    <header class="sticky top-0 z-40 bg-white shadow-md">
+        <!-- Top Announcement Bar -->
+        <div class="bg-gradient-to-r from-brandPurple to-brandRed text-white text-xs py-1.5 px-4 text-center font-medium">
+            ✨ Hyperlocal Same-Day Delivery & Exclusive B2B Wholesale Discounts Available!
+        </div>
+        
+        <!-- Main Navbar -->
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('home')">
+                <div class="w-10 h-10 rounded-full bg-brandRed flex items-center justify-center text-white font-bold text-xl shadow">M</div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-brandPurple tracking-wide leading-none">MONI DRESSES</h1>
+                    <span class="text-[10px] text-gray-500 font-bold tracking-widest block uppercase">Cotton & Fashion Hub</span>
+                </div>
+            </div>
+
+            <!-- Search Bar (Desktop & Tablet) -->
+            <div class="hidden md:flex flex-1 max-w-md relative">
+                <input type="text" placeholder="Search Blouses, Petticoats, Sarees..." class="w-full pl-10 pr-4 py-2 border-2 border-brandPurple/20 rounded-full text-sm focus:outline-none focus:border-brandPurple">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-400"></i>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-6 font-semibold text-sm">
+                <button onclick="switchTab('home')" class="hover:text-brandRed transition">Home</button>
+                <button onclick="switchTab('b2b')" class="text-brandPurple hover:text-brandRed transition font-bold"><i class="fa-solid fa-store mr-1"></i> B2B Portal</button>
+                <button onclick="switchTab('branches')" class="hover:text-brandRed transition">Branches / Warehouses</button>
+                <button onclick="switchTab('orders')" class="hover:text-brandRed transition">Orders</button>
+                <button onclick="switchTab('account')" class="hover:text-brandRed transition"><i class="fa-regular fa-user mr-1"></i> Account</button>
+            </nav>
+        </div>
+
+        <!-- Mobile Search Bar -->
+        <div class="px-4 pb-3 md:hidden">
+            <div class="relative w-full">
+                <input type="text" placeholder="Search Blouses, Petticoats, Sarees..." class="w-full pl-9 pr-4 py-1.5 border border-gray-300 rounded-full text-sm focus:outline-none focus:border-brandPurple">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400 text-xs"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. MAIN CONTENT AREA -->
+    <main id="main-content" class="max-w-7xl mx-auto px-4 py-6">
+
+        <!-- ================= HOME TAB ================= -->
+        <section id="tab-home" class="space-y-8">
+            
+            <!-- Banner Slider Placeholder -->
+            <div class="relative w-full h-48 md:h-80 bg-gradient-to-r from-brandPurple to-brandRed rounded-2xl overflow-hidden shadow-lg flex items-center justify-between px-6 md:px-12 text-white">
+                <div class="space-y-2 z-10 max-w-md">
+                    <span class="bg-white/20 text-xs px-3 py-1 rounded-full uppercase tracking-wider font-semibold">New Arrivals</span>
+                    <h2 class="text-2xl md:text-4xl font-extrabold leading-tight">Premium Cotton Blouses & Petticoats</h2>
+                    <p class="text-xs md:text-sm text-gray-100">Guaranteed quality for both wholesale bulk orders and retail buyers.</p>
+                    <button onclick="switchTab('b2b')" class="mt-2 bg-white text-brandRed font-bold px-4 py-2 rounded-lg text-xs md:text-sm shadow hover:bg-gray-100 transition">Place B2B Bulk Order</button>
+                </div>
+                <div class="hidden sm:block opacity-20 md:opacity-40 text-9xl">
+                    <i class="fa-solid fa-shirt"></i>
+                </div>
+            </div>
+
+            <!-- Categories Slider -->
+            <div>
+                <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-list text-brandRed"></i> Shop by Category
+                </h3>
+                <div class="flex items-center gap-4 overflow-x-auto no-scrollbar py-2">
+                    <div class="flex-shrink-0 w-24 text-center cursor-pointer group">
+                        <div class="w-20 h-20 mx-auto rounded-full bg-purple-100 border-2 border-brandPurple flex items-center justify-center text-brandPurple text-2xl group-hover:bg-brandPurple group-hover:text-white transition shadow-sm">
+                            <i class="fa-solid fa-shirt"></i>
+                        </div>
+                        <span class="text-xs font-semibold mt-2 block">Cotton Blouses</span>
+                    </div>
+                    <div class="flex-shrink-0 w-24 text-center cursor-pointer group">
+                        <div class="w-20 h-20 mx-auto rounded-full bg-red-100 border-2 border-brandRed flex items-center justify-center text-brandRed text-2xl group-hover:bg-brandRed group-hover:text-white transition shadow-sm">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <span class="text-xs font-semibold mt-2 block">Petticoats</span>
+                    </div>
+                    <div class="flex-shrink-0 w-24 text-center cursor-pointer group">
+                        <div class="w-20 h-20 mx-auto rounded-full bg-pink-100 border-2 border-pink-600 flex items-center justify-center text-pink-600 text-2xl group-hover:bg-pink-600 group-hover:text-white transition shadow-sm">
+                            <i class="fa-solid fa-vest-patches"></i>
+                        </div>
+                        <span class="text-xs font-semibold mt-2 block">Kanjivaram Sarees</span>
+                    </div>
+                    <div class="flex-shrink-0 w-24 text-center cursor-pointer group">
+                        <div class="w-20 h-20 mx-auto rounded-full bg-amber-100 border-2 border-amber-600 flex items-center justify-center text-amber-600 text-2xl group-hover:bg-amber-600 group-hover:text-white transition shadow-sm">
+                            <i class="fa-solid fa-boxes-packing"></i>
+                        </div>
+                        <span class="text-xs font-semibold mt-2 block">Bundle Packs (Set of 6)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-brandRed"></i> Trending Products
+                    </h3>
+                    <span class="text-xs text-brandPurple font-bold cursor-pointer hover:underline">View All &rarr;</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Product Card 1 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition flex flex-col justify-between">
+                        <div class="relative">
+                            <span class="absolute top-2 left-2 bg-brandRed text-white text-[10px] font-bold px-2 py-0.5 rounded">BESTSELLER</span>
+                            <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500" alt="Cotton Blouse" class="w-full h-52 object-cover">
+                        </div>
+                        <div class="p-4 space-y-2 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-sm">Premium Pure Cotton Ready-made Blouse</h4>
+                                <p class="text-xs text-gray-500">Sizes: 38, 40, 42 | Colors: Red / Purple</p>
+                                <div class="mt-2 flex items-baseline gap-2">
+                                    <span class="text-lg font-extrabold text-brandPurple">₹299</span>
+                                    <span class="text-xs text-gray-400 line-through">₹499</span>
+                                </div>
+                            </div>
+                            
+                            <!-- AI Fitting Buttons -->
+                            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-gray-100">
+                                <button onclick="openFitModal()" class="bg-purple-50 text-brandPurple border border-brandPurple/30 text-[11px] font-bold py-1.5 rounded hover:bg-brandPurple hover:text-white transition flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-ruler-horizontal"></i> Check Fit
+                                </button>
+                                <button onclick="openTryOnModal()" class="bg-red-50 text-brandRed border border-brandRed/30 text-[11px] font-bold py-1.5 rounded hover:bg-brandRed hover:text-white transition flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-camera"></i> Try It On
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 2 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition flex flex-col justify-between">
+                        <div class="relative">
+                            <span class="absolute top-2 left-2 bg-brandPurple text-white text-[10px] font-bold px-2 py-0.5 rounded">BULK PACK</span>
+                            <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500" alt="Petticoat Bundle" class="w-full h-52 object-cover">
+                        </div>
+                        <div class="p-4 space-y-2 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-sm">Cotton Petticoat Bundle (Set of 6)</h4>
+                                <p class="text-xs text-gray-500">Free Size | 100% Pure Cotton Fabric</p>
+                                <div class="mt-2 flex items-baseline gap-2">
+                                    <span class="text-lg font-extrabold text-brandPurple">₹1,199</span>
+                                    <span class="text-xs text-gray-400 line-through">₹1,799</span>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-gray-100">
+                                <button onclick="openFitModal()" class="bg-purple-50 text-brandPurple border border-brandPurple/30 text-[11px] font-bold py-1.5 rounded hover:bg-brandPurple hover:text-white transition flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-ruler-horizontal"></i> Check Fit
+                                </button>
+                                <button onclick="openTryOnModal()" class="bg-red-50 text-brandRed border border-brandRed/30 text-[11px] font-bold py-1.5 rounded hover:bg-brandRed hover:text-white transition flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-camera"></i> Try It On
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= B2B PORTAL TAB ================= -->
+        <section id="tab-b2b" class="hidden space-y-6">
+            <div class="bg-brandPurple text-white p-6 rounded-2xl shadow-lg">
+                <h2 class="text-2xl font-bold mb-1"><i class="fa-solid fa-store mr-2"></i>B2B & Wholesale Portal</h2>
+                <p class="text-xs text-purple-200">Special tiered pricing structure for wholesalers and franchise partners.</p>
+            </div>
+
+            <!-- Tiered Price Card -->
+            <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
+                <h3 class="font-bold text-gray-800 mb-4">Digital Wholesale Price Calculator</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                        <span class="text-xs font-bold text-brandPurple block">10 - 49 Units</span>
+                        <span class="text-xl font-black text-gray-800">15% Discount</span>
+                    </div>
+                    <div class="p-4 bg-red-50 rounded-lg border border-red-200">
+                        <span class="text-xs font-bold text-brandRed block">50 - 99 Units</span>
+                        <span class="text-xl font-black text-gray-800">25% Discount</span>
+                    </div>
+                    <div class="p-4 bg-green-50 rounded-lg border border-green-200">
+                        <span class="text-xs font-bold text-green-700 block">100+ Units (Franchise Bulk)</span>
+                        <span class="text-xl font-black text-gray-800">35% Discount</span>
+                    </div>
+                </div>
+
+                <button class="w-full bg-brandRed text-white py-3 rounded-lg font-bold shadow hover:bg-red-700 transition">Login / Register for Wholesale Account</button>
+            </div>
+        </section>
+
+        <!-- ================= BRANCHES / HYPERLOCAL TAB ================= -->
+        <section id="tab-branches" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
+                <h3 class="text-lg font-bold text-brandPurple mb-2"><i class="fa-solid fa-truck-fast mr-2"></i>Hyperlocal Franchise Warehouse Detector</h3>
+                <p class="text-xs text-gray-500 mb-4">Enter your pincode to check if your order will be fulfilled by a local franchise hub.</p>
+                
+                <div class="flex gap-2 max-w-md">
+                    <input type="text" id="pincode-input" placeholder="Enter 6-digit Pincode (e.g. 741222)" class="flex-1 border p-2 rounded-lg text-sm focus:outline-none focus:border-brandPurple">
+                    <button onclick="checkHyperlocalPincode()" class="bg-brandPurple text-white px-4 py-2 rounded-lg font-bold text-sm">Check Now</button>
+                </div>
+
+                <div id="pincode-result" class="mt-4 hidden p-4 rounded-lg text-sm font-semibold"></div>
+            </div>
+        </section>
+
+        <!-- ================= ORDERS TAB ================= -->
+        <section id="tab-orders" class="hidden space-y-4">
+            <h3 class="text-lg font-bold text-gray-800">My Order History</h3>
+            <div class="bg-white p-4 rounded-xl shadow border border-gray-200 flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded">DELIVERED</span>
+                    <h4 class="font-bold text-sm mt-1">Order #MD-9082</h4>
+                    <p class="text-xs text-gray-500">Ready-made Blouse Bundle (Set of 2)</p>
+                </div>
+                <div class="text-right">
+                    <span class="font-bold text-brandPurple text-sm">₹598</span>
+                    <span class="block text-[10px] text-gray-400">COD (Shiprocket)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= USER ACCOUNT & LOGIN TAB ================= -->
+        <section id="tab-account" class="hidden max-w-md mx-auto space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 text-center">
+                <div class="w-20 h-20 bg-brandPurple/10 text-brandPurple rounded-full flex items-center justify-center text-3xl mx-auto mb-3">
+                    <i class="fa-solid fa-user-gear"></i>
+                </div>
+                <h3 class="font-bold text-lg text-gray-800">User Login / Profile</h3>
+                <p class="text-xs text-gray-500 mb-4">Easily log in using your mobile number</p>
+                
+                <form class="space-y-3 text-left">
+                    <div>
+                        <label class="text-xs font-bold text-gray-600">Mobile Number</label>
+                        <input type="tel" placeholder="+91 00000 00000" class="w-full border p-2 rounded-lg text-sm focus:outline-none focus:border-brandPurple mt-1">
+                    </div>
+                    <button type="button" class="w-full bg-brandPurple text-white py-2.5 rounded-lg font-bold text-sm shadow hover:bg-brandPurpleDark transition">Send OTP</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================= SETTINGS TAB ================= -->
+        <section id="tab-settings" class="hidden space-y-4 max-w-md mx-auto">
+            <h3 class="text-lg font-bold text-gray-800">App Settings</h3>
+            <div class="bg-white rounded-xl shadow border border-gray-200 divide-y text-sm">
+                <div class="p-4 flex items-center justify-between">
+                    <span>Language</span>
+                    <span class="font-bold text-brandPurple">English</span>
+                </div>
+                <div class="p-4 flex items-center justify-between">
+                    <span>Push Notifications</span>
+                    <input type="checkbox" checked class="accent-brandPurple">
+                </div>
+                <div class="p-4 flex items-center justify-between">
+                    <span>Dark Mode</span>
+                    <input type="checkbox" class="accent-brandPurple">
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 3. VIRTUAL TRY-ON MODAL (AR PLACEHOLDER) -->
+    <div id="modal-tryon" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl relative">
+            <button onclick="closeTryOnModal()" class="absolute top-3 right-3 text-white bg-black/50 w-8 h-8 rounded-full z-10">✕</button>
+            <div class="bg-brandRed text-white p-3 text-center font-bold text-sm">
+                <i class="fa-solid fa-camera mr-1"></i> Virtual Try-On (AR Camera)
+            </div>
+            <div class="p-6 text-center space-y-4">
+                <div class="w-full h-64 bg-gray-900 rounded-xl flex flex-col items-center justify-center text-gray-400 relative overflow-hidden border-2 border-dashed border-gray-600">
+                    <i class="fa-solid fa-video text-4xl mb-2"></i>
+                    <span class="text-xs">Camera Permission Required</span>
+                    <!-- Simulated Fitting Overlay -->
+                    <div class="absolute inset-0 bg-brandPurple/10 pointer-events-none flex items-center justify-center">
+                        <span class="text-xs text-brandPurple font-bold bg-white/80 px-2 py-1 rounded">Live Dress Overlay Active</span>
+                    </div>
+                </div>
+                <button class="w-full bg-brandRed text-white py-2 rounded-lg font-bold text-sm shadow">Enable Camera</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. CHECK MY FIT MODAL (AI MEASUREMENT) -->
+    <div id="modal-fit" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl relative">
+            <button onclick="closeFitModal()" class="absolute top-3 right-3 text-gray-500 hover:text-black w-8 h-8 rounded-full">✕</button>
+            <div class="bg-brandPurple text-white p-3 text-center font-bold text-sm">
+                <i class="fa-solid fa-ruler-combined mr-1"></i> AI Size Predictor (Check My Fit)
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="text-xs font-bold text-gray-600">Your Height (cm)</label>
+                    <input type="number" placeholder="160" class="w-full border p-2 rounded-lg text-sm mt-1">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-600">Chest Size (Inches)</label>
+                    <input type="number" placeholder="38" class="w-full border p-2 rounded-lg text-sm mt-1">
+                </div>
+                <button onclick="alert('AI Recommendation: Size 38 (M) will be a perfect fit for you!')" class="w-full bg-brandPurple text-white py-2.5 rounded-lg font-bold text-sm shadow">Predict Perfect Size</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. FOOTER (DESKTOP) -->
+    <footer class="bg-gray-900 text-gray-300 py-10 mt-12 hidden md:block">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-4 gap-8">
+            <div>
+                <h4 class="text-white font-bold mb-3">MONI DRESSES</h4>
+                <p class="text-xs text-gray-400">E-commerce platform for pure cotton blouses, petticoats, and sarees available for wholesale and retail.</p>
+            </div>
+            <div>
+                <h5 class="text-white font-bold mb-3 text-sm">Quick Links</h5>
+                <ul class="text-xs space-y-2">
+                    <li class="cursor-pointer hover:text-white" onclick="switchTab('home')">Home</li>
+                    <li class="cursor-pointer hover:text-white" onclick="switchTab('b2b')">B2B Wholesale</li>
+                    <li class="cursor-pointer hover:text-white" onclick="switchTab('branches')">Warehouse Locations</li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-white font-bold mb-3 text-sm">Payment & Delivery</h5>
+                <p class="text-xs text-gray-400">Razorpay, UPI, Cash on Delivery (COD) & Shiprocket Express Delivery.</p>
+            </div>
+            <div>
+                <h5 class="text-white font-bold mb-3 text-sm">Contact Us</h5>
+                <p class="text-xs text-gray-400">Chakdaha, Nadia, West Bengal, India</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 6. MOBILE BOTTOM NAVIGATION BAR -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 md:hidden z-40">
+        <button onclick="switchTab('home')" class="flex flex-col items-center text-brandPurple font-bold">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span class="text-[10px]">Home</span>
+        </button>
+        <button onclick="switchTab('b2b')" class="flex flex-col items-center text-gray-500">
+            <i class="fa-solid fa-store text-lg"></i>
+            <span class="text-[10px]">B2B Portal</span>
+        </button>
+        <button onclick="switchTab('orders')" class="flex flex-col items-center text-gray-500">
+            <i class="fa-solid fa-bag-shopping text-lg"></i>
+            <span class="text-[10px]">Orders</span>
+        </button>
+        <button onclick="switchTab('account')" class="flex flex-col items-center text-gray-500">
+            <i class="fa-solid fa-user text-lg"></i>
+            <span class="text-[10px]">Account</span>
+        </button>
+        <button onclick="switchTab('settings')" class="flex flex-col items-center text-gray-500">
+            <i class="fa-solid fa-gear text-lg"></i>
+            <span class="text-[10px]">Settings</span>
+        </button>
+    </div>
+
+    <!-- 7. JAVASCRIPT FOR TABS & MODALS -->
+    <script>
+        // Tab Switcher Logic
+        function switchTab(tabName) {
+            const tabs = ['home', 'b2b', 'branches', 'orders', 'account', 'settings'];
+            tabs.forEach(tab => {
+                const element = document.getElementById(`tab-${tab}`);
+                if(element) {
+                    if (tab === tabName) {
+                        element.classList.remove('hidden');
+                    } else {
+                        element.classList.add('hidden');
+                    }
+                }
+            });
+            window.scrollTo(0,0);
+        }
+
+        // Modals Logic
+        function openTryOnModal() { document.getElementById('modal-tryon').classList.remove('hidden'); }
+        function closeTryOnModal() { document.getElementById('modal-tryon').classList.add('hidden'); }
+        function openFitModal() { document.getElementById('modal-fit').classList.remove('hidden'); }
+        function closeFitModal() { document.getElementById('modal-fit').classList.add('hidden'); }
+
+        // Hyperlocal Pincode Logic Simulation
+        function checkHyperlocalPincode() {
+            const pin = document.getElementById('pincode-input').value.trim();
+            const res = document.getElementById('pincode-result');
+            res.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-blue-100', 'text-blue-800');
+
+            if(pin === "741222") {
+                res.classList.add('bg-green-100', 'text-green-800');
+                res.innerHTML = "✅ Same-day express delivery available from <b>Chakdaha Local Franchise Hub</b>!";
+            } else if(pin.length === 6) {
+                res.classList.add('bg-blue-100', 'text-blue-800');
+                res.innerHTML = "🚚 Standard 3-4 days delivery from <b>Central Warehouse</b> via Shiprocket.";
+            } else {
+                alert('Please enter a valid 6-digit pincode');
+            }
+        }
+    </script>
+</body>
+</html>
