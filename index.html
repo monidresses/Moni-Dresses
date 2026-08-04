@@ -1,80 +1,80 @@
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; background: #ffffff; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #eaeaea;">
 
-    <!-- হেডার -->
-    <div style="text-align: center; background: #6A0572; color: #fff; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-        <h2 style="margin: 0; font-size: 20px;">Moni Dresses Wholesale Order</h2>
-        <p style="margin: 5px 0 0; font-size: 12px; color: #f2d6f5;">পাইকারি অর্ডারের জন্য নিচের ফর্মটি পূরণ করুন</p>
+    <!-- Form Header Matching Website Navy Color -->
+    <div style="text-align: center; background: #192a3e; color: #ffffff; padding: 18px; border-radius: 12px; margin-bottom: 20px;">
+        <h2 style="margin: 0; font-size: 20px; font-weight: bold; letter-spacing: 0.5px;">Moni Dresses Wholesale Order</h2>
+        <p style="margin: 6px 0 0; font-size: 13px; color: #d0dbe5;">Please fill out the form below for bulk inquiries</p>
     </div>
 
-    <form onsubmit="sendWholesaleToWhatsApp(event)" style="display: flex; flex-direction: column; gap: 12px; font-size: 13px; color: #333;">
+    <form onsubmit="sendWholesaleToWhatsApp(event)" style="display: flex; flex-direction: column; gap: 14px; font-size: 13px; color: #333333;">
 
-        <!-- দোকানের নাম -->
+        <!-- Shop Name -->
         <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 4px;">দোকান / ফার্মের নাম (Shop Name) *</label>
-            <input type="text" id="ws_shop" placeholder="उदा. Roy Textiles" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #192a3e;">Shop / Firm Name *</label>
+            <input type="text" id="ws_shop" placeholder="e.g. Home Decor / Roy Textiles" required style="width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none;">
         </div>
 
-        <!-- জিএসটি নম্বর (Optional) -->
+        <!-- GST Number -->
         <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 4px;">GSTIN (Optional)</label>
-            <input type="text" id="ws_gst" placeholder="যদি থাকে (যেমন: 19AAAAA0000A1Z5)" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #192a3e;">GSTIN (Optional)</label>
+            <input type="text" id="ws_gst" placeholder="e.g. 19AAAAA0000A1Z5" style="width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none;">
         </div>
 
-        <!-- নাম ও ফোন নম্বর -->
-        <div style="display: flex; gap: 10px;">
+        <!-- Name and Phone -->
+        <div style="display: flex; gap: 12px;">
             <div style="flex: 1;">
-                <label style="font-weight: bold; display: block; margin-bottom: 4px;">আপনার নাম *</label>
-                <input type="text" id="ws_name" placeholder="নাম লিখুন" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;">
+                <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #192a3e;">Full Name *</label>
+                <input type="text" id="ws_name" placeholder="Enter your name" required style="width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none;">
             </div>
             <div style="flex: 1;">
-                <label style="font-weight: bold; display: block; margin-bottom: 4px;">মোবাইল নম্বর *</label>
-                <input type="tel" id="ws_phone" placeholder="10-digit number" required pattern="[0-9]{10}" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;">
+                <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #192a3e;">Mobile Number *</label>
+                <input type="tel" id="ws_phone" placeholder="10-digit number" required pattern="[0-9]{10}" style="width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none;">
             </div>
         </div>
 
-        <!-- ঠিকানা -->
+        <!-- Address -->
         <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 4px;">ডেলিভারি ঠিকানা ও পিনকোড *</label>
-            <textarea id="ws_address" rows="2" placeholder="পূর্ণাঙ্গ ঠিকানা ও পিনকোড লিখুন" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;"></textarea>
+            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #192a3e;">Delivery Address & Pincode *</label>
+            <textarea id="ws_address" rows="2" placeholder="Enter full delivery address with pincode" required style="width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none;"></textarea>
         </div>
 
-        <!-- প্রোডাক্ট সিলেকশন -->
+        <!-- Product Selection -->
         <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 4px;">পছন্দের প্রোডাক্ট নির্বাচন করুন *</label>
-            <select id="ws_product" onchange="updatePriceInfo()" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-weight: bold; color: #6A0572;">
-                <option value="">-- প্রোডাক্ট বেছে নিন --</option>
-                <option value="Pure Cotton Blouse" data-price="200">Pure Cotton Blouse (পাইকারি: ₹২০০/পিস)</option>
-                <option value="Designer Readymade Blouse" data-price="250">Designer Readymade Blouse (পাইকারি: ₹২৫০/পিস)</option>
-                <option value="Cotton Petticoat" data-price="120">Cotton Petticoat (পাইকারি: ₹১২০/পিস)</option>
+            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #192a3e;">Select Product *</label>
+            <select id="ws_product" onchange="updatePriceInfo()" required style="width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-weight: bold; color: #ff6b35; outline: none;">
+                <option value="" style="color: #333;">-- Choose a product --</option>
+                <option value="Pure Cotton Blouse" data-price="200" style="color: #333;">Pure Cotton Blouse (Wholesale: ₹200/pc)</option>
+                <option value="Designer Readymade Blouse" data-price="250" style="color: #333;">Designer Readymade Blouse (Wholesale: ₹250/pc)</option>
+                <option value="Cotton Petticoat" data-price="120" style="color: #333;">Cotton Petticoat (Wholesale: ₹120/pc)</option>
             </select>
         </div>
 
-        <!-- পাইকারি রেট ডিসপ্লে -->
-        <div id="price_display" style="display: none; background: #fdf5ff; padding: 10px; border-radius: 8px; border: 1px solid #6A0572; font-size: 12px; color: #6A0572; font-weight: bold;">
-            📌 নির্বাচিত প্রোডাক্টের পাইকারি দর: <span id="unit_price">₹0</span> / পিস (সর্বনিম্ন ২৫ পিস)
+        <!-- Price Suggestion Box in Orange Accent -->
+        <div id="price_display" style="display: none; background: #fff5f0; padding: 12px; border-radius: 8px; border: 1px solid #ff6b35; font-size: 13px; color: #ff6b35; font-weight: bold;">
+            📌 Wholesale Unit Price: <span id="unit_price">₹0</span> / piece (Minimum Order: 25 pcs)
         </div>
 
-        <!-- অর্ডারের বাজেট / টাকার পরিমাণ -->
+        <!-- Target Budget -->
         <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 4px;">কত টাকার প্রোডাক্ট কিনতে চান? *</label>
-            <select id="ws_budget" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;">
-                <option value="">-- বাজেট নির্বাচন করুন --</option>
-                <option value="₹5,000 - ₹10,000">₹৫,০০০ - ₹১০,০০০ (ট্রায়াল অর্ডার)</option>
-                <option value="₹10,000 - ₹25,000">₹১০,০০০ - ₹২৫,০০০ (স্ট্যান্ডার্ড বাজেট)</option>
-                <option value="₹25,000 - ₹50,000">₹২৫,০০০ - ₹৫০,000 (বাল্ক বাজেট)</option>
-                <option value="₹50,000+">₹৫০,০০০ এর বেশি (মেগা হোলসেল)</option>
+            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #192a3e;">Expected Order Value / Budget *</label>
+            <select id="ws_budget" required style="width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none;">
+                <option value="">-- Select Budget Range --</option>
+                <option value="₹5,000 - ₹10,000">₹5,000 - ₹10,000 (Trial Order)</option>
+                <option value="₹10,000 - ₹25,000">₹10,000 - ₹25,000 (Standard Order)</option>
+                <option value="₹25,000 - ₹50,000">₹25,000 - ₹50,000 (Bulk Order)</option>
+                <option value="₹50,000+">Above ₹50,000 (Mega Wholesale)</option>
             </select>
         </div>
 
-        <!-- সাবমিট বাটন -->
-        <button type="submit" style="background-color: #25D366; color: white; border: none; padding: 14px; font-size: 15px; font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 10px; shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            📲 Submit & Send Order to WhatsApp
+        <!-- Submit Button in WhatsApp Original Green -->
+        <button type="submit" style="background-color: #25D366; color: #ffffff; border: none; padding: 14px; font-size: 15px; font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <span>📲 Submit & Send Order to WhatsApp</span>
         </button>
 
     </form>
 </div>
 
-<!-- জাভাস্ক্রিপ্ট কোড (WhatsApp অটোমেশন) -->
+<!-- JavaScript Integration -->
 <script>
     function updatePriceInfo() {
         const select = document.getElementById('ws_product');
@@ -93,7 +93,7 @@
     function sendWholesaleToWhatsApp(e) {
         e.preventDefault();
         
-        // আপনার ওয়াটসঅ্যাপ নাম্বার (এখানে নিজের নাম্বার বসাবেন)
+        // Enter your WhatsApp Business Number here (Country Code + 10 Digits)
         const myPhoneNumber = "919832XXXXXX"; 
 
         const shop = document.getElementById('ws_shop').value;
@@ -104,8 +104,8 @@
         const product = document.getElementById('ws_product').value;
         const budget = document.getElementById('ws_budget').value;
 
-        // মেসেজ ফরম্যাট
-        let message = `* New Wholesale Inquiry - Moni Dresses*%0A%0A` +
+        // WhatsApp Formatted Text
+        let message = `*New Wholesale Inquiry - Moni Dresses*%0A%0A` +
             `🏢 *Shop Name:* ${shop}%0A` +
             `🆔 *GST No:* ${gst}%0A` +
             `👤 *Owner Name:* ${name}%0A` +
@@ -113,7 +113,7 @@
             `📍 *Address:* ${address}%0A%0A` +
             `📦 *Product Requested:* ${product}%0A` +
             `💰 *Target Budget:* ${budget}%0A%0A` +
-            `_Sent from Website Wholesale Form_`;
+            `_Sent via Website Wholesale Form_`;
 
         window.open(`https://wa.me/${myPhoneNumber}?text=${message}`, '_blank');
     }
