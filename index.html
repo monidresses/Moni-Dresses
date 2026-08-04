@@ -1,125 +1,33 @@
-<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; background: #ffffff; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #eaeaea;">
+<div style="position: relative; width: 100%; max-width: 1200px; margin: 20px auto; overflow: hidden; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
 
-    <!-- Form Header Matching Website Navy Color -->
-    <div style="text-align: center; background: #192a3e; color: #ffffff; padding: 18px; border-radius: 12px; margin-bottom: 20px;">
-        <h2 style="margin: 0; font-size: 20px; font-weight: bold; letter-spacing: 0.5px;">Moni Dresses Wholesale Order</h2>
-        <p style="margin: 6px 0 0; font-size: 13px; color: #d0dbe5;">Please fill out the form below for bulk inquiries</p>
+    <!-- Banner Background Image -->
+    <img src="YOUR_IMAGE_URL_HERE.jpg" alt="Moni Dresses Banner" style="width: 100%; height: auto; display: block; object-fit: cover; min-height: 250px;">
+
+    <!-- Dark Gradient Overlay for better Text Visibility -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);"></div>
+
+    <!-- Banner Text & Call to Action (CTA) Content -->
+    <div style="position: absolute; bottom: 25px; left: 25px; right: 25px; color: #ffffff; text-align: left;">
+        
+        <!-- Offer Badge -->
+        <span style="background-color: #ff3e6c; color: #ffffff; padding: 5px 12px; font-size: 12px; font-weight: bold; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;">
+            Exclusive Wholesale Collection
+        </span>
+
+        <!-- Heading -->
+        <h2 style="margin: 10px 0 6px 0; font-size: 26px; font-weight: 800; text-shadow: 1px 1px 4px rgba(0,0,0,0.6); line-height: 1.2;">
+            Premium Cotton Blouses
+        </h2>
+
+        <!-- Subtitle -->
+        <p style="margin: 0 0 15px 0; font-size: 14px; opacity: 0.9; text-shadow: 1px 1px 3px rgba(0,0,0,0.6);">
+            Get direct factory prices for bulk and retail orders.
+        </p>
+
+        <!-- Button -->
+        <a href="YOUR_LINK_HERE" style="display: inline-block; background-color: #ffffff; color: #111111; padding: 10px 22px; font-size: 14px; font-weight: bold; border-radius: 8px; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+            Explore Now ➔
+        </a>
+
     </div>
-
-    <form onsubmit="sendWholesaleToWhatsApp(event)" style="display: flex; flex-direction: column; gap: 14px; font-size: 13px; color: #333333;">
-
-        <!-- Shop Name -->
-        <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #192a3e;">Shop / Firm Name *</label>
-            <input type="text" id="ws_shop" placeholder="e.g. Home Decor / Roy Textiles" required style="width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none;">
-        </div>
-
-        <!-- GST Number -->
-        <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #192a3e;">GSTIN (Optional)</label>
-            <input type="text" id="ws_gst" placeholder="e.g. 19AAAAA0000A1Z5" style="width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none;">
-        </div>
-
-        <!-- Name and Phone -->
-        <div style="display: flex; gap: 12px;">
-            <div style="flex: 1;">
-                <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #192a3e;">Full Name *</label>
-                <input type="text" id="ws_name" placeholder="Enter your name" required style="width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none;">
-            </div>
-            <div style="flex: 1;">
-                <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #192a3e;">Mobile Number *</label>
-                <input type="tel" id="ws_phone" placeholder="10-digit number" required pattern="[0-9]{10}" style="width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none;">
-            </div>
-        </div>
-
-        <!-- Address -->
-        <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #192a3e;">Delivery Address & Pincode *</label>
-            <textarea id="ws_address" rows="2" placeholder="Enter full delivery address with pincode" required style="width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none;"></textarea>
-        </div>
-
-        <!-- Product Selection -->
-        <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #192a3e;">Select Product *</label>
-            <select id="ws_product" onchange="updatePriceInfo()" required style="width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-weight: bold; color: #ff6b35; outline: none;">
-                <option value="" style="color: #333;">-- Choose a product --</option>
-                <option value="Pure Cotton Blouse" data-price="200" style="color: #333;">Pure Cotton Blouse (Wholesale: ₹200/pc)</option>
-                <option value="Designer Readymade Blouse" data-price="250" style="color: #333;">Designer Readymade Blouse (Wholesale: ₹250/pc)</option>
-                <option value="Cotton Petticoat" data-price="120" style="color: #333;">Cotton Petticoat (Wholesale: ₹120/pc)</option>
-            </select>
-        </div>
-
-        <!-- Price Suggestion Box in Orange Accent -->
-        <div id="price_display" style="display: none; background: #fff5f0; padding: 12px; border-radius: 8px; border: 1px solid #ff6b35; font-size: 13px; color: #ff6b35; font-weight: bold;">
-            📌 Wholesale Unit Price: <span id="unit_price">₹0</span> / piece (Minimum Order: 25 pcs)
-        </div>
-
-        <!-- Target Budget -->
-        <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 5px; color: #192a3e;">Expected Order Value / Budget *</label>
-            <select id="ws_budget" required style="width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none;">
-                <option value="">-- Select Budget Range --</option>
-                <option value="₹5,000 - ₹10,000">₹5,000 - ₹10,000 (Trial Order)</option>
-                <option value="₹10,000 - ₹25,000">₹10,000 - ₹25,000 (Standard Order)</option>
-                <option value="₹25,000 - ₹50,000">₹25,000 - ₹50,000 (Bulk Order)</option>
-                <option value="₹50,000+">Above ₹50,000 (Mega Wholesale)</option>
-            </select>
-        </div>
-
-        <!-- Image Reference Note -->
-        <div style="background: #fdf5ff; padding: 12px; border-radius: 8px; border: 1px dashed #192a3e; font-size: 12px; color: #192a3e;">
-            🖼️ <strong>Sample Product Photos:</strong> You can send up to 4 sample design photos directly in the WhatsApp chat after clicking the button below.
-        </div>
-
-        <!-- Submit Button in WhatsApp Original Green -->
-        <button type="submit" style="background-color: #25D366; color: #ffffff; border: none; padding: 14px; font-size: 15px; font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; gap: 8px;">
-            <span>📲 Submit & Send Order to WhatsApp</span>
-        </button>
-
-    </form>
 </div>
-
-<!-- JavaScript Integration -->
-<script>
-    function updatePriceInfo() {
-        const select = document.getElementById('ws_product');
-        const selectedOption = select.options[select.selectedIndex];
-        const price = selectedOption.getAttribute('data-price');
-        const display = document.getElementById('price_display');
-        
-        if (price) {
-            document.getElementById('unit_price').innerText = '₹' + price;
-            display.style.display = 'block';
-        } else {
-            display.style.display = 'none';
-        }
-    }
-
-    function sendWholesaleToWhatsApp(e) {
-        e.preventDefault();
-        
-        const myPhoneNumber = "918536891441"; 
-
-        const shop = document.getElementById('ws_shop').value;
-        const gst = document.getElementById('ws_gst').value || "N/A";
-        const name = document.getElementById('ws_name').value;
-        const phone = document.getElementById('ws_phone').value;
-        const address = document.getElementById('ws_address').value;
-        const product = document.getElementById('ws_product').value;
-        const budget = document.getElementById('ws_budget').value;
-
-        // WhatsApp Formatted Text
-        let message = `*New Wholesale Inquiry - Moni Dresses*%0A%0A` +
-            `🏢 *Shop Name:* ${shop}%0A` +
-            `🆔 *GST No:* ${gst}%0A` +
-            `👤 *Owner Name:* ${name}%0A` +
-            `📞 *Phone:* ${phone}%0A` +
-            `📍 *Address:* ${address}%0A%0A` +
-            `📦 *Product Requested:* ${product}%0A` +
-            `💰 *Target Budget:* ${budget}%0A%0A` +
-            `🖼️ *Reference Images:* I will attach sample photos in this chat.%0A%0A` +
-            `_Sent via Website Wholesale Form_`;
-
-        window.open(`https://wa.me/${myPhoneNumber}?text=${message}`, '_blank');
-    }
-</script>
