@@ -5,70 +5,104 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>Your Cart — MONI DRESSES</title>
   
+  <!-- Tailwind CSS & Google Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet"/>
 
   <script>
     tailwind.config = {
-      theme: { extend: { colors: { primary: "#b3006a", surface: "#fbf9f8" }, fontFamily: { sans: ["Plus Jakarta Sans"], brand: ["Bodoni Moda"] } } }
+      theme: {
+        extend: {
+          colors: {
+            primary: "#b3006a",
+            surface: "#fbf9f8"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+            brand: ["Bodoni Moda", "serif"]
+          }
+        }
+      }
     }
   </script>
+  <style>
+    body { -webkit-tap-highlight-color: transparent; }
+  </style>
 </head>
 <body class="bg-surface text-zinc-900 font-sans min-h-screen pb-24">
 
-  <!-- Header -->
+  <!-- ========================================== -->
+  <!-- 🛍️ 1. TOP HEADER -->
+  <!-- ========================================== -->
   <header class="fixed top-0 left-0 w-full z-50 flex items-center px-4 py-3 bg-white border-b border-zinc-100 shadow-sm">
-    <button onclick="window.location.href='home.html'" class="p-1 text-zinc-700">
-      <span class="material-symbols-outlined">arrow_back</span>
+    <button onclick="window.location.href='home.html'" aria-label="Go Back" class="p-1 text-zinc-700 hover:text-primary transition-colors">
+      <span class="material-symbols-outlined text-2xl">arrow_back</span>
     </button>
-    <h1 class="font-brand text-lg font-bold text-primary ml-4">My Shopping Cart</h1>
+    <h1 class="font-brand text-lg font-extrabold text-primary ml-4 tracking-wide uppercase">
+      My Shopping Cart
+    </h1>
   </header>
 
   <main class="max-w-[600px] mx-auto pt-20 px-4 space-y-6">
     
-    <!-- Cart Items Container -->
-    <div id="cart-items-container" class="space-y-4">
-      <!-- JavaScript এখান থেকেই প্রোডাক্টগুলো লোড করবে -->
+    <!-- ========================================== -->
+    <!-- 🛒 2. CART ITEMS LIST CONTAINER -->
+    <!-- ========================================== -->
+    <div id="cart-items-container" class="space-y-3.5">
+      <!-- JavaScript will dynamic load cart items here -->
     </div>
 
-    <!-- Bill Details -->
+    <!-- ========================================== -->
+    <!-- 💳 3. ORDER SUMMARY & CHECKOUT -->
+    <!-- ========================================== -->
     <div id="bill-section" class="bg-white p-5 rounded-2xl border border-zinc-200 shadow-sm space-y-3 hidden">
-      <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wider border-b border-zinc-100 pb-2">Order Summary</h3>
+      <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider border-b border-zinc-100 pb-2">
+        Order Summary
+      </h3>
+      
       <div class="flex justify-between text-xs text-zinc-600">
         <span>Subtotal</span>
         <span id="subtotal-amount" class="font-bold text-zinc-900">₹0</span>
       </div>
+      
       <div class="flex justify-between text-xs text-zinc-600">
-        <span>Delivery Charge</span>
+        <span>Estimated Delivery Charge</span>
         <span class="font-bold text-zinc-900">₹40</span>
       </div>
-      <div class="flex justify-between text-sm font-bold border-t border-zinc-100 pt-3">
-        <span>Total</span>
-        <span id="grand-total" class="text-primary">₹0</span>
+      
+      <div class="flex justify-between text-sm font-extrabold border-t border-zinc-100 pt-3 text-zinc-900">
+        <span>Grand Total</span>
+        <span id="grand-total" class="text-primary text-base">₹0</span>
       </div>
       
-      <!-- Checkout Button: সরাসরি checkout.html এ যাবে -->
-      <button onclick="window.location.href='checkout.html'" class="w-full py-4 bg-primary text-white font-bold text-xs rounded-xl shadow-lg active:scale-95 transition-all">
+      <!-- Redirect Button to checkout.html -->
+      <button onclick="window.location.href='checkout.html'" class="w-full py-3.5 bg-primary text-white font-bold text-xs rounded-xl shadow-md active:scale-95 transition-all mt-2 uppercase tracking-wider">
         Proceed to Checkout
       </button>
     </div>
 
   </main>
 
+  <!-- ========================================== -->
+  <!-- ⚙️ 4. JAVASCRIPT CART RENDER LOGIC -->
+  <!-- ========================================== -->
   <script>
-    // 1. কার্ট থেকে ডেটা লোড করে দেখানোর ফাংশন
+    // 1. Render Cart Items from LocalStorage
     function renderCart() {
       const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       const container = document.getElementById('cart-items-container');
       const billSection = document.getElementById('bill-section');
       
+      // Empty Cart UI (যদি অর্ডার কমপ্লিট হওয়ার পর ইউজার কার্টে আসে, তবে এই খালি পেজটি দেখাবে)
       if (cart.length === 0) {
         container.innerHTML = `
-          <div class="text-center pt-20">
+          <div class="text-center py-20 space-y-3">
             <span class="material-symbols-outlined text-6xl text-zinc-300">shopping_bag</span>
-            <p class="text-zinc-500 text-sm mt-4">Your cart is empty!</p>
-            <a href="home.html" class="inline-block mt-4 text-primary font-bold text-xs underline">Start Shopping</a>
+            <p class="text-zinc-500 font-medium text-sm">Your shopping cart is empty!</p>
+            <a href="home.html" class="inline-block mt-2 bg-primary/10 text-primary px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-primary hover:text-white transition-all">
+              Explore Collections
+            </a>
           </div>`;
         billSection.classList.add('hidden');
         return;
@@ -77,36 +111,46 @@
       billSection.classList.remove('hidden');
       
       let subtotal = 0;
+      
       container.innerHTML = cart.map((item, index) => {
-        subtotal += item.price;
+        const itemPrice = Number(item.price) || 0;
+        subtotal += itemPrice;
+        
         return `
-          <div class="flex items-center gap-4 bg-white p-3 rounded-xl border border-zinc-200 shadow-sm">
-            <img src="${item.image}" class="w-16 h-16 object-cover rounded-lg">
-            <div class="flex-1">
-              <h3 class="text-xs font-bold text-zinc-800">${item.name}</h3>
-              <p class="text-xs text-zinc-500 mt-0.5">Price: ₹${item.price}</p>
+          <div class="flex items-center gap-3.5 bg-white p-3 rounded-2xl border border-zinc-200/80 shadow-sm relative">
+            <img src="${item.image || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=200'}" alt="${item.name}" class="w-16 h-20 object-cover rounded-xl bg-zinc-100 shrink-0"/>
+            
+            <div class="flex-1 space-y-1">
+              <h3 class="text-xs font-bold text-zinc-800 line-clamp-1">${item.name}</h3>
+              <p class="text-[11px] text-zinc-400 font-medium">Size: <span class="text-zinc-700 font-semibold">${item.size || '34'}</span></p>
+              <div class="text-sm font-extrabold text-primary">₹${itemPrice}</div>
             </div>
-            <button onclick="removeItem(${index})" class="text-zinc-400 hover:text-red-500 p-2">
-              <span class="material-symbols-outlined">delete</span>
+
+            <button onclick="removeCartItem(${index})" aria-label="Remove Product" class="p-2 text-zinc-400 hover:text-rose-600 transition-colors">
+              <span class="material-symbols-outlined text-xl">delete</span>
             </button>
           </div>
         `;
       }).join('');
 
+      // Calculation Updates
       document.getElementById('subtotal-amount').innerText = `₹${subtotal}`;
       document.getElementById('grand-total').innerText = `₹${subtotal + 40}`;
     }
 
-    // 2. প্রোডাক্ট রিমুভ করার ফাংশন
-    function removeItem(index) {
+    // 2. Remove Item Function
+    function removeCartItem(index) {
       let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       cart.splice(index, 1);
       localStorage.setItem('cartItems', JSON.stringify(cart));
-      renderCart(); // আবার কার্ট রেন্ডার করবে
+      
+      renderCart(); // Reload list & updates totals
     }
 
-    // পেজ লোড হওয়া মাত্রই ফাংশনটি চলবে
+    // Initialize Page Load
     window.addEventListener('DOMContentLoaded', renderCart);
   </script>
+
+  <script src="app.js" defer></script>
 </body>
 </html>
