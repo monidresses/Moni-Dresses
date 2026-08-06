@@ -30,7 +30,7 @@
     body { -webkit-tap-highlight-color: transparent; }
   </style>
 </head>
-<body class="bg-surface text-zinc-900 font-sans min-h-screen pb-24">
+<body class="bg-surface text-zinc-900 font-sans min-h-screen pb-28">
 
   <!-- ========================================== -->
   <!-- 🛍️ 1. TOP HEADER -->
@@ -85,7 +85,7 @@
   </main>
 
   <!-- ========================================== -->
-  <!-- ⚙️ 4. JAVASCRIPT CART RENDER LOGIC -->
+  <!-- ⚙️ 4. JAVASCRIPT LOGIC (+/- / REDIRECT / REMOVE) -->
   <!-- ========================================== -->
   <script>
     // 1. Render Cart Items from LocalStorage
@@ -94,7 +94,7 @@
       const container = document.getElementById('cart-items-container');
       const billSection = document.getElementById('bill-section');
       
-      // Empty Cart UI (যদি অর্ডার কমপ্লিট হওয়ার পর ইউজার কার্টে আসে, তবে এই খালি পেজটি দেখাবে)
+      // Empty Cart State
       if (cart.length === 0) {
         container.innerHTML = `
           <div class="text-center py-20 space-y-3">
@@ -114,37 +114,85 @@
       
       container.innerHTML = cart.map((item, index) => {
         const itemPrice = Number(item.price) || 0;
-        subtotal += itemPrice;
+        const itemQty = Number(item.qty) || 1;
+        const totalItemPrice = itemPrice * itemQty;
+        subtotal += totalItemPrice;
         
         return `
-          <div class="flex items-center gap-3.5 bg-white p-3 rounded-2xl border border-zinc-200/80 shadow-sm relative">
-            <img src="${item.image || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=200'}" alt="${item.name}" class="w-16 h-20 object-cover rounded-xl bg-zinc-100 shrink-0"/>
+          <div class="flex items-center gap-3 bg-white p-3 rounded-2xl border border-zinc-200/80 shadow-sm relative">
             
+            <!-- Product Image (Click to Redirect to Product Details) -->
+            <a href="product-details.html?id=${item.id}" class="shrink-0">
+              <img src="${item.image || 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=200'}" alt="${item.name}" class="w-16 h-20 object-cover rounded-xl bg-zinc-100"/>
+            </a>
+            
+            <!-- Product Information -->
             <div class="flex-1 space-y-1">
-              <h3 class="text-xs font-bold text-zinc-800 line-clamp-1">${item.name}</h3>
+              <a href="product-details.html?id=${item.id}" class="block">
+                <h3 class="text-xs font-bold text-zinc-800 line-clamp-1 hover:text-primary transition-colors">${item.name}</h3>
+              </a>
               <p class="text-[11px] text-zinc-400 font-medium">Size: <span class="text-zinc-700 font-semibold">${item.size || '34'}</span></p>
-              <div class="text-sm font-extrabold text-primary">₹${itemPrice}</div>
+              <div class="text-xs font-extrabold text-primary">₹${itemPrice} × ${itemQty} = ₹${totalItemPrice}</div>
             </div>
 
-            <button onclick="removeCartItem(${index})" aria-label="Remove Product" class="p-2 text-zinc-400 hover:text-rose-600 transition-colors">
-              <span class="material-symbols-outlined text-xl">delete</span>
-            </button>
+            <!-- Quantity Controls (+ / -) & Remove -->
+            <div class="flex flex-col items-end gap-2">
+              
+              <!-- Remove Button -->
+              <button onclick="removeCartItem(${index})" aria-label="Remove Product" class="text-zinc-400 hover:text-rose-600 transition-colors">
+                <span class="material-symbols-outlined text-lg">delete</span>
+              </button>
+
+              <!-- Plus / Minus Quantity Buttons -->
+              <div class="flex items-center border border-zinc-200 rounded-lg bg-zinc-50 overflow-hidden">
+                <button onclick="updateQuantity(${index}, -1)" class="w-6 h-6 flex items-center justify-center text-zinc-600 hover:bg-zinc-200 text-xs font-bold transition-colors">
+                  -
+                </button>
+                <span class="w-6 text-center text-xs font-extrabold text-zinc-800">${itemQty}</span>
+                <button onclick="updateQuantity(${index}, 1)" class="w-6 h-6 flex items-center justify-center text-zinc-600 hover:bg-zinc-200 text-xs font-bold transition-colors">
+                  +
+                </button>
+              </div>
+
+            </div>
+
           </div>
         `;
       }).join('');
 
-      // Calculation Updates
+      // Update Bill Calculations
       document.getElementById('subtotal-amount').innerText = `₹${subtotal}`;
       document.getElementById('grand-total').innerText = `₹${subtotal + 40}`;
     }
 
-    // 2. Remove Item Function
+    // 2. Update Quantity (+ / -) Function
+    function updateQuantity(index, change) {
+      let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+      if (!cart[index]) return;
+
+      let currentQty = cart[index].qty || 1;
+      currentQty += change;
+
+      if (currentQty <= 0) {
+        removeCartItem(index);
+      } else {
+        cart[index].qty = currentQty;
+        localStorage.setItem('cartItems', JSON.stringify(cart));
+        renderCart();
+      }
+    }
+
+    // 3. Remove Item Function
     function removeCartItem(index) {
       let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       cart.splice(index, 1);
       localStorage.setItem('cartItems', JSON.stringify(cart));
       
-      renderCart(); // Reload list & updates totals
+      renderCart();
+      
+      if (typeof updateCartBadge === 'function') {
+        updateCartBadge();
+      }
     }
 
     // Initialize Page Load
