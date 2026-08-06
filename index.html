@@ -1,240 +1,76 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login — MONI DRESSES</title>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>MONI DRESSES</title>
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@700;900&family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
     body {
-      background-color: #f8f9fa;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 16px;
-    }
-
-    .site-header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 24px 16px;
-      background: #ffffff;
-      border-bottom: 1px solid #eee;
-    }
-
-    /* MONI DRESSES Brand Styling */
-    .brand {
-      font-size: 28px;
-      font-weight: 900;
-      text-decoration: none;
-      color: #000000;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .auth-core {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex: 1;
-      padding: 40px 16px;
-    }
-
-    .auth-card {
-      background: #ffffff;
-      padding: 32px;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-    }
-
-    .auth-card h2 {
-      font-size: 22px;
-      margin-bottom: 8px;
-    }
-
-    .muted {
-      color: #666;
-      font-size: 14px;
-      margin-bottom: 24px;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      text-align: left;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    label {
-      font-size: 13px;
-      font-weight: 600;
-      color: #444;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 15px;
-      outline: none;
-    }
-
-    input:focus {
-      border-color: #000000;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 12px;
-      border-radius: 6px;
-      border: 1px solid transparent;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-    }
-
-    .btn.primary {
-      background: #000000;
+      background-color: #09090b;
       color: #ffffff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    
+    .font-brand {
+      font-family: 'Bodoni Moda', serif;
     }
 
-    .btn.primary:hover:not(:disabled) {
-      background: #222222;
+    /* Pulse Logo Animation */
+    @keyframes pulseLogo {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.08); opacity: 1; }
+    }
+    .animate-pulse-logo {
+      animation: pulseLogo 2.5s infinite ease-in-out;
     }
 
-    /* Disabled State for Verification Button */
-    .btn:disabled {
-      background: #cccccc !important;
-      color: #666666 !important;
-      cursor: not-allowed;
-      border-color: transparent;
+    /* 5 Second Progress Bar Animation */
+    @keyframes progressWidth {
+      0% { width: 0%; }
+      100% { width: 100%; }
     }
-
-    .btn.google {
-      background: #ffffff;
-      border-color: #ddd;
-      color: #444;
-    }
-
-    .divider {
-      margin: 20px 0;
-      font-size: 12px;
-      color: #aaa;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .divider::before, .divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: #eee;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .site-footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 13px;
-      color: #888;
+    .animate-progress {
+      animation: progressWidth 5s linear forwards;
     }
   </style>
 </head>
-<body class="page-auth">
+<body class="min-h-screen flex flex-col justify-between items-center p-8 overflow-hidden select-none">
 
-  <header class="site-header container">
-    <a href="home.html" class="brand">MONI DRESSES</a>
-  </header>
+  <!-- Empty Header Spacer -->
+  <div></div>
 
-  <main class="auth-core container">
-    <section class="auth-card">
-      <h2>Sign In / Create Account</h2>
-      <p class="muted">Access your account to start shopping</p>
+  <!-- Center Content: Animated Brand Logo & Name -->
+  <div class="flex flex-col items-center text-center my-auto animate-pulse-logo">
+    <div class="w-24 h-24 bg-gradient-to-tr from-[#b3006a] to-[#dc1985] rounded-3xl flex items-center justify-center shadow-2xl mb-6 border border-white/10">
+      <span class="font-brand text-4xl font-black text-white tracking-widest">M</span>
+    </div>
+    <h1 class="font-brand text-3xl sm:text-4xl font-black tracking-widest text-white mb-3 uppercase">
+      MONI DRESSES
+    </h1>
+    <p class="text-zinc-400 text-xs font-light tracking-widest uppercase">
+      Crafted Comfort & Elegant Style
+    </p>
+  </div>
 
-      <!-- Google Sign-In Button -->
-      <button id="google-signin" class="btn google">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18" />
-        Continue with Google
-      </button>
+  <!-- Bottom Progress Line -->
+  <div class="w-full max-w-xs flex flex-col items-center gap-3 mb-6">
+    <div class="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+      <div class="bg-gradient-to-r from-[#b3006a] to-[#dc1985] h-full animate-progress"></div>
+    </div>
+    <p class="text-[11px] text-zinc-500 uppercase tracking-widest font-medium">Entering Store...</p>
+  </div>
 
-      <div class="divider">OR</div>
-
-      <!-- Phone OTP Sign-In Box -->
-      <div id="phone-otp-box">
-        <!-- Step 1: Mobile Number Input -->
-        <form id="phone-form">
-          <label for="phone-number">Mobile Phone Number</label>
-          <input type="tel" id="phone-number" placeholder="+91 98765 43210" required />
-          <button type="submit" class="btn primary">Send OTP</button>
-        </form>
-
-        <!-- Step 2: OTP Verification Input -->
-        <form id="otp-form" class="hidden">
-          <label for="otp-code">Enter 6-digit OTP</label>
-          <input type="text" id="otp-code" maxlength="6" placeholder="123456" required />
-          <!-- Initially Disabled Button -->
-          <button type="submit" id="verify-btn" class="btn primary" disabled>Verify & Sign In</button>
-        </form>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer container">
-    <small>© MONI DRESSES. All rights reserved.</small>
-  </footer>
-
+  <!-- Auto Redirect Script (5 Seconds) -->
   <script>
-    const phoneForm = document.getElementById("phone-form");
-    const otpForm = document.getElementById("otp-form");
-    const otpInput = document.getElementById("otp-code");
-    const verifyBtn = document.getElementById("verify-btn");
-
-    // Toggle from Phone Input to OTP Input
-    phoneForm.addEventListener("submit", function(e) {
-      e.preventDefault();
-      phoneForm.classList.add("hidden");
-      otpForm.classList.remove("hidden");
-    });
-
-    // Enable Verify Button ONLY when exactly 6 digits are typed
-    otpInput.addEventListener("input", function() {
-      // Remove any non-numeric characters
-      this.value = this.value.replace(/[^0-9]/g, '');
-
-      if (this.value.length === 6) {
-        verifyBtn.disabled = false;
-      } else {
-        verifyBtn.disabled = true;
-      }
-    });
+    setTimeout(function() {
+      window.location.href = "home.html";
+    }, 5000); // 5000 milliseconds = 5 seconds
   </script>
-  <script src="app.js" defer></script>
+
 </body>
 </html>
