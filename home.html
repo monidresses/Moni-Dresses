@@ -32,7 +32,7 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-surface text-zinc-900 font-sans min-h-screen pb-24">
+<body class="bg-surface text-zinc-900 font-sans min-h-screen">
 
   <!-- ========================================== -->
   <!-- 🛍️ 1. TOP NAVIGATION HEADER WITH DYNAMIC CART -->
@@ -63,7 +63,7 @@
     </div>
   </header>
 
-  <main class="max-w-[600px] mx-auto pt-16 space-y-5">
+  <main class="max-w-[600px] mx-auto pt-16 space-y-6 pb-12">
 
     <!-- ========================================== -->
     <!-- 🔍 2. SEARCH BAR WITH VOICE ICON -->
@@ -71,7 +71,7 @@
     <div class="px-4 pt-2">
       <div class="relative flex items-center bg-white border border-zinc-200 rounded-xl px-3 py-2.5 shadow-sm">
         <span class="material-symbols-outlined text-zinc-400 text-xl mr-2">search</span>
-        <input type="text" placeholder="Search Cotton Blouses, Sarees & More..." class="w-full text-xs text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none" />
+        <input type="text" id="search-input" onkeyup="filterProducts()" placeholder="Search Cotton Blouses, Sarees & More..." class="w-full text-xs text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none" />
         <button aria-label="Voice Search" class="text-zinc-500 hover:text-primary transition-colors">
           <span class="material-symbols-outlined text-xl">mic</span>
         </button>
@@ -82,8 +82,9 @@
     <!-- 👗 3. DYNAMIC CATEGORIES (ADMIN CONNECTED) -->
     <!-- ========================================== -->
     <section class="px-4">
+      <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Categories</h3>
       <div id="category-container" class="flex items-center gap-4 overflow-x-auto no-scrollbar py-1">
-        <!-- Categories will load dynamically via JS from Admin Storage / Fallback -->
+        <!-- Dynamic Categories Load Here -->
       </div>
     </section>
 
@@ -96,81 +97,112 @@
         <h2 class="font-brand text-2xl font-black leading-tight tracking-wide">FESTIVE<br/>SALE</h2>
         <p class="text-xs text-white/90">Get Extra 10% OFF on Readymade Blouses</p>
         <div class="pt-2">
-          <a href="#trending" class="inline-block bg-white text-primary font-bold text-xs px-4 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Shop Now</a>
+          <a href="#all-products" class="inline-block bg-white text-primary font-bold text-xs px-4 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Shop Collection</a>
         </div>
       </div>
     </section>
 
     <!-- ========================================== -->
-    <!-- 🔥 5. TRENDING NOW PRODUCTS -->
+    <!-- ⭐ 5. RECOMMENDED FOR YOU (RECOMMENDED PRODUCTS) -->
     <!-- ========================================== -->
-    <section id="trending" class="px-4 space-y-3">
+    <section class="px-4 space-y-3">
       <div class="flex items-center justify-between">
-        <h2 class="font-brand text-lg font-bold text-zinc-900 tracking-wide">Trending <span class="font-sans text-zinc-400 font-normal">Now</span></h2>
-        <a href="#" class="text-xs font-bold text-primary hover:underline">See All</a>
+        <div>
+          <h2 class="font-brand text-lg font-bold text-zinc-900 tracking-wide">Recommended <span class="font-sans text-primary font-semibold">For You</span></h2>
+          <p class="text-[10px] text-zinc-400">Handpicked blouse designs based on popularity</p>
+        </div>
+        <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-md">Trending</span>
       </div>
 
-      <!-- Product Grid -->
-      <div id="product-grid" class="grid grid-cols-2 gap-3.5">
-        
-        <!-- Product Card 1 -->
-        <div class="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm flex flex-col justify-between relative group">
-          <div class="relative aspect-[3/4] bg-zinc-100 overflow-hidden">
-            <span class="absolute top-2 left-2 z-10 bg-yellow-400 text-zinc-900 text-[9px] font-extrabold px-2 py-0.5 rounded-md shadow-sm">Lowest Price</span>
-            <button class="absolute top-2 right-2 z-10 w-7 h-7 bg-white/80 backdrop-blur-sm text-zinc-600 rounded-full flex items-center justify-center hover:text-rose-600 transition-colors">
-              <span class="material-symbols-outlined text-sm">favorite</span>
-            </button>
-            <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500" alt="Saree Blouse" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-          </div>
-          <div class="p-3 space-y-1.5">
-            <h3 class="text-xs font-bold text-zinc-800 line-clamp-1">Designer Cotton Blouse</h3>
-            <div class="flex items-baseline gap-1.5">
-              <span class="text-sm font-extrabold text-zinc-900">₹449</span>
-              <span class="text-[10px] text-zinc-400 line-through">₹899</span>
-              <span class="text-[10px] font-bold text-emerald-600">50% OFF</span>
-            </div>
-            <button onclick="addToCart({id:'P1', name:'Designer Cotton Blouse', price:449, image:'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500'})" class="w-full py-2 bg-primary/10 text-primary font-bold text-xs rounded-xl hover:bg-primary hover:text-white transition-all active:scale-95 mt-1">
-              Add to Cart
-            </button>
-          </div>
-        </div>
+      <!-- Horizontal Scroll Recommended Products -->
+      <div id="recommended-container" class="flex gap-3.5 overflow-x-auto no-scrollbar py-1">
+        <!-- Dynamic Recommended Products Load Here -->
+      </div>
+    </section>
 
-        <!-- Product Card 2 -->
-        <div class="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm flex flex-col justify-between relative group">
-          <div class="relative aspect-[3/4] bg-zinc-100 overflow-hidden">
-            <span class="absolute top-2 left-2 z-10 bg-yellow-400 text-zinc-900 text-[9px] font-extrabold px-2 py-0.5 rounded-md shadow-sm">Lowest Price</span>
-            <button class="absolute top-2 right-2 z-10 w-7 h-7 bg-white/80 backdrop-blur-sm text-zinc-600 rounded-full flex items-center justify-center hover:text-rose-600 transition-colors">
-              <span class="material-symbols-outlined text-sm">favorite</span>
-            </button>
-            <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500" alt="Dupatta Dress" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-          </div>
-          <div class="p-3 space-y-1.5">
-            <h3 class="text-xs font-bold text-zinc-800 line-clamp-1">Printed Silk Blouse</h3>
-            <div class="flex items-baseline gap-1.5">
-              <span class="text-sm font-extrabold text-zinc-900">₹599</span>
-              <span class="text-[10px] text-zinc-400 line-through">₹1199</span>
-              <span class="text-[10px] font-bold text-emerald-600">50% OFF</span>
-            </div>
-            <button onclick="addToCart({id:'P2', name:'Printed Silk Blouse', price:599, image:'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500'})" class="w-full py-2 bg-primary/10 text-primary font-bold text-xs rounded-xl hover:bg-primary hover:text-white transition-all active:scale-95 mt-1">
-              Add to Cart
-            </button>
-          </div>
+    <!-- ========================================== -->
+    <!-- 🔥 6. ALL PRODUCTS GRID -->
+    <!-- ========================================== -->
+    <section id="all-products" class="px-4 space-y-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-brand text-lg font-bold text-zinc-900 tracking-wide">All <span class="font-sans text-zinc-500 font-normal">Products</span></h2>
+          <p class="text-[10px] text-zinc-400">Explore our complete readymade cotton blouse catalog</p>
         </div>
+      </div>
 
+      <!-- All Product Grid -->
+      <div id="all-products-grid" class="grid grid-cols-2 gap-3.5">
+        <!-- Dynamic All Products Load Here -->
       </div>
     </section>
 
   </main>
 
   <!-- ========================================== -->
-  <!-- ⚙️ JAVASCRIPT LOGIC (CATEGORIES & CART) -->
+  <!-- 🦶 7. PROFESSIONAL FOOTER SECTION -->
+  <!-- ========================================== -->
+  <footer class="bg-zinc-900 text-zinc-300 pt-10 pb-8 px-5 border-t border-zinc-800">
+    <div class="max-w-[600px] mx-auto space-y-8">
+      
+      <!-- Brand & About -->
+      <div class="space-y-3">
+        <a href="home.html" class="font-brand text-xl font-black text-white tracking-widest uppercase block">
+          MONI DRESSES
+        </a>
+        <p class="text-xs text-zinc-400 leading-relaxed">
+          Premium readymade cotton blouses & designer ethnic wear. Crafted with comfort, elegance, and perfect fit.
+        </p>
+      </div>
+
+      <!-- Quick Links Grid -->
+      <div class="grid grid-cols-2 gap-6 text-xs border-t border-b border-zinc-800/80 py-6">
+        <div class="space-y-2.5">
+          <h4 class="font-bold text-white uppercase text-[11px] tracking-wider text-primary">Quick Navigation</h4>
+          <ul class="space-y-2 text-zinc-400">
+            <li><a href="home.html" class="hover:text-white transition-colors">Home Page</a></li>
+            <li><a href="#all-products" class="hover:text-white transition-colors">All Blouses</a></li>
+            <li><a href="cart.html" class="hover:text-white transition-colors">Shopping Cart</a></li>
+            <li><a href="account.html" class="hover:text-white transition-colors">My Profile & Orders</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-2.5">
+          <h4 class="font-bold text-white uppercase text-[11px] tracking-wider text-primary">Business & Help</h4>
+          <ul class="space-y-2 text-zinc-400">
+            <li><a href="b2b.html" class="hover:text-white transition-colors">B2B Wholesale Portal</a></li>
+            <li><a href="https://wa.me/918536891441" target="_blank" class="hover:text-white transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-xs text-emerald-500">support_agent</span> WhatsApp Support</a></li>
+            <li><a href="policies.html" class="hover:text-white transition-colors">Terms & Return Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Contact Info & Copyright -->
+      <div class="space-y-3 text-center pt-2">
+        <p class="text-[11px] text-zinc-500">Need help with sizing or orders? Contact us directly on WhatsApp.</p>
+        <p class="text-[10px] text-zinc-600 font-medium">
+          © 2026 MONI DRESSES. All Rights Reserved. Designed for elegance.
+        </p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- ⚙️ JAVASCRIPT LOGIC (PRODUCTS & CART) -->
   <!-- ========================================== -->
   <script>
-    // 1. Dynamic Categories Loading (Admin Connected / Fallback)
+    // Sample Default Product Data (Overridden by Admin Panel Storage if available)
+    const defaultProducts = [
+      { id: "P1", name: "Designer Readymade Cotton Blouse", price: 449, originalPrice: 899, isRecommended: true, image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500" },
+      { id: "P2", name: "Printed Silk Festival Blouse", price: 599, originalPrice: 1199, isRecommended: true, image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500" },
+      { id: "P3", name: "Pure Cotton Boat-Neck Blouse", price: 399, originalPrice: 799, isRecommended: false, image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500" },
+      { id: "P4", name: "Partywear Embroidered Crop Blouse", price: 699, originalPrice: 1399, isRecommended: true, image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500" }
+    ];
+
+    // 1. Categories Loading
     function loadCategories() {
       const container = document.getElementById('category-container');
-      
-      // Admin Panel Storage or Default Categories
       const adminCategories = JSON.parse(localStorage.getItem('adminCategories')) || [
         { name: "Printed", image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=200" },
         { name: "Designer", image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=200" },
@@ -188,7 +220,57 @@
       `).join('');
     }
 
-    // 2. Real-Time Cart Badge Update Logic
+    // 2. Render Products (Recommended & All Products)
+    function loadProducts() {
+      const products = JSON.parse(localStorage.getItem('adminProducts')) || defaultProducts;
+      
+      const recContainer = document.getElementById('recommended-container');
+      const allGrid = document.getElementById('all-products-grid');
+
+      // Recommended Filter
+      const recommendedProducts = products.filter(p => p.isRecommended !== false);
+      
+      recContainer.innerHTML = recommendedProducts.map(p => `
+        <div class="w-40 shrink-0 bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm flex flex-col justify-between">
+          <div class="relative aspect-[3/4] bg-zinc-100 overflow-hidden">
+            <span class="absolute top-2 left-2 z-10 bg-primary text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded shadow-sm">Hot Fit</span>
+            <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover"/>
+          </div>
+          <div class="p-2.5 space-y-1">
+            <h3 class="text-xs font-bold text-zinc-800 line-clamp-1">${p.name}</h3>
+            <div class="flex items-baseline gap-1">
+              <span class="text-xs font-extrabold text-zinc-900">₹${p.price}</span>
+              <span class="text-[9px] text-zinc-400 line-through">₹${p.originalPrice || p.price * 2}</span>
+            </div>
+            <button onclick="addToCart({id:'${p.id}', name:'${p.name}', price:${p.price}, image:'${p.image}'})" class="w-full py-1.5 bg-primary/10 text-primary font-bold text-[11px] rounded-lg hover:bg-primary hover:text-white transition-all active:scale-95">
+              Add
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      // All Products Grid
+      allGrid.innerHTML = products.map(p => `
+        <div class="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm flex flex-col justify-between relative group">
+          <div class="relative aspect-[3/4] bg-zinc-100 overflow-hidden">
+            <span class="absolute top-2 left-2 z-10 bg-yellow-400 text-zinc-900 text-[9px] font-extrabold px-2 py-0.5 rounded-md shadow-sm">Lowest Price</span>
+            <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
+          </div>
+          <div class="p-3 space-y-1.5">
+            <h3 class="text-xs font-bold text-zinc-800 line-clamp-1">${p.name}</h3>
+            <div class="flex items-baseline gap-1.5">
+              <span class="text-sm font-extrabold text-zinc-900">₹${p.price}</span>
+              <span class="text-[10px] text-zinc-400 line-through">₹${p.originalPrice || p.price * 2}</span>
+            </div>
+            <button onclick="addToCart({id:'${p.id}', name:'${p.name}', price:${p.price}, image:'${p.image}'})" class="w-full py-2 bg-primary/10 text-primary font-bold text-xs rounded-xl hover:bg-primary hover:text-white transition-all active:scale-95 mt-1">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 3. Real-Time Cart Badge Logic
     function updateCartBadge() {
       const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       const countBadge = document.getElementById('cart-count');
@@ -204,7 +286,7 @@
       }
     }
 
-    // 3. Add Product to Cart Handler
+    // 4. Add Product to Cart Function
     function addToCart(product) {
       let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       cart.push(product);
@@ -215,6 +297,7 @@
     // Initialize Page
     window.addEventListener('DOMContentLoaded', () => {
       loadCategories();
+      loadProducts();
       updateCartBadge();
     });
   </script>
