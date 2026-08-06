@@ -7,7 +7,7 @@
   
   <!-- Tailwind CSS & Google Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script> <!-- Razorpay SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 
@@ -39,95 +39,91 @@
 
   <main class="max-w-[550px] mx-auto pt-16 px-4 space-y-5">
 
-    <!-- ========================================== -->
-    <!-- 🏡 2. SAVED ADDRESS SELECTION (PROFILE) -->
-    <!-- ========================================== -->
-    <div id="saved-address-section" class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm space-y-3 hidden">
-      <div class="flex items-center justify-between">
-        <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Saved Profile Address</h3>
-        <span class="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Default</span>
-      </div>
-      
-      <label class="flex items-start gap-3 p-3 border border-primary/30 bg-primary/5 rounded-xl cursor-pointer">
-        <input type="radio" name="addressSelect" value="saved" checked onchange="toggleAddressOption()" class="mt-1 accent-primary">
-        <div class="text-xs space-y-1">
-          <p id="saved-name" class="font-bold text-zinc-900"></p>
-          <p id="saved-phone" class="text-zinc-600 font-medium"></p>
-          <p id="saved-full-addr" class="text-zinc-500 leading-relaxed"></p>
-        </div>
-      </label>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- 📝 3. SHIPPING ADDRESS FORM -->
-    <!-- ========================================== -->
     <form id="checkout-form" class="space-y-4">
       
-      <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm space-y-3">
-        <div class="flex items-center justify-between border-b border-zinc-100 pb-2">
-          <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Delivery Address</h3>
-          <label class="flex items-center gap-1.5 text-xs text-primary font-bold cursor-pointer">
-            <input type="radio" name="addressSelect" value="new" id="use-new-addr-radio" onchange="toggleAddressOption()" class="accent-primary">
-            <span>+ Add New Address</span>
+      <!-- ========================================== -->
+      <!-- 🏡 2. DELIVERY ADDRESS SECTION -->
+      <!-- ========================================== -->
+      <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm space-y-4">
+        <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider border-b border-zinc-100 pb-2">Delivery Address</h3>
+
+        <!-- Saved Address Block (লুকানো থাকবে যদি প্রোফাইলে অ্যাড্রেস না থাকে) -->
+        <div id="saved-address-section" class="hidden">
+          <label class="flex items-start gap-3 p-3 border border-primary/30 bg-primary/5 rounded-xl cursor-pointer transition-all">
+            <input type="radio" name="addressSelect" value="saved" id="radio-saved" onchange="toggleAddressOption()" class="mt-1 accent-primary">
+            <div class="text-xs space-y-1.5 w-full">
+              <div class="flex justify-between items-center">
+                <p id="saved-name" class="font-extrabold text-zinc-900 text-sm"></p>
+                <span class="text-[9px] bg-emerald-100 text-emerald-700 font-extrabold px-2 py-0.5 rounded-full uppercase tracking-widest">Default</span>
+              </div>
+              <p id="saved-phone" class="text-zinc-700 font-bold"></p>
+              <p id="saved-full-addr" class="text-zinc-500 font-medium leading-relaxed"></p>
+            </div>
           </label>
         </div>
 
-        <!-- Form Inputs Grid -->
-        <div id="address-inputs" class="space-y-3 pt-1">
+        <!-- Add New Address Option -->
+        <label class="flex items-center gap-3 p-3 border border-zinc-200 rounded-xl cursor-pointer hover:border-primary transition-colors">
+          <input type="radio" name="addressSelect" value="new" id="radio-new" onchange="toggleAddressOption()" class="accent-primary">
+          <span class="text-xs font-bold text-zinc-800">+ Add New Address</span>
+        </label>
+
+        <!-- New Address Input Fields (লুকানো থাকবে যদি Saved Address সিলেক্ট থাকে) -->
+        <div id="address-inputs" class="space-y-3 pt-2 hidden">
+          
           <div class="grid grid-cols-2 gap-2.5">
             <div>
               <label class="text-[10px] font-bold text-zinc-500 uppercase">Full Name *</label>
-              <input type="text" id="cust-name" required placeholder="Avijit Chakraborty" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
+              <input type="text" id="cust-name" placeholder="E.g. Avijit Chakraborty" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
             </div>
             <div>
               <label class="text-[10px] font-bold text-zinc-500 uppercase">Mobile Number *</label>
-              <input type="tel" id="cust-phone" required pattern="[0-9]{10}" placeholder="10 Digit Number" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
+              <input type="tel" id="cust-phone" pattern="[0-9]{10}" placeholder="10 Digit Number" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
             </div>
           </div>
 
           <div>
             <label class="text-[10px] font-bold text-zinc-500 uppercase">Flat / House No. / Building Name *</label>
-            <input type="text" id="cust-building" required placeholder="House No. 12B, Chakraborty Villa" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
+            <input type="text" id="cust-building" placeholder="House No. 12B, Chakraborty Villa" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
           </div>
 
           <div class="grid grid-cols-2 gap-2.5">
             <div>
               <label class="text-[10px] font-bold text-zinc-500 uppercase">Street / Area / Colony *</label>
-              <input type="text" id="cust-area" required placeholder="Station Road Area" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
+              <input type="text" id="cust-area" placeholder="Station Road Area" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
             </div>
             <div>
               <label class="text-[10px] font-bold text-zinc-500 uppercase">Village / Landmark</label>
-              <input type="text" id="cust-village" placeholder="Near Market" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
+              <input type="text" id="cust-village" placeholder="Near Market (Optional)" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-2.5">
             <div>
               <label class="text-[10px] font-bold text-zinc-500 uppercase">City / Town *</label>
-              <input type="text" id="cust-city" required placeholder="Kolkata" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
+              <input type="text" id="cust-city" placeholder="Kolkata" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
             </div>
             <div>
               <label class="text-[10px] font-bold text-zinc-500 uppercase">District *</label>
-              <input type="text" id="cust-district" required placeholder="North 24 Parganas" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
+              <input type="text" id="cust-district" placeholder="North 24 Parganas" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-2.5">
             <div>
               <label class="text-[10px] font-bold text-zinc-500 uppercase">State *</label>
-              <input type="text" id="cust-state" required placeholder="West Bengal" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
+              <input type="text" id="cust-state" placeholder="West Bengal" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
             </div>
             <div>
               <label class="text-[10px] font-bold text-zinc-500 uppercase">PIN Code *</label>
-              <input type="text" id="cust-pin" required pattern="[0-9]{6}" placeholder="700001" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
+              <input type="text" id="cust-pin" pattern="[0-9]{6}" placeholder="700001" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
             </div>
           </div>
         </div>
-
       </div>
 
       <!-- ========================================== -->
-      <!-- 💳 4. PAYMENT METHOD -->
+      <!-- 💳 3. PAYMENT METHOD -->
       <!-- ========================================== -->
       <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm space-y-3">
         <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Payment Options</h3>
@@ -155,7 +151,7 @@
         </label>
       </div>
 
-      <button type="submit" id="submit-btn" class="w-full py-4 bg-primary text-white font-extrabold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase tracking-wider">
+      <button type="submit" class="w-full py-4 bg-primary text-white font-extrabold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase tracking-wider">
         Confirm & Place Order
       </button>
     </form>
@@ -163,129 +159,118 @@
   </main>
 
   <!-- ========================================== -->
-  <!-- 🔐 5. OTP MODAL POPUP FOR COD ORDERS -->
+  <!-- 🔐 4. OTP MODAL POPUP FOR COD -->
   <!-- ========================================== -->
   <div id="otp-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <div class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-xl space-y-4 text-center">
       <div class="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto">
         <span class="material-symbols-outlined text-2xl">sms</span>
       </div>
-      
       <div>
         <h3 class="text-sm font-bold text-zinc-800">Verify Mobile Number</h3>
         <p class="text-xs text-zinc-500 mt-1">Enter OTP sent to <span id="otp-phone-display" class="font-bold text-zinc-800"></span></p>
       </div>
-
       <input type="text" id="otp-input" maxlength="4" placeholder="1 2 3 4" class="w-full text-center tracking-[0.8em] text-lg font-bold p-3 border border-zinc-300 rounded-xl focus:outline-primary bg-zinc-50">
-
-      <button onclick="verifyCODOTP()" class="w-full py-3 bg-primary text-white font-bold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase">
-        Verify & Confirm
-      </button>
-
-      <button onclick="closeModal('otp-modal')" class="text-xs font-bold text-zinc-400 hover:text-zinc-600 block mx-auto">
-        Cancel
-      </button>
+      <button onclick="verifyCODOTP()" class="w-full py-3 bg-primary text-white font-bold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase">Verify & Confirm</button>
+      <button onclick="closeModal('otp-modal')" class="text-xs font-bold text-zinc-400 hover:text-zinc-600 block mx-auto">Cancel</button>
     </div>
   </div>
 
   <!-- ========================================== -->
-  <!-- 🎉 6. ORDER SUCCESS POPUP WITH TICK & ID -->
+  <!-- 🎉 5. ORDER SUCCESS POPUP -->
   <!-- ========================================== -->
   <div id="success-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl text-center space-y-4 animate-in fade-in zoom-in duration-300">
-      
-      <!-- Big Green Check Icon -->
       <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
         <span class="material-symbols-outlined text-5xl font-black">check_circle</span>
       </div>
-
       <div class="space-y-1">
         <h2 class="text-lg font-extrabold text-zinc-900">Order Confirmed!</h2>
         <p class="text-xs text-zinc-500">Thank you for shopping with Moni Dresses.</p>
       </div>
-
-      <!-- Order ID Box -->
       <div class="bg-zinc-50 border border-zinc-200 p-3.5 rounded-2xl space-y-1">
         <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">Your Order ID</p>
-        <p id="display-order-id" class="text-base font-extrabold text-primary tracking-wide">MD-892134</p>
+        <p id="display-order-id" class="text-base font-extrabold text-primary tracking-wide"></p>
       </div>
-
       <p class="text-[11px] text-zinc-400">We will send shipping updates via WhatsApp / SMS.</p>
-
-      <!-- Action Buttons -->
       <div class="space-y-2 pt-2">
-        <button onclick="finishOrderAndGo('account.html')" class="w-full py-3.5 bg-primary text-white font-bold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase">
-          View Order History
-        </button>
-        <button onclick="finishOrderAndGo('home.html')" class="w-full py-3 text-zinc-600 font-bold text-xs hover:text-zinc-900 transition-colors">
-          Back to Home Page
-        </button>
+        <button onclick="finishOrderAndGo('account.html')" class="w-full py-3.5 bg-primary text-white font-bold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase">View Order History</button>
+        <button onclick="finishOrderAndGo('home.html')" class="w-full py-3 text-zinc-600 font-bold text-xs hover:text-zinc-900 transition-colors">Back to Home Page</button>
       </div>
-
     </div>
   </div>
 
   <!-- ========================================== -->
-  <!-- ⚙️ 7. JAVASCRIPT LOGIC -->
+  <!-- ⚙️ 6. JAVASCRIPT LOGIC -->
   <!-- ========================================== -->
   <script>
-    let generatedOTP = "1234"; // Test OTP Code
+    let generatedOTP = "1234";
 
-    // Check & Load Saved Address from Profile
+    // 1. Load Profile Address
     function loadSavedProfileAddress() {
+      // (Testing purpose: You can remove this localStorage.setItem in production)
+      // localStorage.setItem('userProfile', JSON.stringify({ name: "Avijit Chakraborty", phone: "8536891441", address: { building: "Moni Dresses Outlet", area: "Main Market", city: "Kolkata", district: "North 24 Pgs", state: "West Bengal", pin: "700001" } }));
+
       const savedUser = JSON.parse(localStorage.getItem('userProfile'));
       const savedSection = document.getElementById('saved-address-section');
+      const radioSaved = document.getElementById('radio-saved');
+      const radioNew = document.getElementById('radio-new');
 
-      if (savedUser && savedUser.address) {
+      if (savedUser && savedUser.address && savedUser.address.city) {
         document.getElementById('saved-name').innerText = savedUser.name || "Customer Name";
         document.getElementById('saved-phone').innerText = "+91 " + (savedUser.phone || "");
         
         const addr = savedUser.address;
+        const villageText = addr.village ? `${addr.village}, ` : '';
         document.getElementById('saved-full-addr').innerText = 
-          `${addr.building || ''}, ${addr.area || ''}, ${addr.city || ''}, ${addr.district || ''}, ${addr.state || ''} - ${addr.pin || ''}`;
+          `${addr.building}, ${addr.area}, ${villageText}${addr.city}, ${addr.district}, ${addr.state} - ${addr.pin}`;
         
         savedSection.classList.remove('hidden');
+        radioSaved.checked = true;
+        toggleAddressOption(); 
+      } else {
+        savedSection.classList.add('hidden');
+        radioNew.checked = true;
         toggleAddressOption();
       }
     }
 
-    // Toggle Form Input Fields based on Radio Selection
+    // 2. Hide / Show Input Fields based on Radio Selection
     function toggleAddressOption() {
       const addressChoice = document.querySelector('input[name="addressSelect"]:checked')?.value;
-      const inputs = document.querySelectorAll('#address-inputs input');
+      const addressInputsDiv = document.getElementById('address-inputs');
+      const inputs = addressInputsDiv.querySelectorAll('input');
 
       if (addressChoice === 'saved') {
+        // সম্পূর্ণ হাইড করে দেওয়া হবে
+        addressInputsDiv.classList.add('hidden');
         inputs.forEach(input => input.removeAttribute('required'));
-        document.getElementById('address-inputs').classList.add('opacity-40', 'pointer-events-none');
       } else {
+        // বক্সেগুলো পেজে রেন্ডার হবে
+        addressInputsDiv.classList.remove('hidden');
         inputs.forEach(input => {
           if (input.id !== 'cust-village') input.setAttribute('required', 'true');
         });
-        document.getElementById('address-inputs').classList.remove('opacity-40', 'pointer-events-none');
-        document.getElementById('use-new-addr-radio').checked = true;
       }
     }
 
-    // Get Total Cart Value
     function getCartTotal() {
       const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * (Number(item.qty) || 1)), 0);
-      return subtotal + 40; // Subtotal + Delivery
+      return subtotal + 40; 
     }
 
-    // Trigger Success Confirmation Popup
     function showOrderSuccessModal(orderId) {
       document.getElementById('display-order-id').innerText = orderId;
       document.getElementById('success-modal').classList.remove('hidden');
     }
 
-    // Clear Cart and Redirect
     function finishOrderAndGo(targetUrl) {
-      localStorage.removeItem('cartItems'); // Clear Local Cart Storage
+      localStorage.removeItem('cartItems'); 
       window.location.href = targetUrl;
     }
 
-    // Form Submit Listener
+    // 3. Form Submit Logic
     document.getElementById('checkout-form').addEventListener('submit', function(e) {
       e.preventDefault();
 
@@ -297,13 +282,24 @@
       }
 
       const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-      const phoneInput = document.getElementById('cust-phone').value || "1234567890";
+      const addressChoice = document.querySelector('input[name="addressSelect"]:checked').value;
+      
+      let phoneInput = "";
+      let nameInput = "";
+      
+      if(addressChoice === 'saved') {
+        const savedUser = JSON.parse(localStorage.getItem('userProfile'));
+        phoneInput = savedUser.phone;
+        nameInput = savedUser.name;
+      } else {
+        phoneInput = document.getElementById('cust-phone').value;
+        nameInput = document.getElementById('cust-name').value;
+      }
 
       if (paymentMethod === 'razorpay') {
-        // Razorpay Prepaid Payment Gateway
         const totalAmount = getCartTotal();
         const options = {
-          "key": "YOUR_RAZORPAY_KEY", // Replace with your Razorpay Key
+          "key": "YOUR_RAZORPAY_KEY", 
           "amount": totalAmount * 100,
           "currency": "INR",
           "name": "MONI DRESSES",
@@ -312,27 +308,19 @@
             const finalId = "MD-RZP-" + Math.floor(100000 + Math.random() * 900000);
             showOrderSuccessModal(finalId);
           },
-          "prefill": {
-            "name": document.getElementById('cust-name').value,
-            "contact": phoneInput
-          },
+          "prefill": { "name": nameInput, "contact": phoneInput },
           "theme": { "color": "#b3006a" }
         };
         const rzp = new Razorpay(options);
         rzp.open();
-
       } else {
-        // COD Order OTP Flow
         document.getElementById('otp-phone-display').innerText = "+91 " + phoneInput;
         document.getElementById('otp-modal').classList.remove('hidden');
-        alert("Verification OTP sent to your phone! (Test OTP: 1234)");
       }
     });
 
-    // Verify COD OTP
     function verifyCODOTP() {
       const userOTP = document.getElementById('otp-input').value.trim();
-      
       if (userOTP === generatedOTP) {
         closeModal('otp-modal');
         const finalId = "MD-COD-" + Math.floor(100000 + Math.random() * 900000);
@@ -347,9 +335,7 @@
     }
 
     // Initialize Page
-    window.addEventListener('DOMContentLoaded', () => {
-      loadSavedProfileAddress();
-    });
+    window.addEventListener('DOMContentLoaded', loadSavedProfileAddress);
   </script>
 </body>
 </html>
