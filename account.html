@@ -52,8 +52,8 @@
           <img id="user-profile-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200" alt="User Profile" class="w-full h-full object-cover"/>
         </div>
         <div>
-          <h1 class="text-base font-extrabold text-zinc-900" id="profile-name">Avijit Chakraborty</h1>
-          <p class="text-xs text-zinc-500 font-medium" id="profile-phone">+91 98765 43210</p>
+          <h1 class="text-base font-extrabold text-zinc-900" id="profile-name">Your Full Name</h1>
+          <p class="text-xs text-zinc-500 font-medium" id="profile-phone">+91 00000 00000</p>
           <span class="inline-block mt-1 bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Verified Customer</span>
         </div>
       </div>
@@ -155,7 +155,7 @@
         <span class="material-symbols-outlined text-primary text-lg mt-0.5">home</span>
         <div class="flex-1">
           <span class="font-bold text-zinc-900 block mb-0.5">Default Address</span>
-          <p class="text-zinc-500 leading-relaxed text-[11px]" id="display-address">Chakraborty House, Road No. 4, City Center, Kolkata, West Bengal - 700001</p>
+          <p class="text-zinc-500 leading-relaxed text-[11px]" id="display-address">Enter Your Full Address, Pincode, State</p>
         </div>
       </div>
     </div>
@@ -172,7 +172,7 @@
           <span class="material-symbols-outlined text-emerald-600">account_balance</span>
           <div>
             <span class="text-xs font-bold text-zinc-900 block">UPI ID</span>
-            <p class="text-[11px] text-zinc-500" id="display-upi">avijit@upi</p>
+            <p class="text-[11px] text-zinc-500" id="display-upi">yourname@upi</p>
           </div>
         </div>
         <button onclick="openEditProfileModal()" class="text-xs font-bold text-primary">Edit</button>
@@ -190,10 +190,11 @@
         <span class="material-symbols-outlined text-zinc-400 text-sm">chevron_right</span>
       </a>
 
-      <a href="https://wa.me/919876543210" target="_blank" class="flex items-center justify-between p-3.5 hover:bg-zinc-50">
+      <!-- Updated WhatsApp Support Link -->
+      <a href="https://wa.me/918536891441?text=Hello%20MONI%20DRESSES!%20I%20need%20help%20with%20my%20order." target="_blank" class="flex items-center justify-between p-3.5 hover:bg-zinc-50">
         <div class="flex items-center gap-3">
           <span class="material-symbols-outlined text-emerald-600">support_agent</span>
-          <span class="text-xs font-bold text-zinc-800">Help & WhatsApp Support</span>
+          <span class="text-xs font-bold text-zinc-800">Help & WhatsApp Support (+91 85368 91441)</span>
         </div>
         <span class="material-symbols-outlined text-zinc-400 text-sm">chevron_right</span>
       </a>
@@ -215,9 +216,7 @@
 
   </main>
 
-  <!-- ========================================== -->
-  <!-- 📝 EDIT PROFILE MODAL -->
-  <!-- ========================================== -->
+  <!-- EDIT PROFILE MODAL -->
   <div id="edit-profile-modal" class="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white w-full max-w-md rounded-2xl p-5 shadow-2xl relative space-y-4 my-8">
       
@@ -231,12 +230,12 @@
       <form onsubmit="saveProfileDetails(event)" class="space-y-3">
         <div>
           <label class="block text-xs font-bold text-zinc-700 mb-1">Full Name</label>
-          <input type="text" id="input-name" required class="w-full text-xs p-2.5 border border-zinc-200 rounded-lg focus:outline-none focus:border-primary" />
+          <input type="text" id="input-name" required placeholder="e.g. Rahul Sharma" class="w-full text-xs p-2.5 border border-zinc-200 rounded-lg focus:outline-none focus:border-primary" />
         </div>
 
         <div>
           <label class="block text-xs font-bold text-zinc-700 mb-1">Mobile Phone Number</label>
-          <input type="tel" id="input-phone" required class="w-full text-xs p-2.5 border border-zinc-200 rounded-lg focus:outline-none focus:border-primary" />
+          <input type="tel" id="input-phone" required placeholder="+91 00000 00000" class="w-full text-xs p-2.5 border border-zinc-200 rounded-lg focus:outline-none focus:border-primary" />
         </div>
 
         <div>
@@ -246,7 +245,7 @@
 
         <div>
           <label class="block text-xs font-bold text-zinc-700 mb-1">Full Address</label>
-          <textarea id="input-address" rows="2" class="w-full text-xs p-2.5 border border-zinc-200 rounded-lg focus:outline-none focus:border-primary"></textarea>
+          <textarea id="input-address" rows="2" placeholder="House No, Road, City, Pincode" class="w-full text-xs p-2.5 border border-zinc-200 rounded-lg focus:outline-none focus:border-primary"></textarea>
         </div>
 
         <div>
@@ -262,16 +261,14 @@
     </div>
   </div>
 
-  <!-- JavaScript Functions -->
   <script>
-    // Load User Data from localStorage
     function loadUserData() {
       const savedUser = JSON.parse(localStorage.getItem("userProfile")) || {
-        name: "Avijit Chakraborty",
-        phone: "+91 98765 43210",
+        name: "Your Full Name",
+        phone: "+91 00000 00000",
         photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200",
-        address: "Chakraborty House, Road No. 4, City Center, Kolkata, West Bengal - 700001",
-        upi: "avijit@upi"
+        address: "Enter Your Full Address, Pincode, State",
+        upi: "yourname@upi"
       };
 
       document.getElementById('profile-name').innerText = savedUser.name;
@@ -280,7 +277,6 @@
       document.getElementById('display-address').innerText = savedUser.address;
       document.getElementById('display-upi').innerText = savedUser.upi;
 
-      // Fill Input fields in Modal
       document.getElementById('input-name').value = savedUser.name;
       document.getElementById('input-phone').value = savedUser.phone;
       document.getElementById('input-photo').value = savedUser.photo;
@@ -313,7 +309,6 @@
       alert("Profile Details Updated Successfully!");
     }
 
-    // Initialize Page
     window.addEventListener('DOMContentLoaded', () => {
       const isLoggedIn = localStorage.getItem("isLoggedIn");
       if (isLoggedIn !== "true") {
@@ -322,7 +317,6 @@
 
       loadUserData();
 
-      // Load Saved Size Fit
       const savedFitRaw = localStorage.getItem("userSavedFit");
       if (savedFitRaw) {
         const savedFit = JSON.parse(savedFitRaw);
