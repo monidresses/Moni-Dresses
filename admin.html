@@ -1,365 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moni Dresses | Master Admin Panel</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brandPurple: '#6A0572',
-                        brandRed: '#D62828',
-                    }
-                }
-            }
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Admin Dashboard — MONI DRESSES</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: "#b3006a", surface: "#f1f5f9", panel: "#ffffff" },
+          fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"] }
         }
-    </script>
+      }
+    }
+  </script>
 </head>
-<body class="bg-gray-100 font-sans pb-20">
+<body class="bg-surface text-zinc-900 font-sans min-h-screen">
 
-    <!-- 1. PURE ADMIN LOGIN SCREEN -->
-    <div id="login-overlay" class="fixed inset-0 bg-purple-950 z-50 flex items-center justify-center p-4">
-        <div class="bg-white max-w-sm w-full rounded-3xl p-6 shadow-2xl space-y-4">
-            <div class="text-center">
-                <div class="w-12 h-12 bg-brandRed text-white font-black text-2xl rounded-2xl flex items-center justify-center mx-auto mb-2">M</div>
-                <h2 class="text-lg font-black text-gray-800">MONI DRESSES</h2>
-                <p class="text-xs text-brandPurple font-bold">Admin Portal Access</p>
-            </div>
+  <!-- Admin Header -->
+  <header class="bg-primary text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-3xl">admin_panel_settings</span>
+        <h1 class="text-lg font-extrabold tracking-wider">MONI DRESSES ADMIN</h1>
+      </div>
+      <a href="home.html" class="text-xs font-bold bg-white/20 px-4 py-2 rounded-lg hover:bg-white/30 transition">
+        View Store
+      </a>
+    </div>
+  </header>
 
-            <div id="login-error" class="hidden bg-red-100 text-red-700 p-2.5 rounded-xl text-xs font-bold text-center">
-                Invalid Username or Password!
-            </div>
+  <main class="max-w-6xl mx-auto p-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            <form onsubmit="handleAdminLogin(event)" class="space-y-3 text-xs">
-                <div>
-                    <label class="font-bold text-gray-600">Admin Username</label>
-                    <input type="text" id="admin-user" placeholder="admin" class="w-full border border-gray-300 p-3 rounded-xl mt-1 focus:outline-none focus:border-brandPurple font-bold" required>
-                </div>
-                <div>
-                    <label class="font-bold text-gray-600">Password</label>
-                    <input type="password" id="admin-pass" placeholder="••••" class="w-full border border-gray-300 p-3 rounded-xl mt-1 focus:outline-none focus:border-brandPurple font-bold" required>
-                </div>
-                <button type="submit" class="w-full bg-brandPurple text-white py-3 rounded-xl font-bold shadow-lg hover:bg-purple-900 active:scale-95 transition text-sm">
-                    Login to Dashboard
-                </button>
-            </form>
-            <p class="text-[10px] text-center text-gray-400">Default Credentials: admin / 1234</p>
-        </div>
+    <!-- LEFT COLUMN: Delivery Settings -->
+    <div class="md:col-span-1 space-y-6">
+      
+      <div class="bg-panel p-5 rounded-2xl shadow-sm border border-zinc-200">
+        <h2 class="text-sm font-extrabold text-zinc-800 flex items-center gap-2 border-b border-zinc-100 pb-3 mb-4">
+          <span class="material-symbols-outlined text-primary">local_shipping</span>
+          Delivery Charge Control
+        </h2>
+        
+        <form id="delivery-settings-form" class="space-y-4">
+          <div>
+            <label class="block text-[11px] font-bold text-zinc-500 uppercase mb-1">Prepaid Delivery Charge (₹)</label>
+            <input type="number" id="prepaid-charge" required class="w-full p-2.5 border border-zinc-300 rounded-xl text-sm font-bold focus:outline-primary bg-zinc-50">
+            <p class="text-[10px] text-emerald-600 mt-1 font-semibold">Keep 0 for Free Delivery</p>
+          </div>
+          
+          <div>
+            <label class="block text-[11px] font-bold text-zinc-500 uppercase mb-1">COD Delivery Charge (₹)</label>
+            <input type="number" id="cod-charge" required class="w-full p-2.5 border border-zinc-300 rounded-xl text-sm font-bold focus:outline-primary bg-zinc-50">
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-primary text-white font-bold text-xs rounded-xl shadow active:scale-95 transition-all uppercase">
+            Update Charges
+          </button>
+        </form>
+      </div>
+
     </div>
 
-    <!-- 2. MAIN HEADER BAR -->
-    <header class="bg-purple-950 text-white p-4 sticky top-0 z-40 flex justify-between items-center shadow-md">
-        <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-brandRed flex items-center justify-center font-black text-sm">M</div>
-            <div>
-                <h1 class="text-sm font-extrabold leading-none">MONI DRESSES</h1>
-                <span class="text-[9px] bg-brandRed text-white px-1.5 py-0.5 rounded font-bold uppercase">Master Admin</span>
-            </div>
-        </div>
-        <button onclick="handleAdminLogout()" class="text-xs bg-red-600 px-3 py-1.5 rounded-xl font-bold hover:bg-red-700 active:scale-95 transition">
-            <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
-        </button>
-    </header>
+    <!-- RIGHT COLUMN: Order Management -->
+    <div class="md:col-span-2">
+      <div class="bg-panel p-5 rounded-2xl shadow-sm border border-zinc-200">
+        <h2 class="text-sm font-extrabold text-zinc-800 flex items-center gap-2 border-b border-zinc-100 pb-3 mb-4">
+          <span class="material-symbols-outlined text-primary">list_alt</span>
+          Customer Orders
+        </h2>
 
-    <!-- 3. TOP NAVIGATION MENU -->
-    <div class="bg-white shadow-sm border-b sticky top-14 z-30 flex overflow-x-auto no-scrollbar text-center text-xs font-bold">
-        <button onclick="switchTab('analytics')" id="tab-analytics" class="flex-1 min-w-[80px] py-3 text-brandPurple border-b-2 border-brandPurple">
-            <i class="fa-solid fa-chart-line block text-base mb-0.5"></i> Analytics
-        </button>
-        <button onclick="switchTab('inventory')" id="tab-inventory" class="flex-1 min-w-[80px] py-3 text-gray-400 border-b-2 border-transparent">
-            <i class="fa-solid fa-boxes-stacked block text-base mb-0.5"></i> Inventory
-        </button>
-        <button onclick="switchTab('orders')" id="tab-orders" class="flex-1 min-w-[80px] py-3 text-gray-400 border-b-2 border-transparent">
-            <i class="fa-solid fa-cart-flatbed block text-base mb-0.5"></i> Orders
-        </button>
-        <button onclick="switchTab('branches')" id="tab-branches" class="flex-1 min-w-[80px] py-3 text-gray-400 border-b-2 border-transparent">
-            <i class="fa-solid fa-warehouse block text-base mb-0.5"></i> Branches
-        </button>
-        <button onclick="switchTab('siteedit')" id="tab-siteedit" class="flex-1 min-w-[80px] py-3 text-gray-400 border-b-2 border-transparent">
-            <i class="fa-solid fa-pen-to-square block text-base mb-0.5"></i> Site Edit
-        </button>
-        <button onclick="switchTab('plugins')" id="tab-plugins" class="flex-1 min-w-[80px] py-3 text-gray-400 border-b-2 border-transparent">
-            <i class="fa-solid fa-plug block text-base mb-0.5"></i> Plugins
-        </button>
+        <div id="admin-orders-container" class="space-y-4">
+          <!-- Orders will be loaded here via JavaScript -->
+        </div>
+      </div>
     </div>
 
-    <!-- 4. DASHBOARD CONTENT -->
-    <main class="p-4 max-w-xl mx-auto">
+  </main>
 
-        <!-- ANALYTICS -->
-        <section id="sec-analytics" class="space-y-4">
-            <div class="bg-gradient-to-r from-brandPurple to-purple-900 text-white p-5 rounded-3xl shadow-lg">
-                <span class="text-xs text-purple-200 uppercase font-bold tracking-wider">Total Sales Today</span>
-                <h2 class="text-3xl font-black mt-1">₹48,290</h2>
-                <div class="mt-4 grid grid-cols-2 gap-2 text-xs">
-                    <div class="bg-white/10 p-2.5 rounded-2xl">Total Orders: <b>24</b></div>
-                    <div class="bg-white/10 p-2.5 rounded-2xl">Pending Dispatch: <b>6</b></div>
-                </div>
+  <script>
+    // ==========================================
+    // 1. DELIVERY CHARGE MANAGEMENT
+    // ==========================================
+    function loadDeliverySettings() {
+      const settings = JSON.parse(localStorage.getItem('adminSettings')) || {
+        prepaidDelivery: 0,
+        codDelivery: 60
+      };
+      
+      document.getElementById('prepaid-charge').value = settings.prepaidDelivery;
+      document.getElementById('cod-charge').value = settings.codDelivery;
+    }
+
+    document.getElementById('delivery-settings-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const updatedSettings = {
+        prepaidDelivery: Number(document.getElementById('prepaid-charge').value),
+        codDelivery: Number(document.getElementById('cod-charge').value)
+      };
+
+      localStorage.setItem('adminSettings', JSON.stringify(updatedSettings));
+      alert("✅ Delivery charges updated successfully! Checkout page will now reflect these new rates.");
+    });
+
+    // ==========================================
+    // 2. ORDER MANAGEMENT & STATUS UPDATE
+    // ==========================================
+    function loadAdminOrders() {
+      const orders = JSON.parse(localStorage.getItem('orderHistory')) || [];
+      const container = document.getElementById('admin-orders-container');
+
+      if (orders.length === 0) {
+        container.innerHTML = `<p class="text-center text-sm font-bold text-zinc-400 py-10">No orders received yet.</p>`;
+        return;
+      }
+
+      container.innerHTML = orders.map((order, index) => `
+        <div class="border border-zinc-200 rounded-xl p-4 bg-zinc-50 flex flex-col md:flex-row gap-4 justify-between items-start">
+          
+          <!-- Order Details -->
+          <div class="space-y-2 flex-1">
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-black text-primary">${order.orderId}</span>
+              <span class="text-[10px] text-zinc-500 font-bold">${order.date}</span>
+            </div>
+            
+            <div class="space-y-1">
+              ${order.items.map(item => `
+                <p class="text-xs text-zinc-800 font-semibold">• ${item.name} (Size: ${item.size || '-'}) - Qty: ${item.qty || 1}</p>
+              `).join('')}
             </div>
 
-            <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-2">
-                <div class="flex justify-between items-center border-b pb-2">
-                    <h3 class="font-bold text-xs text-gray-800"><i class="fa-solid fa-users text-brandPurple mr-1"></i> Customers Summary</h3>
-                    <span class="text-[10px] bg-green-100 text-green-800 font-bold px-2 py-0.5 rounded-full">1,240 Registered</span>
-                </div>
-                <p class="text-xs text-gray-500">Retail Buyers: <b>1,180</b> | B2B Wholesale: <b>60</b></p>
-            </div>
-        </section>
+            <p class="text-sm font-extrabold text-zinc-900 pt-1">Total Bill: ₹${order.total}</p>
+          </div>
 
-        <!-- INVENTORY -->
-        <section id="sec-inventory" class="hidden space-y-4">
-            <div class="flex justify-between items-center">
-                <h2 class="text-sm font-bold text-gray-800">Master Products</h2>
-                <button onclick="openModal('modal-add-product')" class="bg-brandPurple text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">+ Add Product</button>
-            </div>
+          <!-- Status Updater -->
+          <div class="w-full md:w-auto bg-white p-3 rounded-lg border border-zinc-200 shadow-sm">
+            <label class="block text-[10px] font-bold text-zinc-500 uppercase mb-1">Update Status</label>
+            <select onchange="updateOrderStatus(${index}, this.value)" class="w-full md:w-40 p-2 border border-zinc-300 rounded text-xs font-bold focus:outline-primary">
+              <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
+              <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+              <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+              <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+            </select>
+          </div>
 
-            <div id="product-list" class="space-y-3">
-                <div class="bg-white p-3 rounded-2xl shadow-sm border flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=100" class="w-12 h-12 rounded-xl object-cover">
-                        <div>
-                            <h4 class="font-bold text-xs text-gray-800">Pure Cotton Blouse (Red)</h4>
-                            <span class="text-xs font-extrabold text-brandPurple">₹299</span>
-                            <span class="text-[10px] text-gray-400 block">Stock: 45 units</span>
-                        </div>
-                    </div>
-                    <button onclick="deleteProduct(this)" class="text-red-500 hover:bg-red-50 p-2 rounded-xl text-xs"><i class="fa-solid fa-trash-can"></i></button>
-                </div>
-            </div>
-        </section>
-
-        <!-- ORDERS -->
-        <section id="sec-orders" class="hidden space-y-3">
-            <h2 class="text-sm font-bold text-gray-800">Orders to Dispatch</h2>
-
-            <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-2">
-                <div class="flex justify-between items-center border-b pb-2">
-                    <span class="font-bold text-xs text-brandPurple">#MD-9082</span>
-                    <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Pending</span>
-                </div>
-                <div class="text-xs space-y-1">
-                    <p class="font-bold text-gray-800">Avijit Chakraborty (+91 9832XXXXXX)</p>
-                    <p class="text-gray-500">Items: Ready-made Blouse (Set of 2) | Price: <b>₹598</b></p>
-                    <p class="text-purple-900 font-bold text-[11px]"><i class="fa-solid fa-truck-fast mr-1"></i> Routed Hub: Chakdaha Franchise (741222)</p>
-                </div>
-                <div class="pt-2 border-t flex gap-2">
-                    <button onclick="updateOrderStatus(this, 'Dispatched')" class="flex-1 bg-brandPurple text-white py-2 rounded-xl font-bold text-xs">Dispatch Order</button>
-                    <button onclick="updateOrderStatus(this, 'Cancelled')" class="bg-gray-100 text-gray-600 px-3 py-2 rounded-xl font-bold text-xs">Cancel</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- BRANCHES -->
-        <section id="sec-branches" class="hidden space-y-4">
-            <div class="flex justify-between items-center">
-                <h2 class="text-sm font-bold text-gray-800">Branch Warehouses</h2>
-                <button onclick="openModal('modal-add-branch')" class="bg-brandRed text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">+ Add Branch</button>
-            </div>
-
-            <div id="branch-list" class="space-y-3">
-                <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-2">
-                    <div class="flex justify-between items-center border-b pb-2">
-                        <span class="font-bold text-xs text-brandPurple">Chakdaha Local Hub</span>
-                        <span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Active</span>
-                    </div>
-                    <p class="text-xs text-gray-500">Serviceable Pincodes: <b>741222, 741223</b></p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SITE EDIT -->
-        <section id="sec-siteedit" class="hidden space-y-4">
-            <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-3">
-                <h3 class="font-bold text-xs text-gray-800 border-b pb-2"><i class="fa-solid fa-pen-to-square text-brandPurple mr-1"></i>Edit Website Banner</h3>
-                <div>
-                    <label class="text-xs font-bold text-gray-600">Store Banner Heading Text</label>
-                    <input type="text" value="Premium Cotton Blouses & Petticoats" class="w-full border p-2 rounded-xl text-xs mt-1">
-                </div>
-                <button onclick="alert('Website Banner Updated!')" class="w-full bg-brandPurple text-white py-2.5 rounded-xl font-bold text-xs">Save Changes</button>
-            </div>
-        </section>
-
-        <!-- PLUGINS -->
-        <section id="sec-plugins" class="hidden space-y-4">
-            <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-3">
-                <h3 class="font-bold text-xs text-gray-800 border-b pb-2"><i class="fa-solid fa-plug text-brandPurple mr-1"></i>Razorpay & Shiprocket Keys</h3>
-                <div>
-                    <label class="text-xs font-bold text-gray-600">Razorpay Key ID</label>
-                    <input type="text" value="rzp_live_98327429842" class="w-full border p-2 rounded-xl text-xs mt-1 font-mono">
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-gray-600">Shiprocket Token</label>
-                    <input type="password" value="****************" class="w-full border p-2 rounded-xl text-xs mt-1">
-                </div>
-                <button onclick="alert('API Credentials Saved!')" class="w-full bg-brandRed text-white py-2.5 rounded-xl font-bold text-xs">Save Gateway Credentials</button>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- MODAL: ADD PRODUCT -->
-    <div id="modal-add-product" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3 shadow-2xl">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-xs text-gray-800">Add Item to Inventory</h3>
-                <button onclick="closeModal('modal-add-product')" class="text-gray-400 font-bold">✕</button>
-            </div>
-            <form onsubmit="handleAddProduct(event)" class="space-y-3 text-xs">
-                <div>
-                    <label class="font-bold text-gray-600">Product Title</label>
-                    <input type="text" id="p-title" placeholder="Cotton Petticoat" class="w-full border p-2 rounded-xl mt-1" required>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="font-bold text-gray-600">Price (₹)</label>
-                        <input type="number" id="p-price" placeholder="299" class="w-full border p-2 rounded-xl mt-1" required>
-                    </div>
-                    <div>
-                        <label class="font-bold text-gray-600">Stock Units</label>
-                        <input type="number" id="p-stock" placeholder="50" class="w-full border p-2 rounded-xl mt-1" required>
-                    </div>
-                </div>
-                <div>
-                    <label class="font-bold text-gray-600">Product Image URL</label>
-                    <input type="url" id="p-img" placeholder="https://..." class="w-full border p-2 rounded-xl mt-1" required>
-                </div>
-                <button type="submit" class="w-full bg-brandPurple text-white py-3 rounded-xl font-bold">Upload Product</button>
-            </form>
         </div>
-    </div>
+      `).join('');
+    }
 
-    <!-- MODAL: ADD BRANCH -->
-    <div id="modal-add-branch" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3 shadow-2xl">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-xs text-gray-800">Add Branch Warehouse</h3>
-                <button onclick="closeModal('modal-add-branch')" class="text-gray-400 font-bold">✕</button>
-            </div>
-            <form onsubmit="handleAddBranch(event)" class="space-y-3 text-xs">
-                <div>
-                    <label class="font-bold text-gray-600">Branch Name</label>
-                    <input type="text" id="b-name" placeholder="Kolkata Hub" class="w-full border p-2 rounded-xl mt-1" required>
-                </div>
-                <div>
-                    <label class="font-bold text-gray-600">Serviceable Pincodes</label>
-                    <input type="text" id="b-pins" placeholder="700001, 700002" class="w-full border p-2 rounded-xl mt-1" required>
-                </div>
-                <button type="submit" class="w-full bg-brandRed text-white py-3 rounded-xl font-bold">Register Branch</button>
-            </form>
-        </div>
-    </div>
+    function updateOrderStatus(orderIndex, newStatus) {
+      let orders = JSON.parse(localStorage.getItem('orderHistory')) || [];
+      if(orders[orderIndex]) {
+        orders[orderIndex].status = newStatus;
+        localStorage.setItem('orderHistory', JSON.stringify(orders));
+        alert(`Order status updated to: ${newStatus}`);
+      }
+    }
 
-    <!-- JAVASCRIPT LOGIC -->
-    <script>
-        // AUTH LOGIC
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const u = document.getElementById('admin-user').value.trim();
-            const p = document.getElementById('admin-pass').value.trim();
-            const err = document.getElementById('login-error');
-
-            if (u === 'admin' && p === '1234') {
-                document.getElementById('login-overlay').classList.add('hidden');
-                err.classList.add('hidden');
-            } else {
-                err.classList.remove('hidden');
-            }
-        }
-
-        function handleAdminLogout() {
-            if (confirm('Logout from Moni Dresses Admin Panel?')) {
-                document.getElementById('login-overlay').classList.remove('hidden');
-                document.getElementById('admin-pass').value = '';
-            }
-        }
-
-        // TAB SWITCHER
-        function switchTab(tab) {
-            ['analytics', 'inventory', 'orders', 'branches', 'siteedit', 'plugins'].forEach(t => {
-                document.getElementById(`sec-${t}`).classList.add('hidden');
-                const btn = document.getElementById(`tab-${t}`);
-                btn.classList.remove('text-brandPurple', 'border-brandPurple');
-                btn.classList.add('text-gray-400', 'border-transparent');
-            });
-
-            document.getElementById(`sec-${tab}`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`tab-${tab}`);
-            activeBtn.classList.add('text-brandPurple', 'border-brandPurple');
-            activeBtn.classList.remove('text-gray-400', 'border-transparent');
-        }
-
-        // MODAL UTILITIES
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        // PRODUCT MANAGEMENT
-        function handleAddProduct(e) {
-            e.preventDefault();
-            const title = document.getElementById('p-title').value;
-            const price = document.getElementById('p-price').value;
-            const stock = document.getElementById('p-stock').value;
-            const img = document.getElementById('p-img').value;
-
-            const list = document.getElementById('product-list');
-            const newCard = document.createElement('div');
-            newCard.className = "bg-white p-3 rounded-2xl shadow-sm border flex items-center justify-between";
-            newCard.innerHTML = `
-                <div class="flex items-center gap-3">
-                    <img src="${img}" class="w-12 h-12 rounded-xl object-cover" onerror="this.src='https://via.placeholder.com/100'">
-                    <div>
-                        <h4 class="font-bold text-xs text-gray-800">${title}</h4>
-                        <span class="text-xs font-extrabold text-brandPurple">₹${price}</span>
-                        <span class="text-[10px] text-gray-400 block">Stock: ${stock} units</span>
-                    </div>
-                </div>
-                <button onclick="deleteProduct(this)" class="text-red-500 hover:bg-red-50 p-2 rounded-xl text-xs"><i class="fa-solid fa-trash-can"></i></button>
-            `;
-            list.prepend(newCard);
-            closeModal('modal-add-product');
-            alert('Item added to Inventory!');
-        }
-
-        function deleteProduct(btn) {
-            if(confirm('Delete item?')) {
-                btn.closest('.bg-white').remove();
-            }
-        }
-
-        // BRANCH MANAGEMENT
-        function handleAddBranch(e) {
-            e.preventDefault();
-            const name = document.getElementById('b-name').value;
-            const pins = document.getElementById('b-pins').value;
-
-            const list = document.getElementById('branch-list');
-            const newBranch = document.createElement('div');
-            newBranch.className = "bg-white p-4 rounded-2xl shadow-sm border space-y-2";
-            newBranch.innerHTML = `
-                <div class="flex justify-between items-center border-b pb-2">
-                    <span class="font-bold text-xs text-brandPurple">${name}</span>
-                    <span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Active</span>
-                </div>
-                <p class="text-xs text-gray-500">Serviceable Pincodes: <b>${pins}</b></p>
-            `;
-            list.prepend(newBranch);
-            closeModal('modal-add-branch');
-            alert('Branch Registered!');
-        }
-
-        // ORDER MANAGEMENT
-        function updateOrderStatus(btn, status) {
-            const card = btn.closest('.bg-white');
-            const badge = card.querySelector('.bg-amber-100, .bg-green-100, .bg-red-100');
-            if(badge) {
-                badge.className = status === 'Dispatched' ? "bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full" : "bg-red-100 text-red-800 text-[10px] font-bold px-2 py-0.5 rounded-full";
-                badge.innerText = status;
-            }
-            alert(`Order marked as ${status}`);
-        }
-    </script>
+    // Initialize Admin Panel
+    window.addEventListener('DOMContentLoaded', () => {
+      loadDeliverySettings();
+      loadAdminOrders();
+    });
+  </script>
 </body>
 </html>
