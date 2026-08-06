@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Designer Cotton Blouse — MONI DRESSES</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#b3006a",
+            secondary: "#5f5e5e",
+            surface: "#fbf9f8"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+            brand: ["Bodoni Moda", "serif"]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { -webkit-tap-highlight-color: transparent; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body class="bg-surface text-zinc-900 font-sans min-h-screen pb-24">
+
+  <!-- Top Navigation Header -->
+  <header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-3 bg-white/90 backdrop-blur-md border-b border-zinc-100 shadow-sm">
+    <button onclick="history.back()" aria-label="Back" class="p-1 rounded-full text-zinc-700 hover:bg-zinc-100 active:scale-95">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+
+    <a href="home.html" class="font-brand text-lg font-bold text-primary tracking-wider">MONI DRESSES</a>
+
+    <a href="cart.html" aria-label="Cart" class="relative p-1 text-zinc-700 active:scale-95">
+      <span class="material-symbols-outlined">shopping_cart</span>
+      <span class="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full" id="cart-count">0</span>
+    </a>
+  </header>
+
+  <main class="max-w-[600px] mx-auto pt-14">
+
+    <!-- Image Gallery Carousel -->
+    <div class="relative w-full aspect-[3/4] bg-zinc-100 overflow-hidden">
+      <img id="main-product-img" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600" alt="Cotton Blouse" />
+      <span class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs px-2.5 py-1 rounded-full font-medium">1 / 4 Photos</span>
+    </div>
+
+    <!-- Image Thumbnails -->
+    <div class="flex gap-2 px-4 py-3 overflow-x-auto no-scrollbar bg-white border-b border-zinc-100">
+      <img onclick="changeImage(this.src)" class="w-16 h-16 rounded-lg object-cover border-2 border-primary cursor-pointer" src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=200" alt="Thumb 1"/>
+      <img onclick="changeImage(this.src)" class="w-16 h-16 rounded-lg object-cover border border-zinc-200 cursor-pointer" src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=200" alt="Thumb 2"/>
+      <img onclick="changeImage(this.src)" class="w-16 h-16 rounded-lg object-cover border border-zinc-200 cursor-pointer" src="https://images.unsplash.com/photo-1518049362265-d5b2a6467637?w=200" alt="Thumb 3"/>
+    </div>
+
+    <!-- Product Details Section -->
+    <div class="p-4 bg-white mb-2 shadow-sm">
+      <span class="text-[11px] font-bold tracking-wider uppercase text-primary bg-primary/10 px-2 py-0.5 rounded">Pure Cotton</span>
+      
+      <h1 class="text-lg font-bold text-zinc-900 mt-2 leading-snug">
+        Designer Readymade Cotton Blouse (Front Open Hook)
+      </h1>
+
+      <div class="flex items-center gap-2 mt-2">
+        <span class="bg-emerald-700 text-white text-xs font-bold px-2 py-0.5 rounded flex items-center gap-0.5">
+          4.8 <span class="material-symbols-outlined text-[12px]">star</span>
+        </span>
+        <span class="text-xs text-zinc-500 font-medium">124 Ratings & Reviews</span>
+      </div>
+
+      <!-- Pricing -->
+      <div class="flex items-baseline gap-2 mt-4">
+        <span class="text-2xl font-black text-zinc-900">₹499</span>
+        <span class="text-sm text-zinc-400 line-through">₹799</span>
+        <span class="text-sm font-bold text-emerald-600">37% OFF</span>
+      </div>
+      <p class="text-[11px] text-zinc-500 mt-0.5">Inclusive of all taxes</p>
+    </div>
+
+    <!-- Size Selection -->
+    <div class="p-4 bg-white mb-2 shadow-sm">
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="text-sm font-bold text-zinc-900">Select Bust Size (Inches)</h3>
+        <button class="text-xs font-bold text-primary flex items-center gap-0.5">
+          <span class="material-symbols-outlined text-sm">straighten</span> Size Chart
+        </button>
+      </div>
+
+      <div class="flex gap-2">
+        <button onclick="selectSize(this)" class="size-btn flex-1 py-2.5 border-2 border-zinc-200 rounded-lg font-bold text-sm text-zinc-700 hover:border-primary active:scale-95 transition-all">32</button>
+        <button onclick="selectSize(this)" class="size-btn flex-1 py-2.5 border-2 border-primary bg-primary/5 text-primary rounded-lg font-bold text-sm active:scale-95 transition-all">34</button>
+        <button onclick="selectSize(this)" class="size-btn flex-1 py-2.5 border-2 border-zinc-200 rounded-lg font-bold text-sm text-zinc-700 hover:border-primary active:scale-95 transition-all">36</button>
+        <button onclick="selectSize(this)" class="size-btn flex-1 py-2.5 border-2 border-zinc-200 rounded-lg font-bold text-sm text-zinc-700 hover:border-primary active:scale-95 transition-all">38</button>
+        <button onclick="selectSize(this)" class="size-btn flex-1 py-2.5 border-2 border-zinc-200 rounded-lg font-bold text-sm text-zinc-700 hover:border-primary active:scale-95 transition-all">40</button>
+      </div>
+    </div>
+
+    <!-- Product Description & Specifications -->
+    <div class="p-4 bg-white shadow-sm space-y-3">
+      <h3 class="text-sm font-bold text-zinc-900">Product Specifications</h3>
+      
+      <div class="grid grid-cols-2 gap-y-2 text-xs text-zinc-600 border-t border-zinc-100 pt-3">
+        <div><span class="text-zinc-400">Fabric:</span> 100% Pure Cotton</div>
+        <div><span class="text-zinc-400">Sleeve:</span> Half Sleeve</div>
+        <div><span class="text-zinc-400">Closure:</span> Front Hook</div>
+        <div><span class="text-zinc-400">Pad Type:</span> Non-Padded</div>
+        <div><span class="text-zinc-400">Care:</span> Hand Wash Only</div>
+        <div><span class="text-zinc-400">Origin:</span> Made in India</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Sticky Bottom Action Buttons -->
+  <div class="fixed bottom-0 left-0 w-full z-40 bg-white border-t border-zinc-200 p-3 shadow-lg">
+    <div class="max-w-[600px] mx-auto flex gap-3">
+      <button onclick="addToCart()" class="flex-1 py-3 px-4 rounded-xl border border-zinc-900 font-bold text-sm text-zinc-900 hover:bg-zinc-50 active:scale-95 transition-all flex items-center justify-center gap-1">
+        <span class="material-symbols-outlined text-lg">shopping_bag</span> Add to Cart
+      </button>
+      
+      <button onclick="buyNow()" class="flex-1 py-3 px-4 rounded-xl bg-primary font-bold text-sm text-white shadow-md hover:bg-primary/90 active:scale-95 transition-all">
+        Buy Now
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function changeImage(src) {
+      document.getElementById('main-product-img').src = src;
+    }
+
+    function selectSize(btn) {
+      document.querySelectorAll('.size-btn').forEach(b => {
+        b.classList.remove('border-primary', 'bg-primary/5', 'text-primary');
+        b.classList.add('border-zinc-200', 'text-zinc-700');
+      });
+      btn.classList.remove('border-zinc-200', 'text-zinc-700');
+      btn.classList.add('border-primary', 'bg-primary/5', 'text-primary');
+    }
+
+    function addToCart() {
+      // Logic handled via app.js
+      alert('Item added to cart!');
+    }
+
+    function buyNow() {
+      window.location.href = 'cart.html';
+    }
+  </script>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
