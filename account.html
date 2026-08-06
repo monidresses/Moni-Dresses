@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>My Account — MONI DRESSES</title>
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#b3006a",
+            surface: "#fbf9f8"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+            brand: ["Bodoni Moda", "serif"]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { -webkit-tap-highlight-color: transparent; }
+  </style>
+</head>
+<body class="bg-surface text-zinc-900 font-sans min-h-screen pb-20">
+
+  <!-- Top Header Navigation -->
+  <header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-3 bg-white border-b border-zinc-100 shadow-sm">
+    <button onclick="history.back()" aria-label="Back" class="p-1 text-zinc-700 active:scale-95">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <a href="home.html" class="font-brand text-lg font-bold text-primary tracking-wider">MONI DRESSES</a>
+    <a href="cart.html" aria-label="Cart" class="p-1 text-zinc-700 active:scale-95">
+      <span class="material-symbols-outlined">shopping_cart</span>
+    </a>
+  </header>
+
+  <main class="max-w-[600px] mx-auto pt-16 px-4 space-y-4">
+
+    <!-- User Profile Card -->
+    <div class="bg-white p-4 rounded-xl border border-zinc-200/80 shadow-sm flex items-center gap-4">
+      <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center font-bold text-2xl border border-primary/20">
+        <span id="user-avatar-text">A</span>
+      </div>
+      <div>
+        <h1 class="text-base font-extrabold text-zinc-900" id="profile-name">Avijit Chakraborty</h1>
+        <p class="text-xs text-zinc-500 font-medium" id="profile-phone">+91 98765 43210</p>
+        <span class="inline-block mt-1 bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">Verified Customer</span>
+      </div>
+    </div>
+
+    <!-- My Orders Section -->
+    <div class="bg-white p-4 rounded-xl border border-zinc-200/80 shadow-sm space-y-3">
+      <div class="flex justify-between items-center border-b border-zinc-100 pb-2">
+        <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">My Orders</h2>
+        <a href="#" class="text-xs font-bold text-primary">View All</a>
+      </div>
+
+      <!-- Recent Order Card 1 -->
+      <div class="p-3 bg-zinc-50 border border-zinc-200/70 rounded-lg space-y-2">
+        <div class="flex justify-between items-start">
+          <div>
+            <span class="text-[10px] font-bold uppercase text-primary bg-primary/10 px-1.5 py-0.5 rounded">Order #MD-8841</span>
+            <h3 class="text-xs font-bold text-zinc-800 mt-1">Designer Readymade Cotton Blouse (Size 34)</h3>
+          </div>
+          <span class="text-xs font-black text-zinc-900">₹449</span>
+        </div>
+
+        <div class="flex items-center justify-between pt-1 border-t border-zinc-200/60 text-[11px]">
+          <span class="text-emerald-700 font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">local_shipping</span> Out for Delivery
+          </span>
+          <a href="#" class="text-zinc-500 hover:text-zinc-800 font-medium underline">Track Parcel</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saved Addresses -->
+    <div class="bg-white p-4 rounded-xl border border-zinc-200/80 shadow-sm space-y-3">
+      <div class="flex justify-between items-center border-b border-zinc-100 pb-2">
+        <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Saved Addresses</h2>
+        <button onclick="alert('Add address form will open')" class="text-xs font-bold text-primary">+ Add New</button>
+      </div>
+
+      <div class="flex items-start gap-3 text-xs text-zinc-700 p-2.5 bg-zinc-50 rounded-lg border border-zinc-200/70">
+        <span class="material-symbols-outlined text-primary text-lg mt-0.5">home</span>
+        <div>
+          <span class="font-bold text-zinc-900 block mb-0.5">Home Address</span>
+          <p class="text-zinc-500 leading-relaxed">Chakraborty House, Road No. 4, City Center, Kolkata, West Bengal - 700001</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Settings & Support -->
+    <div class="bg-white rounded-xl border border-zinc-200/80 shadow-sm overflow-hidden divide-y divide-zinc-100">
+      
+      <a href="b2b.html" class="flex items-center justify-between p-3.5 hover:bg-zinc-50">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-primary">store</span>
+          <span class="text-xs font-bold text-zinc-800">B2B Wholesale Portal</span>
+        </div>
+        <span class="material-symbols-outlined text-zinc-400 text-sm">chevron_right</span>
+      </a>
+
+      <a href="https://wa.me/919876543210" target="_blank" class="flex items-center justify-between p-3.5 hover:bg-zinc-50">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-emerald-600">support_agent</span>
+          <span class="text-xs font-bold text-zinc-800">Help & WhatsApp Support</span>
+        </div>
+        <span class="material-symbols-outlined text-zinc-400 text-sm">chevron_right</span>
+      </a>
+
+      <a href="policies.html" class="flex items-center justify-between p-3.5 hover:bg-zinc-50">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-zinc-600">policy</span>
+          <span class="text-xs font-bold text-zinc-800">Terms, Privacy & Return Policy</span>
+        </div>
+        <span class="material-symbols-outlined text-zinc-400 text-sm">chevron_right</span>
+      </a>
+
+    </div>
+
+    <!-- Logout Button -->
+    <button onclick="logoutUser()" class="w-full py-3 px-4 rounded-xl bg-red-50 border border-red-200 font-bold text-xs text-red-600 hover:bg-red-100 active:scale-95 transition-all flex items-center justify-center gap-1">
+      <span class="material-symbols-outlined text-sm">logout</span> Log Out
+    </button>
+
+  </main>
+
+  <script>
+    // Check Auth on Page Load
+    window.addEventListener('DOMContentLoaded', () => {
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      if (isLoggedIn !== "true") {
+        window.location.href = "login.html";
+      }
+    });
+
+    function logoutUser() {
+      if (confirm("Are you sure you want to log out?")) {
+        localStorage.removeItem("isLoggedIn");
+        window.location.href = "home.html";
+      }
+    }
+  </script>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
