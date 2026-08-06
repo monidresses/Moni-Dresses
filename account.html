@@ -45,7 +45,7 @@
 
   <main class="max-w-[600px] mx-auto pt-16 px-4 space-y-4">
 
-    <!-- 1. USER PROFILE HEADER WITH IMAGE & NAME -->
+    <!-- 1. USER PROFILE HEADER WITH EDIT FUNCTIONALITY -->
     <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-sm flex items-center justify-between">
       <div class="flex items-center gap-3.5">
         <div class="relative w-16 h-16 rounded-full overflow-hidden bg-primary/10 border-2 border-primary/20 flex items-center justify-center shrink-0">
@@ -58,15 +58,14 @@
         </div>
       </div>
       
-      <button onclick="alert('Profile edit feature coming soon')" class="p-2 bg-zinc-50 text-zinc-600 rounded-xl hover:bg-zinc-100 border border-zinc-200 active:scale-95">
-        <span class="material-symbols-outlined text-sm">edit</span>
+      <!-- Edit Profile Button -->
+      <button onclick="openEditProfileModal()" class="p-2 bg-zinc-50 text-zinc-600 rounded-xl hover:bg-zinc-100 border border-zinc-200 active:scale-95 flex items-center gap-1 text-xs font-bold">
+        <span class="material-symbols-outlined text-sm">edit</span> Edit
       </button>
     </div>
 
-    <!-- 2. QUICK ACTION GRID (Wishlist, Orders, Size Fit, Refer) -->
+    <!-- 2. QUICK ACTION GRID -->
     <div class="grid grid-cols-2 gap-3">
-      
-      <!-- Order History -->
       <a href="#orders-section" class="bg-white p-3.5 rounded-2xl border border-zinc-200/80 shadow-sm flex items-center gap-3 hover:border-primary transition-all">
         <div class="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center shrink-0">
           <span class="material-symbols-outlined">package_2</span>
@@ -77,17 +76,15 @@
         </div>
       </a>
 
-      <!-- Wishlist -->
-      <a href="#wishlist-section" class="bg-white p-3.5 rounded-2xl border border-zinc-200/80 shadow-sm flex items-center gap-3 hover:border-primary transition-all">
+      <a href="cart.html" class="bg-white p-3.5 rounded-2xl border border-zinc-200/80 shadow-sm flex items-center gap-3 hover:border-primary transition-all">
         <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center shrink-0">
           <span class="material-symbols-outlined">favorite</span>
         </div>
         <div>
           <h3 class="text-xs font-bold text-zinc-900">Wishlist</h3>
-          <p class="text-[10px] text-zinc-400">3 Saved Items</p>
+          <p class="text-[10px] text-zinc-400">View Saved Items</p>
         </div>
       </a>
-
     </div>
 
     <!-- 3. REFER & EARN BANNER -->
@@ -95,7 +92,7 @@
       <div class="space-y-1">
         <span class="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Refer & Earn</span>
         <h3 class="text-sm font-extrabold">Invite Friends, Get ₹100 Off</h3>
-        <p class="text-[11px] text-white/80">Share your referral code with friends and family.</p>
+        <p class="text-[11px] text-white/80">Share your referral link with friends.</p>
       </div>
       <button onclick="copyReferralCode()" class="bg-white text-primary font-bold text-xs px-3 py-2 rounded-xl shadow active:scale-95 shrink-0">
         Share
@@ -106,10 +103,9 @@
     <div id="orders-section" class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-sm space-y-3">
       <div class="flex justify-between items-center border-b border-zinc-100 pb-2">
         <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Recent Orders</h2>
-        <a href="#" class="text-xs font-bold text-primary">View All</a>
+        <span class="text-xs font-bold text-primary">Active</span>
       </div>
 
-      <!-- Recent Order Card 1 -->
       <div class="p-3 bg-zinc-50 border border-zinc-200/70 rounded-xl space-y-2">
         <div class="flex justify-between items-start">
           <div>
@@ -123,7 +119,7 @@
           <span class="text-emerald-700 font-bold flex items-center gap-1">
             <span class="material-symbols-outlined text-sm">local_shipping</span> Out for Delivery
           </span>
-          <a href="#" class="text-primary font-bold hover:underline">Track Order</a>
+          <button onclick="alert('Tracking ID: DELHIVERY-998231\nStatus: Out for delivery via Delhivery Courier.')" class="text-primary font-bold hover:underline">Track Order</button>
         </div>
       </div>
     </div>
@@ -148,23 +144,23 @@
       </div>
     </div>
 
-    <!-- 6. SAVED ADDRESSES -->
+    <!-- 6. SAVED ADDRESSES SECTION -->
     <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-sm space-y-3">
       <div class="flex justify-between items-center border-b border-zinc-100 pb-2">
-        <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Saved Delivery Addresses</h2>
-        <button onclick="alert('Add Address Form')" class="text-xs font-bold text-primary">+ Add New</button>
+        <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Saved Delivery Address</h2>
+        <button onclick="openEditProfileModal()" class="text-xs font-bold text-primary">Edit Address</button>
       </div>
 
       <div class="flex items-start gap-3 text-xs text-zinc-700 p-3 bg-zinc-50 rounded-xl border border-zinc-200/70">
         <span class="material-symbols-outlined text-primary text-lg mt-0.5">home</span>
         <div class="flex-1">
-          <span class="font-bold text-zinc-900 block mb-0.5">Home Address</span>
-          <p class="text-zinc-500 leading-relaxed text-[11px]">Chakraborty House, Road No. 4, City Center, Kolkata, West Bengal - 700001</p>
+          <span class="font-bold text-zinc-900 block mb-0.5">Default Address</span>
+          <p class="text-zinc-500 leading-relaxed text-[11px]" id="display-address">Chakraborty House, Road No. 4, City Center, Kolkata, West Bengal - 700001</p>
         </div>
       </div>
     </div>
 
-    <!-- 7. BANK & UPI DETAILS (FOR REFUNDS) -->
+    <!-- 7. BANK & UPI DETAILS SECTION -->
     <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-sm space-y-3">
       <div class="flex justify-between items-center border-b border-zinc-100 pb-2">
         <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Bank & UPI Details (For Refunds)</h2>
@@ -175,18 +171,17 @@
         <div class="flex items-center gap-3">
           <span class="material-symbols-outlined text-emerald-600">account_balance</span>
           <div>
-            <span class="text-xs font-bold text-zinc-900 block">Google Pay / PhonePe UPI</span>
-            <p class="text-[11px] text-zinc-500">avijit@upi</p>
+            <span class="text-xs font-bold text-zinc-900 block">UPI ID</span>
+            <p class="text-[11px] text-zinc-500" id="display-upi">avijit@upi</p>
           </div>
         </div>
-        <button onclick="alert('Update UPI')" class="text-xs font-bold text-primary">Edit</button>
+        <button onclick="openEditProfileModal()" class="text-xs font-bold text-primary">Edit</button>
       </div>
     </div>
 
-    <!-- 8. ACCOUNT SETTINGS, HELP & POLICIES MENU -->
+    <!-- 8. SETTINGS & SUPPORT MENU -->
     <div class="bg-white rounded-2xl border border-zinc-200/80 shadow-sm overflow-hidden divide-y divide-zinc-100">
       
-      <!-- B2B Wholesale -->
       <a href="b2b.html" class="flex items-center justify-between p-3.5 hover:bg-zinc-50">
         <div class="flex items-center gap-3">
           <span class="material-symbols-outlined text-primary">store</span>
@@ -195,8 +190,7 @@
         <span class="material-symbols-outlined text-zinc-400 text-sm">chevron_right</span>
       </a>
 
-      <!-- Help & WhatsApp Support -->
-      <a href="https://wa.me/918536891441" target="_blank" class="flex items-center justify-between p-3.5 hover:bg-zinc-50">
+      <a href="https://wa.me/919876543210" target="_blank" class="flex items-center justify-between p-3.5 hover:bg-zinc-50">
         <div class="flex items-center gap-3">
           <span class="material-symbols-outlined text-emerald-600">support_agent</span>
           <span class="text-xs font-bold text-zinc-800">Help & WhatsApp Support</span>
@@ -204,23 +198,13 @@
         <span class="material-symbols-outlined text-zinc-400 text-sm">chevron_right</span>
       </a>
 
-      <!-- Settings -->
-      <a href="#" onclick="alert('Settings menu')" class="flex items-center justify-between p-3.5 hover:bg-zinc-50">
+      <button onclick="alert('Notification preference saved!')" class="w-full flex items-center justify-between p-3.5 hover:bg-zinc-50 text-left">
         <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-zinc-600">settings</span>
-          <span class="text-xs font-bold text-zinc-800">App Settings & Notifications</span>
+          <span class="material-symbols-outlined text-zinc-600">notifications</span>
+          <span class="text-xs font-bold text-zinc-800">App Notifications</span>
         </div>
-        <span class="material-symbols-outlined text-zinc-400 text-sm">chevron_right</span>
-      </a>
-
-      <!-- Terms & Privacy -->
-      <a href="policies.html" class="flex items-center justify-between p-3.5 hover:bg-zinc-50">
-        <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-zinc-600">policy</span>
-          <span class="text-xs font-bold text-zinc-800">Terms, Privacy & Return Policy</span>
-        </div>
-        <span class="material-symbols-outlined text-zinc-400 text-sm">chevron_right</span>
-      </a>
+        <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">ENABLED</span>
+      </button>
 
     </div>
 
@@ -231,15 +215,114 @@
 
   </main>
 
+  <!-- ========================================== -->
+  <!-- 📝 EDIT PROFILE MODAL -->
+  <!-- ========================================== -->
+  <div id="edit-profile-modal" class="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white w-full max-w-md rounded-2xl p-5 shadow-2xl relative space-y-4 my-8">
+      
+      <div class="flex justify-between items-center border-b border-zinc-100 pb-3">
+        <h3 class="font-bold text-sm text-zinc-900">Update Profile Details</h3>
+        <button onclick="closeEditProfileModal()" class="text-zinc-400 hover:text-zinc-800">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form onsubmit="saveProfileDetails(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-zinc-700 mb-1">Full Name</label>
+          <input type="text" id="input-name" required class="w-full text-xs p-2.5 border border-zinc-200 rounded-lg focus:outline-none focus:border-primary" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-zinc-700 mb-1">Mobile Phone Number</label>
+          <input type="tel" id="input-phone" required class="w-full text-xs p-2.5 border border-zinc-200 rounded-lg focus:outline-none focus:border-primary" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-zinc-700 mb-1">Profile Photo Image URL</label>
+          <input type="url" id="input-photo" placeholder="https://..." class="w-full text-xs p-2.5 border border-zinc-200 rounded-lg focus:outline-none focus:border-primary" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-zinc-700 mb-1">Full Address</label>
+          <textarea id="input-address" rows="2" class="w-full text-xs p-2.5 border border-zinc-200 rounded-lg focus:outline-none focus:border-primary"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-zinc-700 mb-1">UPI ID for Refunds</label>
+          <input type="text" id="input-upi" placeholder="name@upi" class="w-full text-xs p-2.5 border border-zinc-200 rounded-lg focus:outline-none focus:border-primary" />
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-primary text-white font-bold text-xs shadow-md active:scale-95 transition-all mt-2">
+          Save & Update Profile
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- JavaScript Functions -->
   <script>
-    // 1. Auth Check on Page Load
+    // Load User Data from localStorage
+    function loadUserData() {
+      const savedUser = JSON.parse(localStorage.getItem("userProfile")) || {
+        name: "Avijit Chakraborty",
+        phone: "+91 98765 43210",
+        photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200",
+        address: "Chakraborty House, Road No. 4, City Center, Kolkata, West Bengal - 700001",
+        upi: "avijit@upi"
+      };
+
+      document.getElementById('profile-name').innerText = savedUser.name;
+      document.getElementById('profile-phone').innerText = savedUser.phone;
+      document.getElementById('user-profile-img').src = savedUser.photo;
+      document.getElementById('display-address').innerText = savedUser.address;
+      document.getElementById('display-upi').innerText = savedUser.upi;
+
+      // Fill Input fields in Modal
+      document.getElementById('input-name').value = savedUser.name;
+      document.getElementById('input-phone').value = savedUser.phone;
+      document.getElementById('input-photo').value = savedUser.photo;
+      document.getElementById('input-address').value = savedUser.address;
+      document.getElementById('input-upi').value = savedUser.upi;
+    }
+
+    function openEditProfileModal() {
+      document.getElementById('edit-profile-modal').classList.remove('hidden');
+    }
+
+    function closeEditProfileModal() {
+      document.getElementById('edit-profile-modal').classList.add('hidden');
+    }
+
+    function saveProfileDetails(e) {
+      e.preventDefault();
+
+      const updatedUser = {
+        name: document.getElementById('input-name').value,
+        phone: document.getElementById('input-phone').value,
+        photo: document.getElementById('input-photo').value || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200",
+        address: document.getElementById('input-address').value,
+        upi: document.getElementById('input-upi').value
+      };
+
+      localStorage.setItem("userProfile", JSON.stringify(updatedUser));
+      loadUserData();
+      closeEditProfileModal();
+      alert("Profile Details Updated Successfully!");
+    }
+
+    // Initialize Page
     window.addEventListener('DOMContentLoaded', () => {
       const isLoggedIn = localStorage.getItem("isLoggedIn");
       if (isLoggedIn !== "true") {
         window.location.href = "login.html";
       }
 
-      // Load Saved Size Fit if available
+      loadUserData();
+
+      // Load Saved Size Fit
       const savedFitRaw = localStorage.getItem("userSavedFit");
       if (savedFitRaw) {
         const savedFit = JSON.parse(savedFitRaw);
@@ -249,13 +332,11 @@
       }
     });
 
-    // 2. Refer Code Share Function
     function copyReferralCode() {
       navigator.clipboard.writeText("https://monidresses.com/ref?code=MONI100");
-      alert("Referral link copied! Share with your friends on WhatsApp to earn rewards.");
+      alert("Referral link copied! Share with your friends on WhatsApp.");
     }
 
-    // 3. Logout Function
     function logoutUser() {
       if (confirm("Are you sure you want to log out?")) {
         localStorage.removeItem("isLoggedIn");
