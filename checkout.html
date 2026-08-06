@@ -23,7 +23,9 @@
 </head>
 <body class="bg-surface text-zinc-900 font-sans min-h-screen pb-24">
 
+  <!-- ========================================== -->
   <!-- TOP HEADER -->
+  <!-- ========================================== -->
   <header class="fixed top-0 left-0 w-full z-40 flex items-center px-4 py-3 bg-white border-b border-zinc-100 shadow-sm">
     <button onclick="history.back()" class="p-1 text-zinc-700 hover:text-primary transition-colors">
       <span class="material-symbols-outlined text-2xl">arrow_back</span>
@@ -34,11 +36,13 @@
   <main class="max-w-[550px] mx-auto pt-16 px-4 space-y-5">
     <form id="checkout-form" class="space-y-4">
       
+      <!-- ========================================== -->
       <!-- DELIVERY ADDRESS SECTION -->
+      <!-- ========================================== -->
       <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm space-y-4">
         <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider border-b border-zinc-100 pb-2">Delivery Address</h3>
 
-        <!-- Saved Address Block -->
+        <!-- Saved Profile Address Block -->
         <div id="saved-address-section" class="hidden">
           <label class="flex items-start gap-3 p-3 border border-primary/30 bg-primary/5 rounded-xl cursor-pointer transition-all">
             <input type="radio" name="addressSelect" value="saved" id="radio-saved" onchange="toggleAddressOption()" class="mt-1 accent-primary">
@@ -59,7 +63,7 @@
           <span class="text-xs font-bold text-zinc-800">+ Add New Address</span>
         </label>
 
-        <!-- New Address Input Fields -->
+        <!-- New Address Input Fields (Hidden by default if saved address exists) -->
         <div id="address-inputs" class="space-y-3 pt-2 hidden">
           <div class="grid grid-cols-2 gap-2.5">
             <div>
@@ -108,38 +112,65 @@
         </div>
       </div>
 
-      <!-- PAYMENT METHOD -->
+      <!-- ========================================== -->
+      <!-- PAYMENT METHOD SECTION -->
+      <!-- ========================================== -->
       <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm space-y-3">
         <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Payment Options</h3>
+        
+        <!-- Prepaid Option -->
         <label class="flex items-center justify-between p-3 border border-zinc-200 rounded-xl cursor-pointer hover:border-primary transition-colors">
           <div class="flex items-center gap-3">
-            <input type="radio" name="paymentMethod" value="razorpay" checked class="accent-primary">
+            <input type="radio" name="paymentMethod" value="razorpay" onchange="updateOrderSummary()" checked class="accent-primary">
             <div>
               <p class="text-xs font-bold text-zinc-800">Online Payment (UPI, Cards)</p>
-              <p class="text-[10px] text-emerald-600 font-semibold">Fast & Secure via Razorpay</p>
+              <p class="text-[10px] text-emerald-600 font-semibold">Extra Discount on Prepaid Order</p>
             </div>
           </div>
           <span class="material-symbols-outlined text-primary text-xl">payments</span>
         </label>
+        
+        <!-- COD Option -->
         <label class="flex items-center justify-between p-3 border border-zinc-200 rounded-xl cursor-pointer hover:border-primary transition-colors">
           <div class="flex items-center gap-3">
-            <input type="radio" name="paymentMethod" value="cod" class="accent-primary">
+            <input type="radio" name="paymentMethod" value="cod" onchange="updateOrderSummary()" class="accent-primary">
             <div>
               <p class="text-xs font-bold text-zinc-800">Cash on Delivery (COD)</p>
-              <p class="text-[10px] text-zinc-400">Mobile OTP Verification</p>
+              <p class="text-[10px] text-zinc-400">Standard Delivery Charge Applies</p>
             </div>
           </div>
           <span class="material-symbols-outlined text-zinc-500 text-xl">local_shipping</span>
         </label>
       </div>
 
-      <button type="submit" class="w-full py-4 bg-primary text-white font-extrabold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase tracking-wider">
+      <!-- ========================================== -->
+      <!-- ORDER SUMMARY & BILLING SECTION -->
+      <!-- ========================================== -->
+      <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm space-y-3">
+        <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider border-b border-zinc-100 pb-2">Order Summary</h3>
+        <div class="flex justify-between text-xs font-bold text-zinc-600">
+          <span>Items Subtotal</span>
+          <span id="summary-subtotal">₹0</span>
+        </div>
+        <div class="flex justify-between text-xs font-bold text-zinc-600">
+          <span>Delivery Charge</span>
+          <span id="summary-delivery" class="text-emerald-600">FREE</span>
+        </div>
+        <div class="flex justify-between text-sm font-black text-zinc-900 border-t border-zinc-100 pt-3">
+          <span>Grand Total</span>
+          <span id="summary-total" class="text-primary text-base">₹0</span>
+        </div>
+      </div>
+
+      <button type="submit" id="submit-btn" class="w-full py-4 bg-primary text-white font-extrabold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase tracking-wider">
         Confirm & Place Order
       </button>
     </form>
   </main>
 
-  <!-- OTP MODAL FOR COD -->
+  <!-- ========================================== -->
+  <!-- OTP MODAL FOR COD VERIFICATION -->
+  <!-- ========================================== -->
   <div id="otp-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <div class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-xl space-y-4 text-center">
       <div class="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto">
@@ -155,10 +186,65 @@
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!-- CORE JAVASCRIPT LOGIC -->
+  <!-- ========================================== -->
   <script>
     let generatedOTP = "1234";
+    let finalOrderAmount = 0; // Stores the final amount the customer has to pay
 
-    // 1. Profile Address Load Logic
+    // ==========================================
+    // 1. ADMIN DELIVERY CHARGES (DYNAMIC)
+    // ==========================================
+    // These charges are fetched from the Admin Panel via localStorage.
+    // If not configured, defaults are applied: Prepaid = 0 (Free), COD = 60.
+    function getAdminDeliveryCharges() {
+      const adminSettings = JSON.parse(localStorage.getItem('adminSettings')) || {
+        prepaidDelivery: 0, 
+        codDelivery: 60     
+      };
+      return adminSettings;
+    }
+
+    // ==========================================
+    // 2. ORDER CALCULATION & SUMMARY UPDATE
+    // ==========================================
+    function getCartSubtotal() {
+      const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+      return cart.reduce((sum, item) => sum + (Number(item.price) * (Number(item.qty) || 1)), 0);
+    }
+
+    function updateOrderSummary() {
+      const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+      const charges = getAdminDeliveryCharges();
+      
+      const subtotal = getCartSubtotal();
+      
+      // Determine delivery fee based on selected payment method
+      const deliveryFee = paymentMethod === 'razorpay' ? Number(charges.prepaidDelivery) : Number(charges.codDelivery);
+      
+      finalOrderAmount = subtotal + deliveryFee;
+
+      // Update UI Elements
+      document.getElementById('summary-subtotal').innerText = `₹${subtotal}`;
+      
+      if (deliveryFee === 0) {
+        document.getElementById('summary-delivery').innerText = "FREE";
+        document.getElementById('summary-delivery').classList.add("text-emerald-600");
+        document.getElementById('summary-delivery').classList.remove("text-zinc-900");
+      } else {
+        document.getElementById('summary-delivery').innerText = `+ ₹${deliveryFee}`;
+        document.getElementById('summary-delivery').classList.remove("text-emerald-600");
+        document.getElementById('summary-delivery').classList.add("text-zinc-900");
+      }
+
+      document.getElementById('summary-total').innerText = `₹${finalOrderAmount}`;
+      document.getElementById('submit-btn').innerText = `Pay ₹${finalOrderAmount} & Place Order`;
+    }
+
+    // ==========================================
+    // 3. PROFILE ADDRESS LOGIC
+    // ==========================================
     function loadSavedProfileAddress() {
       const savedUser = JSON.parse(localStorage.getItem('userProfile'));
       const savedSection = document.getElementById('saved-address-section');
@@ -184,7 +270,6 @@
       }
     }
 
-    // 2. Toggle Input Visibility
     function toggleAddressOption() {
       const addressChoice = document.querySelector('input[name="addressSelect"]:checked')?.value;
       const addressInputsDiv = document.getElementById('address-inputs');
@@ -201,14 +286,10 @@
       }
     }
 
-    function getCartTotal() {
-      const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
-      const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * (Number(item.qty) || 1)), 0);
-      return subtotal + 40; 
-    }
-
-    // 3. Save Order History
-    function saveOrderToHistory(orderId) {
+    // ==========================================
+    // 4. SAVE ORDER TO HISTORY & REDIRECT
+    // ==========================================
+    function saveOrderToHistory(orderId, totalPaid) {
       const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       if (cart.length === 0) return;
 
@@ -216,7 +297,7 @@
         orderId: orderId,
         date: new Date().toLocaleDateString('en-IN'),
         items: cart,
-        total: getCartTotal(),
+        total: totalPaid, 
         status: "Processing"
       };
 
@@ -225,15 +306,16 @@
       localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
     }
 
-    // 4. NEW: Redirect to Success Page
-    function processOrderSuccess(orderId) {
-      saveOrderToHistory(orderId);
-      localStorage.removeItem('cartItems'); // কার্ট খালি করা হলো
-      localStorage.setItem('latestOrderId', orderId); // সাকসেস পেজের জন্য আইডি সেভ
-      window.location.href = 'order-success.html'; // নতুন পেজে পাঠানো হলো
+    function processOrderSuccess(orderId, totalPaid) {
+      saveOrderToHistory(orderId, totalPaid);
+      localStorage.removeItem('cartItems'); // Clear the cart items
+      localStorage.setItem('latestOrderId', orderId); // Save Order ID for the success page
+      window.location.href = 'order-success.html'; // Redirect to success page
     }
 
-    // 5. Form Submit Logic
+    // ==========================================
+    // 5. FORM SUBMIT (RAZORPAY & COD OTP)
+    // ==========================================
     document.getElementById('checkout-form').addEventListener('submit', function(e) {
       e.preventDefault();
 
@@ -250,7 +332,7 @@
       let phoneInput = "";
       let nameInput = "";
       
-      if(addressChoice === 'saved') {
+      if (addressChoice === 'saved') {
         const savedUser = JSON.parse(localStorage.getItem('userProfile'));
         phoneInput = savedUser.phone;
         nameInput = savedUser.name;
@@ -260,16 +342,15 @@
       }
 
       if (paymentMethod === 'razorpay') {
-        const totalAmount = getCartTotal();
         const options = {
           "key": "YOUR_RAZORPAY_KEY", 
-          "amount": totalAmount * 100,
+          "amount": finalOrderAmount * 100, // Amount is in currency subunits (paise)
           "currency": "INR",
           "name": "MONI DRESSES",
           "description": "Prepaid Order Payment",
           "handler": function (response) {
             const finalId = "MD-RZP-" + Math.floor(100000 + Math.random() * 900000);
-            processOrderSuccess(finalId);
+            processOrderSuccess(finalId, finalOrderAmount);
           },
           "prefill": { "name": nameInput, "contact": phoneInput },
           "theme": { "color": "#b3006a" }
@@ -282,15 +363,14 @@
       }
     });
 
-    // 6. Verify COD OTP
     function verifyCODOTP() {
       const userOTP = document.getElementById('otp-input').value.trim();
       if (userOTP === generatedOTP) {
         closeModal('otp-modal');
         const finalId = "MD-COD-" + Math.floor(100000 + Math.random() * 900000);
-        processOrderSuccess(finalId);
+        processOrderSuccess(finalId, finalOrderAmount); // Pass the final amount including COD charge
       } else {
-        alert("❌ Invalid OTP! Please enter 1234");
+        alert("Invalid OTP! Please enter 1234 for testing.");
       }
     }
 
@@ -298,7 +378,11 @@
       document.getElementById(id).classList.add('hidden');
     }
 
-    window.addEventListener('DOMContentLoaded', loadSavedProfileAddress);
+    // Initialize Page Settings on Load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedProfileAddress();
+      updateOrderSummary(); // Calculate and display initial bill amounts
+    });
   </script>
 </body>
 </html>
