@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Shopping Cart — MONI DRESSES</title>
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#b3006a",
+            secondary: "#5f5e5e",
+            surface: "#fbf9f8"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+            brand: ["Bodoni Moda", "serif"]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { -webkit-tap-highlight-color: transparent; }
+  </style>
+</head>
+<body class="bg-surface text-zinc-900 font-sans min-h-screen pb-28">
+
+  <!-- Top Navigation Header -->
+  <header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-3 bg-white border-b border-zinc-100 shadow-sm">
+    <button onclick="history.back()" aria-label="Back" class="p-1 rounded-full text-zinc-700 hover:bg-zinc-100 active:scale-95">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+
+    <a href="home.html" class="font-brand text-lg font-bold text-primary tracking-wider">MONI DRESSES</a>
+
+    <a href="home.html" aria-label="Shop" class="p-1 text-zinc-700 active:scale-95">
+      <span class="material-symbols-outlined">storefront</span>
+    </a>
+  </header>
+
+  <main class="max-w-[600px] mx-auto pt-16 px-4">
+
+    <!-- Page Title -->
+    <div class="flex items-center justify-between my-3">
+      <h1 class="text-lg font-bold text-zinc-900">My Bag (<span id="cart-item-count">1</span> Items)</h1>
+      <a href="home.html" class="text-xs font-bold text-primary">+ Add More Items</a>
+    </div>
+
+    <!-- Cart Item 1 -->
+    <div class="bg-white p-3 rounded-xl border border-zinc-200/80 shadow-sm mb-3">
+      <div class="flex gap-3">
+        <!-- Item Image -->
+        <img class="w-20 h-24 rounded-lg object-cover bg-zinc-100 border border-zinc-100" src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=300" alt="Cotton Blouse"/>
+        
+        <!-- Item Details -->
+        <div class="flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-start">
+              <h2 class="text-xs font-bold text-zinc-800 line-clamp-1">Designer Readymade Cotton Blouse</h2>
+              <button onclick="removeItem(this)" class="text-zinc-400 hover:text-red-600 p-0.5">
+                <span class="material-symbols-outlined text-sm">delete</span>
+              </button>
+            </div>
+            
+            <p class="text-[11px] text-zinc-500 mt-1">Size: <span class="font-bold text-zinc-800">34</span> | Color: <span class="font-bold text-zinc-800">Maroon</span></p>
+          </div>
+
+          <!-- Price & Quantity Control -->
+          <div class="flex items-center justify-between mt-2 pt-2 border-t border-zinc-100">
+            <div class="flex items-baseline gap-1">
+              <span class="text-sm font-extrabold text-zinc-900">₹499</span>
+              <span class="text-[11px] text-zinc-400 line-through">₹799</span>
+            </div>
+
+            <!-- Quantity Selector -->
+            <div class="flex items-center border border-zinc-200 rounded-lg overflow-hidden bg-zinc-50">
+              <button onclick="updateQty(this, -1)" class="px-2 py-0.5 text-xs font-bold text-zinc-600 hover:bg-zinc-200 active:scale-95">-</button>
+              <span class="px-2 py-0.5 text-xs font-bold text-zinc-900 bg-white border-x border-zinc-200">1</span>
+              <button onclick="updateQty(this, 1)" class="px-2 py-0.5 text-xs font-bold text-zinc-600 hover:bg-zinc-200 active:scale-95">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Apply Coupon Section -->
+    <div class="bg-white p-3 rounded-xl border border-zinc-200/80 shadow-sm mb-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-xl">confirmation_number</span>
+          <input type="text" placeholder="Enter Coupon Code" class="text-xs font-medium focus:outline-none uppercase placeholder:normal-case placeholder:text-zinc-400 bg-transparent w-36" />
+        </div>
+        <button onclick="applyCoupon()" class="text-xs font-bold text-primary hover:opacity-80">APPLY</button>
+      </div>
+    </div>
+
+    <!-- Price Details Breakdown -->
+    <div class="bg-white p-4 rounded-xl border border-zinc-200/80 shadow-sm mb-6 space-y-2.5">
+      <h3 class="text-xs font-bold text-zinc-500 uppercase tracking-wider border-b border-zinc-100 pb-2">Price Details</h3>
+      
+      <div class="flex justify-between text-xs text-zinc-600">
+        <span>Total MRP</span>
+        <span>₹799</span>
+      </div>
+
+      <div class="flex justify-between text-xs text-zinc-600">
+        <span>Discount on MRP</span>
+        <span class="text-emerald-600 font-medium">- ₹300</span>
+      </div>
+
+      <div class="flex justify-between text-xs text-zinc-600">
+        <span>Delivery Fee</span>
+        <span class="text-emerald-600 font-bold uppercase">FREE</span>
+      </div>
+
+      <div class="flex justify-between text-sm font-bold text-zinc-900 border-t border-zinc-100 pt-2.5">
+        <span>Total Amount</span>
+        <span>₹499</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Sticky Bottom Checkout Bar -->
+  <div class="fixed bottom-0 left-0 w-full z-40 bg-white border-t border-zinc-200 p-3 shadow-lg">
+    <div class="max-w-[600px] mx-auto flex items-center justify-between gap-4">
+      <div>
+        <span class="text-[10px] text-zinc-400 uppercase font-bold tracking-wider block">Total Payable</span>
+        <span class="text-lg font-black text-zinc-900">₹499</span>
+      </div>
+
+      <button onclick="proceedToCheckout()" class="flex-1 py-3 px-4 rounded-xl bg-primary font-bold text-sm text-white shadow-md hover:bg-primary/90 active:scale-95 transition-all flex items-center justify-center gap-1">
+        Proceed to Checkout <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function updateQty(btn, change) {
+      const qtySpan = btn.parentElement.children[1];
+      let currentQty = parseInt(qtySpan.innerText);
+      currentQty += change;
+      if (currentQty < 1) currentQty = 1;
+      qtySpan.innerText = currentQty;
+    }
+
+    function removeItem(btn) {
+      const card = btn.closest('.bg-white');
+      if (card) {
+        card.remove();
+      }
+    }
+
+    function applyCoupon() {
+      alert('Coupon MONI10 Applied Successfully!');
+    }
+
+    function proceedToCheckout() {
+      // Check Auth Status (handled by app.js)
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      if (isLoggedIn === "true") {
+        alert("Redirecting to Razorpay Payment Gateway...");
+      } else {
+        localStorage.setItem("redirectAfterLogin", "cart.html");
+        window.location.href = "login.html";
+      }
+    }
+  </script>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
