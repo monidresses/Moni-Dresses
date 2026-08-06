@@ -3,13 +3,155 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login — Clothify</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Login — Moni Dresses</title>
+  <style>
+    /* Embedded Styles for Instant Rendering */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #f8f9fa;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 16px;
+      background: #ffffff;
+      border-bottom: 1px solid #eee;
+    }
+
+    .brand {
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+      color: #111;
+    }
+
+    .auth-core {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      padding: 40px 16px;
+    }
+
+    .auth-card {
+      background: #ffffff;
+      padding: 32px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .auth-card h2 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .muted {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #444;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn.primary {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    .btn.google {
+      background: #ffffff;
+      border-color: #ddd;
+      color: #444;
+    }
+
+    .divider {
+      margin: 20px 0;
+      font-size: 12px;
+      color: #aaa;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #eee;
+    }
+
+    /* Strict Rule to Hide OTP Box initially */
+    .hidden {
+      display: none !important;
+    }
+
+    .site-footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: #888;
+    }
+  </style>
 </head>
 <body class="page-auth">
 
   <header class="site-header container">
-    <a href="home.html" class="brand">Clothify</a>
+    <a href="home.html" class="brand">Moni Dresses</a>
   </header>
 
   <main class="auth-core container">
@@ -27,12 +169,14 @@
 
       <!-- Phone OTP Sign-In Box -->
       <div id="phone-otp-box">
+        <!-- Step 1: Phone Input Form (Visible) -->
         <form id="phone-form">
           <label for="phone-number">Mobile Phone Number</label>
           <input type="tel" id="phone-number" placeholder="+91 98765 43210" required />
           <button type="submit" class="btn primary">Send OTP</button>
         </form>
 
+        <!-- Step 2: OTP Verification Form (Hidden until Send OTP is clicked) -->
         <form id="otp-form" class="hidden">
           <label for="otp-code">Enter 6-digit OTP</label>
           <input type="text" id="otp-code" maxlength="6" placeholder="123456" required />
@@ -43,9 +187,18 @@
   </main>
 
   <footer class="site-footer container">
-    <small>© Clothify. All rights reserved.</small>
+    <small>© Moni Dresses. All rights reserved.</small>
   </footer>
 
+  <!-- Temporary Inline Script for testing Step 1 & Step 2 toggle -->
+  <script>
+    document.getElementById("phone-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      // Hide phone input form and show OTP input form
+      document.getElementById("phone-form").classList.add("hidden");
+      document.getElementById("otp-form").classList.remove("hidden");
+    });
+  </script>
   <script src="app.js" defer></script>
 </body>
 </html>
