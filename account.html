@@ -30,7 +30,7 @@
     body { -webkit-tap-highlight-color: transparent; }
   </style>
 </head>
-<body class="bg-surface text-zinc-900 font-sans min-h-screen pb-20">
+<body class="bg-surface text-zinc-900 font-sans min-h-screen pb-24">
 
   <!-- Top Header Navigation -->
   <header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-3 bg-white border-b border-zinc-100 shadow-sm">
@@ -45,27 +45,72 @@
 
   <main class="max-w-[600px] mx-auto pt-16 px-4 space-y-4">
 
-    <!-- User Profile Card -->
-    <div class="bg-white p-4 rounded-xl border border-zinc-200/80 shadow-sm flex items-center gap-4">
-      <div class="w-14 h-14 bg-primary/10 text-primary rounded-full flex items-center justify-center font-bold text-2xl border border-primary/20">
-        <span id="user-avatar-text">A</span>
+    <!-- 1. USER PROFILE HEADER WITH IMAGE & NAME -->
+    <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-sm flex items-center justify-between">
+      <div class="flex items-center gap-3.5">
+        <div class="relative w-16 h-16 rounded-full overflow-hidden bg-primary/10 border-2 border-primary/20 flex items-center justify-center shrink-0">
+          <img id="user-profile-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200" alt="User Profile" class="w-full h-full object-cover"/>
+        </div>
+        <div>
+          <h1 class="text-base font-extrabold text-zinc-900" id="profile-name">Avijit Chakraborty</h1>
+          <p class="text-xs text-zinc-500 font-medium" id="profile-phone">+91 98765 43210</p>
+          <span class="inline-block mt-1 bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Verified Customer</span>
+        </div>
       </div>
-      <div>
-        <h1 class="text-base font-extrabold text-zinc-900" id="profile-name">Avijit Chakraborty</h1>
-        <p class="text-xs text-zinc-500 font-medium" id="profile-phone">+91 98765 43210</p>
-        <span class="inline-block mt-1 bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">Verified Customer</span>
-      </div>
+      
+      <button onclick="alert('Profile edit feature coming soon')" class="p-2 bg-zinc-50 text-zinc-600 rounded-xl hover:bg-zinc-100 border border-zinc-200 active:scale-95">
+        <span class="material-symbols-outlined text-sm">edit</span>
+      </button>
     </div>
 
-    <!-- My Orders Section -->
-    <div class="bg-white p-4 rounded-xl border border-zinc-200/80 shadow-sm space-y-3">
+    <!-- 2. QUICK ACTION GRID (Wishlist, Orders, Size Fit, Refer) -->
+    <div class="grid grid-cols-2 gap-3">
+      
+      <!-- Order History -->
+      <a href="#orders-section" class="bg-white p-3.5 rounded-2xl border border-zinc-200/80 shadow-sm flex items-center gap-3 hover:border-primary transition-all">
+        <div class="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined">package_2</span>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold text-zinc-900">My Orders</h3>
+          <p class="text-[10px] text-zinc-400">Track & History</p>
+        </div>
+      </a>
+
+      <!-- Wishlist -->
+      <a href="#wishlist-section" class="bg-white p-3.5 rounded-2xl border border-zinc-200/80 shadow-sm flex items-center gap-3 hover:border-primary transition-all">
+        <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined">favorite</span>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold text-zinc-900">Wishlist</h3>
+          <p class="text-[10px] text-zinc-400">3 Saved Items</p>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- 3. REFER & EARN BANNER -->
+    <div class="bg-gradient-to-r from-primary to-[#dc1985] p-4 rounded-2xl text-white shadow-md flex items-center justify-between">
+      <div class="space-y-1">
+        <span class="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Refer & Earn</span>
+        <h3 class="text-sm font-extrabold">Invite Friends, Get ₹100 Off</h3>
+        <p class="text-[11px] text-white/80">Share your referral code with friends and family.</p>
+      </div>
+      <button onclick="copyReferralCode()" class="bg-white text-primary font-bold text-xs px-3 py-2 rounded-xl shadow active:scale-95 shrink-0">
+        Share
+      </button>
+    </div>
+
+    <!-- 4. ORDER HISTORY SECTION -->
+    <div id="orders-section" class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-sm space-y-3">
       <div class="flex justify-between items-center border-b border-zinc-100 pb-2">
-        <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">My Orders</h2>
+        <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Recent Orders</h2>
         <a href="#" class="text-xs font-bold text-primary">View All</a>
       </div>
 
       <!-- Recent Order Card 1 -->
-      <div class="p-3 bg-zinc-50 border border-zinc-200/70 rounded-lg space-y-2">
+      <div class="p-3 bg-zinc-50 border border-zinc-200/70 rounded-xl space-y-2">
         <div class="flex justify-between items-start">
           <div>
             <span class="text-[10px] font-bold uppercase text-primary bg-primary/10 px-1.5 py-0.5 rounded">Order #MD-8841</span>
@@ -74,34 +119,74 @@
           <span class="text-xs font-black text-zinc-900">₹449</span>
         </div>
 
-        <div class="flex items-center justify-between pt-1 border-t border-zinc-200/60 text-[11px]">
+        <div class="flex items-center justify-between pt-1.5 border-t border-zinc-200/60 text-[11px]">
           <span class="text-emerald-700 font-bold flex items-center gap-1">
             <span class="material-symbols-outlined text-sm">local_shipping</span> Out for Delivery
           </span>
-          <a href="#" class="text-zinc-500 hover:text-zinc-800 font-medium underline">Track Parcel</a>
+          <a href="#" class="text-primary font-bold hover:underline">Track Order</a>
         </div>
       </div>
     </div>
 
-    <!-- Saved Addresses -->
-    <div class="bg-white p-4 rounded-xl border border-zinc-200/80 shadow-sm space-y-3">
+    <!-- 5. SAVED FIT & SIZE SECTION -->
+    <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-sm space-y-3">
       <div class="flex justify-between items-center border-b border-zinc-100 pb-2">
-        <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Saved Addresses</h2>
-        <button onclick="alert('Add address form will open')" class="text-xs font-bold text-primary">+ Add New</button>
+        <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">My Saved Fit & Size</h2>
+        <span class="material-symbols-outlined text-primary text-sm">checkroom</span>
       </div>
 
-      <div class="flex items-start gap-3 text-xs text-zinc-700 p-2.5 bg-zinc-50 rounded-lg border border-zinc-200/70">
-        <span class="material-symbols-outlined text-primary text-lg mt-0.5">home</span>
-        <div>
-          <span class="font-bold text-zinc-900 block mb-0.5">Home Address</span>
-          <p class="text-zinc-500 leading-relaxed">Chakraborty House, Road No. 4, City Center, Kolkata, West Bengal - 700001</p>
+      <div class="p-3 bg-primary/5 rounded-xl border border-primary/20 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm">
+            <span id="saved-size-display">34</span>
+          </div>
+          <div>
+            <h3 class="text-xs font-bold text-zinc-900" id="saved-fit-type-display">Size 34 (Regular Fit)</h3>
+            <p class="text-[10px] text-zinc-500" id="saved-fit-details">Bust Measurement: 34 inches</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Quick Settings & Support -->
-    <div class="bg-white rounded-xl border border-zinc-200/80 shadow-sm overflow-hidden divide-y divide-zinc-100">
+    <!-- 6. SAVED ADDRESSES -->
+    <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-sm space-y-3">
+      <div class="flex justify-between items-center border-b border-zinc-100 pb-2">
+        <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Saved Delivery Addresses</h2>
+        <button onclick="alert('Add Address Form')" class="text-xs font-bold text-primary">+ Add New</button>
+      </div>
+
+      <div class="flex items-start gap-3 text-xs text-zinc-700 p-3 bg-zinc-50 rounded-xl border border-zinc-200/70">
+        <span class="material-symbols-outlined text-primary text-lg mt-0.5">home</span>
+        <div class="flex-1">
+          <span class="font-bold text-zinc-900 block mb-0.5">Home Address</span>
+          <p class="text-zinc-500 leading-relaxed text-[11px]">Chakraborty House, Road No. 4, City Center, Kolkata, West Bengal - 700001</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. BANK & UPI DETAILS (FOR REFUNDS) -->
+    <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-sm space-y-3">
+      <div class="flex justify-between items-center border-b border-zinc-100 pb-2">
+        <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Bank & UPI Details (For Refunds)</h2>
+        <span class="material-symbols-outlined text-zinc-400 text-sm">account_balance_wallet</span>
+      </div>
+
+      <div class="flex items-center justify-between p-3 bg-zinc-50 rounded-xl border border-zinc-200/70">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-emerald-600">account_balance</span>
+          <div>
+            <span class="text-xs font-bold text-zinc-900 block">Google Pay / PhonePe UPI</span>
+            <p class="text-[11px] text-zinc-500">avijit@upi</p>
+          </div>
+        </div>
+        <button onclick="alert('Update UPI')" class="text-xs font-bold text-primary">Edit</button>
+      </div>
+    </div>
+
+    <!-- 8. ACCOUNT SETTINGS, HELP & POLICIES MENU -->
+    <div class="bg-white rounded-2xl border border-zinc-200/80 shadow-sm overflow-hidden divide-y divide-zinc-100">
       
+      <!-- B2B Wholesale -->
       <a href="b2b.html" class="flex items-center justify-between p-3.5 hover:bg-zinc-50">
         <div class="flex items-center gap-3">
           <span class="material-symbols-outlined text-primary">store</span>
@@ -110,6 +195,7 @@
         <span class="material-symbols-outlined text-zinc-400 text-sm">chevron_right</span>
       </a>
 
+      <!-- Help & WhatsApp Support -->
       <a href="https://wa.me/919876543210" target="_blank" class="flex items-center justify-between p-3.5 hover:bg-zinc-50">
         <div class="flex items-center gap-3">
           <span class="material-symbols-outlined text-emerald-600">support_agent</span>
@@ -118,6 +204,16 @@
         <span class="material-symbols-outlined text-zinc-400 text-sm">chevron_right</span>
       </a>
 
+      <!-- Settings -->
+      <a href="#" onclick="alert('Settings menu')" class="flex items-center justify-between p-3.5 hover:bg-zinc-50">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-zinc-600">settings</span>
+          <span class="text-xs font-bold text-zinc-800">App Settings & Notifications</span>
+        </div>
+        <span class="material-symbols-outlined text-zinc-400 text-sm">chevron_right</span>
+      </a>
+
+      <!-- Terms & Privacy -->
       <a href="policies.html" class="flex items-center justify-between p-3.5 hover:bg-zinc-50">
         <div class="flex items-center gap-3">
           <span class="material-symbols-outlined text-zinc-600">policy</span>
@@ -128,22 +224,38 @@
 
     </div>
 
-    <!-- Logout Button -->
-    <button onclick="logoutUser()" class="w-full py-3 px-4 rounded-xl bg-red-50 border border-red-200 font-bold text-xs text-red-600 hover:bg-red-100 active:scale-95 transition-all flex items-center justify-center gap-1">
-      <span class="material-symbols-outlined text-sm">logout</span> Log Out
+    <!-- 9. LOGOUT BUTTON -->
+    <button onclick="logoutUser()" class="w-full py-3.5 px-4 rounded-2xl bg-red-50 border border-red-200 font-bold text-xs text-red-600 hover:bg-red-100 active:scale-95 transition-all flex items-center justify-center gap-1.5 shadow-sm">
+      <span class="material-symbols-outlined text-sm">logout</span> Log Out from Account
     </button>
 
   </main>
 
   <script>
-    // Check Auth on Page Load
+    // 1. Auth Check on Page Load
     window.addEventListener('DOMContentLoaded', () => {
       const isLoggedIn = localStorage.getItem("isLoggedIn");
       if (isLoggedIn !== "true") {
         window.location.href = "login.html";
       }
+
+      // Load Saved Size Fit if available
+      const savedFitRaw = localStorage.getItem("userSavedFit");
+      if (savedFitRaw) {
+        const savedFit = JSON.parse(savedFitRaw);
+        document.getElementById('saved-size-display').innerText = savedFit.size;
+        document.getElementById('saved-fit-type-display').innerText = `Size ${savedFit.size} (${savedFit.fitType})`;
+        document.getElementById('saved-fit-details').innerText = `Bust Measurement: ${savedFit.bust} inches`;
+      }
     });
 
+    // 2. Refer Code Share Function
+    function copyReferralCode() {
+      navigator.clipboard.writeText("https://monidresses.com/ref?code=MONI100");
+      alert("Referral link copied! Share with your friends on WhatsApp to earn rewards.");
+    }
+
+    // 3. Logout Function
     function logoutUser() {
       if (confirm("Are you sure you want to log out?")) {
         localStorage.removeItem("isLoggedIn");
