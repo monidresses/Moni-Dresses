@@ -3,238 +3,221 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>MONI DRESSES - Home</title>
+  <title>MONI DRESSES — Home</title>
   
   <!-- Tailwind CSS & Google Fonts -->
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet"/>
 
-  <script id="tailwind-config">
+  <script>
     tailwind.config = {
-        darkMode: "class",
-        theme: {
-            extend: {
-                "colors": {
-                    "surface": "#fbf9f8",
-                    "surface-dim": "#dbdad9",
-                    "primary": "#b3006a",
-                    "secondary": "#5f5e5e",
-                    "background": "#fbf9f8",
-                    "surface-container-low": "#f5f3f3",
-                    "surface-container-lowest": "#ffffff",
-                    "on-surface": "#1b1c1c",
-                    "on-surface-variant": "#594048",
-                    "primary-container": "#dc1985",
-                    "surface-container": "#efeded"
-                },
-                "fontFamily": {
-                    "body-sm": ["Plus Jakarta Sans", "sans-serif"],
-                    "price-display": ["Plus Jakarta Sans", "sans-serif"],
-                    "display-lg": ["Bodoni Moda", "serif"],
-                    "headline-md": ["Bodoni Moda", "serif"]
-                }
-            }
+      theme: {
+        extend: {
+          colors: {
+            primary: "#b3006a",
+            surface: "#fbf9f8"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+            brand: ["Bodoni Moda", "serif"]
+          }
         }
+      }
     }
   </script>
-
   <style>
-    body {
-      -webkit-tap-highlight-color: transparent;
-      min-height: max(884px, 100dvh);
-    }
+    body { -webkit-tap-highlight-color: transparent; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;  
-        overflow: hidden;
-    }
   </style>
 </head>
-<body class="bg-surface text-on-surface font-body-sm min-h-screen pt-14 pb-20 overflow-x-hidden">
+<body class="bg-surface text-zinc-900 font-sans min-h-screen pb-24">
 
-  <!-- Top Navigation Bar -->
-  <header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-3 shadow-sm bg-surface">
+  <!-- ========================================== -->
+  <!-- 🛍️ 1. TOP NAVIGATION HEADER WITH DYNAMIC CART -->
+  <!-- ========================================== -->
+  <header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-3 bg-white border-b border-zinc-100 shadow-sm">
+    
+    <!-- Drawer / Menu Icon -->
     <button aria-label="Menu" class="text-primary hover:opacity-80 transition-all active:scale-95">
-      <span class="material-symbols-outlined">menu</span>
+      <span class="material-symbols-outlined text-2xl">menu</span>
     </button>
 
-    <a href="home.html" class="font-headline-md text-2xl font-bold text-primary tracking-tight">MONI DRESSES</a>
+    <!-- Brand Logo -->
+    <a href="home.html" class="font-brand text-lg font-extrabold text-primary tracking-wider uppercase">
+      MONI DRESSES
+    </a>
 
+    <!-- Account & Dynamic Cart Icon -->
     <div class="flex items-center gap-3">
       <a href="account.html" aria-label="Account" class="text-primary hover:opacity-80 transition-all active:scale-95">
-        <span class="material-symbols-outlined">person</span>
+        <span class="material-symbols-outlined text-2xl">person</span>
       </a>
-      <a href="cart.html" aria-label="Cart" class="text-primary hover:opacity-80 transition-all active:scale-95 relative">
-        <span class="material-symbols-outlined">shopping_cart</span>
-        <span class="absolute -top-1 -right-1 bg-[#F43397] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-surface" id="cart-count"</span>
-  <span class="absolute -top-1 -right-1 bg-[#b3006a] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-surface hidden" id="cart-count"></span>
 
+      <!-- Dynamic Cart Icon (Hidden by default when 0) -->
+      <a href="cart.html" aria-label="Cart" class="text-primary hover:opacity-80 transition-all active:scale-95 relative inline-flex items-center justify-center">
+        <span class="material-symbols-outlined text-2xl">shopping_cart</span>
+        <span id="cart-count" class="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full border border-white hidden min-w-[18px] text-center leading-none shadow-sm"></span>
       </a>
     </div>
   </header>
 
-  <main class="w-full max-w-[600px] mx-auto">
+  <main class="max-w-[600px] mx-auto pt-16 space-y-5">
 
-    <!-- Search Bar -->
-    <div class="px-4 py-3 sticky top-14 z-40 bg-surface shadow-[0px_4px_12px_rgba(0,0,0,0.05)]">
-      <div class="relative w-full">
-        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <span class="material-symbols-outlined text-secondary" style="font-size: 20px;">search</span>
-        </div>
-        <input class="block w-full pl-10 pr-10 py-2.5 border border-[#EEEEEE] rounded-lg bg-surface-container-lowest text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary placeholder:text-gray-400" placeholder="Search Cotton Blouses, Sarees & Dresses..." type="text"/>
-        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-          <span class="material-symbols-outlined text-secondary" style="font-size: 20px;">mic</span>
-        </div>
+    <!-- ========================================== -->
+    <!-- 🔍 2. SEARCH BAR WITH VOICE ICON -->
+    <!-- ========================================== -->
+    <div class="px-4 pt-2">
+      <div class="relative flex items-center bg-white border border-zinc-200 rounded-xl px-3 py-2.5 shadow-sm">
+        <span class="material-symbols-outlined text-zinc-400 text-xl mr-2">search</span>
+        <input type="text" placeholder="Search Cotton Blouses, Sarees & More..." class="w-full text-xs text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none" />
+        <button aria-label="Voice Search" class="text-zinc-500 hover:text-primary transition-colors">
+          <span class="material-symbols-outlined text-xl">mic</span>
+        </button>
       </div>
     </div>
 
-    <!-- Category Slide Navigation -->
-    <div class="w-full overflow-x-auto no-scrollbar py-4 px-4 bg-surface-container-low">
-      <div class="flex gap-4 w-max">
-        
-        <div class="flex flex-col items-center gap-2 w-16 group cursor-pointer">
-          <div class="w-14 h-14 rounded-full border border-[#EEEEEE] bg-surface-container-lowest flex items-center justify-center overflow-hidden shadow-sm group-active:scale-95 transition-transform">
-            <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=150" alt="Cotton Blouse"/>
-          </div>
-          <span class="text-[12px] text-center text-on-surface-variant font-medium">Cotton</span>
-        </div>
-
-        <div class="flex flex-col items-center gap-2 w-16 group cursor-pointer">
-          <div class="w-14 h-14 rounded-full border border-[#EEEEEE] bg-surface-container-lowest flex items-center justify-center overflow-hidden shadow-sm group-active:scale-95 transition-transform">
-            <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=150" alt="Printed Blouse"/>
-          </div>
-          <span class="text-[12px] text-center text-on-surface-variant font-medium">Printed</span>
-        </div>
-
-        <div class="flex flex-col items-center gap-2 w-16 group cursor-pointer">
-          <div class="w-14 h-14 rounded-full border border-[#EEEEEE] bg-surface-container-lowest flex items-center justify-center overflow-hidden shadow-sm group-active:scale-95 transition-transform">
-            <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1518049362265-d5b2a6467637?w=150" alt="Designer Work"/>
-          </div>
-          <span class="text-[12px] text-center text-on-surface-variant font-medium">Designer</span>
-        </div>
-
-        <div class="flex flex-col items-center gap-2 w-16 group cursor-pointer">
-          <div class="w-14 h-14 rounded-full border border-[#EEEEEE] bg-surface-container-lowest flex items-center justify-center overflow-hidden shadow-sm group-active:scale-95 transition-transform">
-            <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1563178406-4cdc2923acbc?w=150" alt="Silk Special"/>
-          </div>
-          <span class="text-[12px] text-center text-on-surface-variant font-medium">Silk</span>
-        </div>
-
-        <a href="b2b.html" class="flex flex-col items-center gap-2 w-16 group cursor-pointer">
-          <div class="w-14 h-14 rounded-full border border-primary bg-primary/10 flex items-center justify-center shadow-sm group-active:scale-95 transition-transform">
-            <span class="material-symbols-outlined text-primary">store</span>
-          </div>
-          <span class="text-[12px] text-center text-primary font-bold">B2B Bulk</span>
-        </a>
-
+    <!-- ========================================== -->
+    <!-- 👗 3. DYNAMIC CATEGORIES (ADMIN CONNECTED) -->
+    <!-- ========================================== -->
+    <section class="px-4">
+      <div id="category-container" class="flex items-center gap-4 overflow-x-auto no-scrollbar py-1">
+        <!-- Categories will load dynamically via JS from Admin Storage / Fallback -->
       </div>
-    </div>
+    </section>
 
-    <!-- Hero Promotional Banner -->
-    <div class="px-4 py-4">
-      <div class="w-full rounded-xl bg-gradient-to-r from-primary to-primary-container p-6 text-white flex flex-col justify-center items-start shadow-md relative overflow-hidden h-[160px]">
-        <div class="relative z-10 w-2/3">
-          <span class="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Limited Offer</span>
-          <h2 class="font-headline-md text-2xl font-bold mt-1 mb-1">FESTIVE SALE</h2>
-          <p class="text-xs mb-3 opacity-90">Get Extra 10% OFF on Readymade Blouses</p>
-          <button class="bg-white text-primary font-bold text-xs px-4 py-2 rounded-lg shadow-sm active:scale-95 transition-transform">Shop Now</button>
+    <!-- ========================================== -->
+    <!-- 📢 4. FESTIVE SALE BANNER -->
+    <!-- ========================================== -->
+    <section class="px-4">
+      <div class="bg-gradient-to-r from-primary to-[#dc1985] rounded-2xl p-5 text-white shadow-md space-y-2 relative overflow-hidden">
+        <span class="bg-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider inline-block">Limited Offer</span>
+        <h2 class="font-brand text-2xl font-black leading-tight tracking-wide">FESTIVE<br/>SALE</h2>
+        <p class="text-xs text-white/90">Get Extra 10% OFF on Readymade Blouses</p>
+        <div class="pt-2">
+          <a href="#trending" class="inline-block bg-white text-primary font-bold text-xs px-4 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Shop Now</a>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Product Grid -->
-    <div class="px-4 pb-6">
-      <div class="flex justify-between items-end mb-4">
-        <h3 class="font-headline-md text-xl font-bold text-on-surface">Trending Now</h3>
-        <a class="text-primary font-bold text-sm" href="#">See All</a>
+    <!-- ========================================== -->
+    <!-- 🔥 5. TRENDING NOW PRODUCTS -->
+    <!-- ========================================== -->
+    <section id="trending" class="px-4 space-y-3">
+      <div class="flex items-center justify-between">
+        <h2 class="font-brand text-lg font-bold text-zinc-900 tracking-wide">Trending <span class="font-sans text-zinc-400 font-normal">Now</span></h2>
+        <a href="#" class="text-xs font-bold text-primary hover:underline">See All</a>
       </div>
 
-      <div class="grid grid-cols-2 gap-3">
+      <!-- Product Grid -->
+      <div id="product-grid" class="grid grid-cols-2 gap-3.5">
         
         <!-- Product Card 1 -->
-        <div class="bg-surface-container-lowest rounded-lg border border-[#EEEEEE] overflow-hidden flex flex-col shadow-sm">
-          <div class="relative aspect-[3/4] w-full bg-surface-container">
-            <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500" alt="Designer Readymade Cotton Blouse"/>
-            <div class="absolute top-2 left-2 bg-[#FFD700] text-black text-[10px] font-bold px-1.5 py-0.5 rounded-sm">Lowest Price</div>
-            <button class="absolute top-2 right-2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center text-secondary hover:text-primary transition-colors backdrop-blur-sm">
-              <span class="material-symbols-outlined" style="font-size: 18px;">favorite_border</span>
+        <div class="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm flex flex-col justify-between relative group">
+          <div class="relative aspect-[3/4] bg-zinc-100 overflow-hidden">
+            <span class="absolute top-2 left-2 z-10 bg-yellow-400 text-zinc-900 text-[9px] font-extrabold px-2 py-0.5 rounded-md shadow-sm">Lowest Price</span>
+            <button class="absolute top-2 right-2 z-10 w-7 h-7 bg-white/80 backdrop-blur-sm text-zinc-600 rounded-full flex items-center justify-center hover:text-rose-600 transition-colors">
+              <span class="material-symbols-outlined text-sm">favorite</span>
             </button>
+            <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500" alt="Saree Blouse" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
           </div>
-          <div class="p-3 flex flex-col flex-grow">
-            <h4 class="text-xs font-medium text-on-surface-variant line-clamp-2 mb-1">Designer Readymade Cotton Blouse</h4>
-            <div class="flex items-center gap-1 mb-1">
-              <span class="material-symbols-outlined text-green-600" style="font-size: 14px;">star</span>
-              <span class="text-[12px] text-secondary">4.8 (124)</span>
+          <div class="p-3 space-y-1.5">
+            <h3 class="text-xs font-bold text-zinc-800 line-clamp-1">Designer Cotton Blouse</h3>
+            <div class="flex items-baseline gap-1.5">
+              <span class="text-sm font-extrabold text-zinc-900">₹449</span>
+              <span class="text-[10px] text-zinc-400 line-through">₹899</span>
+              <span class="text-[10px] font-bold text-emerald-600">50% OFF</span>
             </div>
-            <div class="mt-auto">
-              <div class="flex items-baseline gap-1">
-                <span class="text-lg font-bold text-on-surface">₹499</span>
-                <span class="text-[12px] text-secondary line-through">₹799</span>
-                <span class="text-[12px] text-[#038D63] font-bold">37% off</span>
-              </div>
-              <div class="mt-1 flex items-center gap-1 text-[#038D63]">
-                <span class="material-symbols-outlined" style="font-size: 12px;">local_shipping</span>
-                <span class="text-[10px] font-bold">Free Delivery</span>
-              </div>
-            </div>
+            <button onclick="addToCart({id:'P1', name:'Designer Cotton Blouse', price:449, image:'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500'})" class="w-full py-2 bg-primary/10 text-primary font-bold text-xs rounded-xl hover:bg-primary hover:text-white transition-all active:scale-95 mt-1">
+              Add to Cart
+            </button>
           </div>
         </div>
 
         <!-- Product Card 2 -->
-        <div class="bg-surface-container-lowest rounded-lg border border-[#EEEEEE] overflow-hidden flex flex-col shadow-sm">
-          <div class="relative aspect-[3/4] w-full bg-surface-container">
-            <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500" alt="Hand-Printed Pure Cotton Blouse"/>
-            <div class="absolute top-2 left-2 bg-[#FFD700] text-black text-[10px] font-bold px-1.5 py-0.5 rounded-sm">Lowest Price</div>
-            <button class="absolute top-2 right-2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center text-secondary hover:text-primary transition-colors backdrop-blur-sm">
-              <span class="material-symbols-outlined" style="font-size: 18px;">favorite_border</span>
+        <div class="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm flex flex-col justify-between relative group">
+          <div class="relative aspect-[3/4] bg-zinc-100 overflow-hidden">
+            <span class="absolute top-2 left-2 z-10 bg-yellow-400 text-zinc-900 text-[9px] font-extrabold px-2 py-0.5 rounded-md shadow-sm">Lowest Price</span>
+            <button class="absolute top-2 right-2 z-10 w-7 h-7 bg-white/80 backdrop-blur-sm text-zinc-600 rounded-full flex items-center justify-center hover:text-rose-600 transition-colors">
+              <span class="material-symbols-outlined text-sm">favorite</span>
             </button>
+            <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500" alt="Dupatta Dress" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
           </div>
-          <div class="p-3 flex flex-col flex-grow">
-            <h4 class="text-xs font-medium text-on-surface-variant line-clamp-2 mb-1">Hand-Printed Pure Cotton Blouse</h4>
-            <div class="flex items-center gap-1 mb-1">
-              <span class="material-symbols-outlined text-green-600" style="font-size: 14px;">star</span>
-              <span class="text-[12px] text-secondary">4.5 (89)</span>
+          <div class="p-3 space-y-1.5">
+            <h3 class="text-xs font-bold text-zinc-800 line-clamp-1">Printed Silk Blouse</h3>
+            <div class="flex items-baseline gap-1.5">
+              <span class="text-sm font-extrabold text-zinc-900">₹599</span>
+              <span class="text-[10px] text-zinc-400 line-through">₹1199</span>
+              <span class="text-[10px] font-bold text-emerald-600">50% OFF</span>
             </div>
-            <div class="mt-auto">
-              <div class="flex items-baseline gap-1">
-                <span class="text-lg font-bold text-on-surface">₹599</span>
-                <span class="text-[12px] text-secondary line-through">₹899</span>
-                <span class="text-[12px] text-[#038D63] font-bold">33% off</span>
-              </div>
-              <div class="mt-1 flex items-center gap-1 text-[#038D63]">
-                <span class="material-symbols-outlined" style="font-size: 12px;">local_shipping</span>
-                <span class="text-[10px] font-bold">Free Delivery</span>
-              </div>
-            </div>
+            <button onclick="addToCart({id:'P2', name:'Printed Silk Blouse', price:599, image:'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500'})" class="w-full py-2 bg-primary/10 text-primary font-bold text-xs rounded-xl hover:bg-primary hover:text-white transition-all active:scale-95 mt-1">
+              Add to Cart
+            </button>
           </div>
         </div>
 
       </div>
-    </div>
+    </section>
 
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-zinc-900 text-zinc-400 py-8 px-4 text-center text-xs mt-auto">
-    <div class="max-w-[600px] mx-auto space-y-4">
-      <h2 class="font-headline-md text-lg font-bold text-white tracking-widest">MONI DRESSES</h2>
-      <p class="leading-relaxed">Premium quality cotton readymade blouses and traditional wear crafted for elegance and daily comfort.</p>
+  <!-- ========================================== -->
+  <!-- ⚙️ JAVASCRIPT LOGIC (CATEGORIES & CART) -->
+  <!-- ========================================== -->
+  <script>
+    // 1. Dynamic Categories Loading (Admin Connected / Fallback)
+    function loadCategories() {
+      const container = document.getElementById('category-container');
       
-      <div class="flex justify-center gap-4 text-xs font-medium py-2">
-        <a href="policies.html#terms" class="hover:text-white">Terms</a>
-        <span>•</span>
-        <a href="policies.html#privacy" class="hover:text-white">Privacy</a>
-        <span>•</span>
-        <a href="policies.html#refund" class="hover:text-white">Returns</a>
-      </div>
+      // Admin Panel Storage or Default Categories
+      const adminCategories = JSON.parse(localStorage.getItem('adminCategories')) || [
+        { name: "Printed", image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=200" },
+        { name: "Designer", image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=200" },
+        { name: "Silk", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200" },
+        { name: "Cotton", image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=200" }
+      ];
 
-      <p class="text-zinc-500 pt-2 border-t border-zinc-800">© 2026 MONI DRESSES. All rights reserved.</p>
-    </div>
-  </footer>
+      container.innerHTML = adminCategories.map(cat => `
+        <a href="catalog.html?category=${encodeURIComponent(cat.name)}" class="flex flex-col items-center gap-1.5 shrink-0 group">
+          <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-200 group-hover:border-primary transition-all shadow-sm">
+            <img src="${cat.image}" alt="${cat.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"/>
+          </div>
+          <span class="text-xs font-semibold text-zinc-700 group-hover:text-primary transition-colors">${cat.name}</span>
+        </a>
+      `).join('');
+    }
+
+    // 2. Real-Time Cart Badge Update Logic
+    function updateCartBadge() {
+      const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+      const countBadge = document.getElementById('cart-count');
+      
+      if (countBadge) {
+        if (cart.length > 0) {
+          countBadge.innerText = cart.length;
+          countBadge.classList.remove('hidden');
+        } else {
+          countBadge.innerText = '';
+          countBadge.classList.add('hidden');
+        }
+      }
+    }
+
+    // 3. Add Product to Cart Handler
+    function addToCart(product) {
+      let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+      cart.push(product);
+      localStorage.setItem('cartItems', JSON.stringify(cart));
+      updateCartBadge();
+    }
+
+    // Initialize Page
+    window.addEventListener('DOMContentLoaded', () => {
+      loadCategories();
+      updateCartBadge();
+    });
+  </script>
 
   <script src="app.js" defer></script>
 </body>
