@@ -1,33 +1,78 @@
-<div style="position: relative; width: 100%; max-width: 1200px; margin: 20px auto; overflow: hidden; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+  <div class="auth-toggle">
+    <label>
+      <input type="radio" name="accountType" value="d2c" checked />
+      D2C Customer
+    </label>
+    <label>
+      <input type="radio" name="accountType" value="b2b" />
+      B2B / Wholesale
+    </label>
+  </div>
 
-    <!-- Banner Background Image -->
-    <img src="YOUR_IMAGE_URL_HERE.jpg" alt="Moni Dresses Banner" style="width: 100%; height: auto; display: block; object-fit: cover; min-height: 250px;">
+  <div class="auth-forms">
+    <form id="email-signin-form" class="form" autocomplete="on">
+      <label>Email
+        <input type="email" id="email" placeholder="you@domain.com" required />
+      </label>
+      <label>Password
+        <input type="password" id="password" placeholder="••••••••" required />
+      </label>
+      <button type="submit" class="btn primary">Sign In</button>
+      <p class="muted">Or continue with</p>
+    </form>
 
-    <!-- Dark Gradient Overlay for better Text Visibility -->
-    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);"></div>
-
-    <!-- Banner Text & Call to Action (CTA) Content -->
-    <div style="position: absolute; bottom: 25px; left: 25px; right: 25px; color: #ffffff; text-align: left;">
-        
-        <!-- Offer Badge -->
-        <span style="background-color: #ff3e6c; color: #ffffff; padding: 5px 12px; font-size: 12px; font-weight: bold; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;">
-            Exclusive Wholesale Collection
-        </span>
-
-        <!-- Heading -->
-        <h2 style="margin: 10px 0 6px 0; font-size: 26px; font-weight: 800; text-shadow: 1px 1px 4px rgba(0,0,0,0.6); line-height: 1.2;">
-            Premium Cotton Blouses
-        </h2>
-
-        <!-- Subtitle -->
-        <p style="margin: 0 0 15px 0; font-size: 14px; opacity: 0.9; text-shadow: 1px 1px 3px rgba(0,0,0,0.6);">
-            Get direct factory prices for bulk and retail orders.
-        </p>
-
-        <!-- Button -->
-        <a href="YOUR_LINK_HERE" style="display: inline-block; background-color: #ffffff; color: #111111; padding: 10px 22px; font-size: 14px; font-weight: bold; border-radius: 8px; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-            Explore Now ➔
-        </a>
-
+    <div class="social-signin">
+      <button id="google-signin" class="btn google">Continue with Google</button>
+      <button id="phone-signin" class="btn outline">Sign in with Phone (OTP)</button>
     </div>
-</div>
+
+    <div id="phone-otp-container" class="hidden">
+      <form id="phone-form" class="form">
+        <label>Phone number
+          <input type="tel" id="phone-number" placeholder="+91 98765 43210" required />
+        </label>
+        <button type="submit" class="btn">Send OTP</button>
+      </form>
+      <form id="otp-form" class="form hidden">
+        <label>Enter OTP
+          <input type="text" id="otp-code" maxlength="6" placeholder="123456" required />
+        </label>
+        <button id="verify-otp" class="btn primary">Verify OTP</button>
+      </form>
+    </div>
+
+    <p class="small">
+      New to Clothify? <a href="#" id="show-signup">Create an account</a>
+    </p>
+  </div>
+
+  <div class="b2b-portal hidden" id="b2b-portal">
+    <h2>Wholesale / Retailer Portal</h2>
+    <p class="muted">Use your B2B credentials to access bulk pricing and GST invoicing.</p>
+    <form id="b2b-login-form" class="form">
+      <label>Business Email
+        <input type="email" id="b2b-email" placeholder="billing@company.com" required />
+      </label>
+      <label>Password
+        <input type="password" id="b2b-password" placeholder="••••••" required />
+      </label>
+      <label>GSTIN (optional)
+        <input type="text" id="b2b-gstin" placeholder="22AAAAA0000A1Z5" />
+      </label>
+      <button type="submit" class="btn primary">Sign In Wholesale</button>
+    </form>
+    <p class="small"><a href="b2b.html">Explore Wholesale Catalog</a></p>
+  </div>
+</section>
+
+<aside class="auth-hero">
+  <div class="hero-card">
+    <h2>Clothify</h2>
+    <p>Modern D2C clothing, sustainably made — sign in to continue shopping.</p>
+    <ul class="auth-features">
+      <li>Fast Checkout</li>
+      <li>Free & Easy Returns</li>
+      <li>Exclusive Wholesale Rates</li>
+    </ul>
+  </div>
+</aside>
