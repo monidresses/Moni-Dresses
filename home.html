@@ -66,12 +66,12 @@
   <main class="max-w-[600px] mx-auto pt-16 space-y-6 pb-12">
 
     <!-- ========================================== -->
-    <!-- 🔍 2. SEARCH BAR WITH VOICE ICON -->
+    <!-- 🔍 2. SEARCH BAR -->
     <!-- ========================================== -->
     <div class="px-4 pt-2">
       <div class="relative flex items-center bg-white border border-zinc-200 rounded-xl px-3 py-2.5 shadow-sm">
         <span class="material-symbols-outlined text-zinc-400 text-xl mr-2">search</span>
-        <input type="text" id="search-input" onkeyup="filterProducts()" placeholder="Search Cotton Blouses, Sarees & More..." class="w-full text-xs text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none" />
+        <input type="text" id="search-input" placeholder="Search Cotton Blouses, Sarees & More..." class="w-full text-xs text-zinc-800 placeholder-zinc-400 bg-transparent focus:outline-none" />
         <button aria-label="Voice Search" class="text-zinc-500 hover:text-primary transition-colors">
           <span class="material-symbols-outlined text-xl">mic</span>
         </button>
@@ -79,7 +79,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- 👗 3. DYNAMIC CATEGORIES (ADMIN CONNECTED) -->
+    <!-- 👗 3. DYNAMIC CATEGORIES -->
     <!-- ========================================== -->
     <section class="px-4">
       <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Categories</h3>
@@ -103,7 +103,7 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- ⭐ 5. RECOMMENDED FOR YOU (RECOMMENDED PRODUCTS) -->
+    <!-- ⭐ 5. RECOMMENDED FOR YOU -->
     <!-- ========================================== -->
     <section class="px-4 space-y-3">
       <div class="flex items-center justify-between">
@@ -121,7 +121,7 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- 🔥 6. ALL PRODUCTS GRID -->
+    <!-- 🔥 6. ALL PRODUCTS GRID WITH SHOW MORE -->
     <!-- ========================================== -->
     <section id="all-products" class="px-4 space-y-3">
       <div class="flex items-center justify-between">
@@ -135,12 +135,20 @@
       <div id="all-products-grid" class="grid grid-cols-2 gap-3.5">
         <!-- Dynamic All Products Load Here -->
       </div>
+
+      <!-- Show More Button -->
+      <div class="pt-2">
+        <button id="show-more-btn" onclick="showMoreProducts()" class="w-full py-3 bg-white border border-primary text-primary font-bold text-xs rounded-xl hover:bg-primary/5 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-1">
+          <span>Show More Products</span>
+          <span class="material-symbols-outlined text-sm">expand_more</span>
+        </button>
+      </div>
     </section>
 
   </main>
 
   <!-- ========================================== -->
-  <!-- 🦶 7. PROFESSIONAL FOOTER SECTION -->
+  <!-- 🦶 7. FOOTER SECTION -->
   <!-- ========================================== -->
   <footer class="bg-zinc-900 text-zinc-300 pt-10 pb-8 px-5 border-t border-zinc-800">
     <div class="max-w-[600px] mx-auto space-y-8">
@@ -181,7 +189,7 @@
       <div class="space-y-3 text-center pt-2">
         <p class="text-[11px] text-zinc-500">Need help with sizing or orders? Contact us directly on WhatsApp.</p>
         <p class="text-[10px] text-zinc-600 font-medium">
-          © 2026 MONI DRESSES. All Rights Reserved. Designed for elegance.
+          © 2026 MONI DRESSES. All Rights Reserved.
         </p>
       </div>
 
@@ -189,18 +197,22 @@
   </footer>
 
   <!-- ========================================== -->
-  <!-- ⚙️ JAVASCRIPT LOGIC (PRODUCTS & CART) -->
+  <!-- ⚙️ JAVASCRIPT LOGIC (FIXED CART & SHOW MORE) -->
   <!-- ========================================== -->
   <script>
-    // Sample Default Product Data (Overridden by Admin Panel Storage if available)
+    // Sample Products Data
     const defaultProducts = [
-      { id: "P1", name: "Designer Readymade Cotton Blouse", price: 449, originalPrice: 899, isRecommended: true, image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500" },
-      { id: "P2", name: "Printed Silk Festival Blouse", price: 599, originalPrice: 1199, isRecommended: true, image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500" },
-      { id: "P3", name: "Pure Cotton Boat-Neck Blouse", price: 399, originalPrice: 799, isRecommended: false, image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500" },
-      { id: "P4", name: "Partywear Embroidered Crop Blouse", price: 699, originalPrice: 1399, isRecommended: true, image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500" }
+      { id: "P1", name: "Designer Readymade Cotton Blouse", price: 449, originalPrice: 899, size: "34", image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500" },
+      { id: "P2", name: "Printed Silk Festival Blouse", price: 599, originalPrice: 1199, size: "36", image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500" },
+      { id: "P3", name: "Pure Cotton Boat-Neck Blouse", price: 399, originalPrice: 799, size: "34", image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500" },
+      { id: "P4", name: "Partywear Embroidered Crop Blouse", price: 699, originalPrice: 1399, size: "38", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500" },
+      { id: "P5", name: "Traditional Red Bridal Blouse", price: 799, originalPrice: 1599, size: "34", image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500" },
+      { id: "P6", name: "Black Velvet Sleeveless Blouse", price: 549, originalPrice: 1099, size: "36", image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500" }
     ];
 
-    // 1. Categories Loading
+    let displayLimit = 4; // শুরুতে ৪টি প্রোডাক্ট শো করবে
+
+    // 1. Load Categories
     function loadCategories() {
       const container = document.getElementById('category-container');
       const adminCategories = JSON.parse(localStorage.getItem('adminCategories')) || [
@@ -220,17 +232,16 @@
       `).join('');
     }
 
-    // 2. Render Products (Recommended & All Products)
+    // 2. Load Products & Handle "Show More"
     function loadProducts() {
       const products = JSON.parse(localStorage.getItem('adminProducts')) || defaultProducts;
       
       const recContainer = document.getElementById('recommended-container');
       const allGrid = document.getElementById('all-products-grid');
+      const showMoreBtn = document.getElementById('show-more-btn');
 
-      // Recommended Filter
-      const recommendedProducts = products.filter(p => p.isRecommended !== false);
-      
-      recContainer.innerHTML = recommendedProducts.map(p => `
+      // Recommended Section (First 4)
+      recContainer.innerHTML = products.slice(0, 4).map(p => `
         <div class="w-40 shrink-0 bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm flex flex-col justify-between">
           <div class="relative aspect-[3/4] bg-zinc-100 overflow-hidden">
             <span class="absolute top-2 left-2 z-10 bg-primary text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded shadow-sm">Hot Fit</span>
@@ -242,15 +253,17 @@
               <span class="text-xs font-extrabold text-zinc-900">₹${p.price}</span>
               <span class="text-[9px] text-zinc-400 line-through">₹${p.originalPrice || p.price * 2}</span>
             </div>
-            <button onclick="addToCart({id:'${p.id}', name:'${p.name}', price:${p.price}, image:'${p.image}'})" class="w-full py-1.5 bg-primary/10 text-primary font-bold text-[11px] rounded-lg hover:bg-primary hover:text-white transition-all active:scale-95">
+            <button onclick="addToCart('${p.id}')" class="w-full py-1.5 bg-primary/10 text-primary font-bold text-[11px] rounded-lg hover:bg-primary hover:text-white transition-all active:scale-95">
               Add
             </button>
           </div>
         </div>
       `).join('');
 
-      // All Products Grid
-      allGrid.innerHTML = products.map(p => `
+      // All Products Section (Paginated by displayLimit)
+      const visibleProducts = products.slice(0, displayLimit);
+
+      allGrid.innerHTML = visibleProducts.map(p => `
         <div class="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm flex flex-col justify-between relative group">
           <div class="relative aspect-[3/4] bg-zinc-100 overflow-hidden">
             <span class="absolute top-2 left-2 z-10 bg-yellow-400 text-zinc-900 text-[9px] font-extrabold px-2 py-0.5 rounded-md shadow-sm">Lowest Price</span>
@@ -262,15 +275,27 @@
               <span class="text-sm font-extrabold text-zinc-900">₹${p.price}</span>
               <span class="text-[10px] text-zinc-400 line-through">₹${p.originalPrice || p.price * 2}</span>
             </div>
-            <button onclick="addToCart({id:'${p.id}', name:'${p.name}', price:${p.price}, image:'${p.image}'})" class="w-full py-2 bg-primary/10 text-primary font-bold text-xs rounded-xl hover:bg-primary hover:text-white transition-all active:scale-95 mt-1">
+            <button onclick="addToCart('${p.id}')" class="w-full py-2 bg-primary/10 text-primary font-bold text-xs rounded-xl hover:bg-primary hover:text-white transition-all active:scale-95 mt-1">
               Add to Cart
             </button>
           </div>
         </div>
       `).join('');
+
+      // Hide "Show More" Button if all products are displayed
+      if (displayLimit >= products.length) {
+        showMoreBtn.classList.add('hidden');
+      } else {
+        showMoreBtn.classList.remove('hidden');
+      }
     }
 
-    // 3. Real-Time Cart Badge Logic
+    function showMoreProducts() {
+      displayLimit += 4;
+      loadProducts();
+    }
+
+    // 3. Real-Time Cart Badge Update
     function updateCartBadge() {
       const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       const countBadge = document.getElementById('cart-count');
@@ -286,12 +311,28 @@
       }
     }
 
-    // 4. Add Product to Cart Function
-    function addToCart(product) {
+    // 4. Fixed Add to Cart Function (Proper JSON structure for cart.html)
+    function addToCart(productId) {
+      const products = JSON.parse(localStorage.getItem('adminProducts')) || defaultProducts;
+      const productToAdd = products.find(p => p.id === productId);
+
+      if (!productToAdd) return;
+
       let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
-      cart.push(product);
+      
+      // কার্টে অবজেক্ট পুশ করা
+      cart.push({
+        id: productToAdd.id,
+        name: productToAdd.name,
+        price: productToAdd.price,
+        size: productToAdd.size || "34",
+        qty: 1,
+        image: productToAdd.image
+      });
+
       localStorage.setItem('cartItems', JSON.stringify(cart));
       updateCartBadge();
+      alert(productToAdd.name + " added to your cart!");
     }
 
     // Initialize Page
