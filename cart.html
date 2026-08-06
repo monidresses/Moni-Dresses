@@ -19,7 +19,7 @@
 
   <!-- Header -->
   <header class="fixed top-0 left-0 w-full z-50 flex items-center px-4 py-3 bg-white border-b border-zinc-100 shadow-sm">
-    <button onclick="history.back()" class="p-1 text-zinc-700">
+    <button onclick="window.location.href='home.html'" class="p-1 text-zinc-700">
       <span class="material-symbols-outlined">arrow_back</span>
     </button>
     <h1 class="font-brand text-lg font-bold text-primary ml-4">My Shopping Cart</h1>
@@ -29,7 +29,7 @@
     
     <!-- Cart Items Container -->
     <div id="cart-items-container" class="space-y-4">
-      <!-- Products will be injected here via JS -->
+      <!-- JavaScript এখান থেকেই প্রোডাক্টগুলো লোড করবে -->
     </div>
 
     <!-- Bill Details -->
@@ -48,15 +48,16 @@
         <span id="grand-total" class="text-primary">₹0</span>
       </div>
       
-      <button onclick="checkoutOnWhatsApp()" class="w-full py-4 bg-primary text-white font-bold text-xs rounded-xl shadow-lg active:scale-95 transition-all">
-        Proceed to Order on WhatsApp
+      <!-- Checkout Button: সরাসরি checkout.html এ যাবে -->
+      <button onclick="window.location.href='checkout.html'" class="w-full py-4 bg-primary text-white font-bold text-xs rounded-xl shadow-lg active:scale-95 transition-all">
+        Proceed to Checkout
       </button>
     </div>
 
   </main>
 
   <script>
-    // 1. Load & Render Cart
+    // 1. কার্ট থেকে ডেটা লোড করে দেখানোর ফাংশন
     function renderCart() {
       const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       const container = document.getElementById('cart-items-container');
@@ -83,10 +84,9 @@
             <img src="${item.image}" class="w-16 h-16 object-cover rounded-lg">
             <div class="flex-1">
               <h3 class="text-xs font-bold text-zinc-800">${item.name}</h3>
-              <p class="text-xs text-zinc-500 mt-0.5">Size: ${item.size}</p>
-              <p class="text-sm font-bold text-primary mt-1">₹${item.price}</p>
+              <p class="text-xs text-zinc-500 mt-0.5">Price: ₹${item.price}</p>
             </div>
-            <button onclick="removeItem(${index})" class="text-zinc-400 hover:text-red-500">
+            <button onclick="removeItem(${index})" class="text-zinc-400 hover:text-red-500 p-2">
               <span class="material-symbols-outlined">delete</span>
             </button>
           </div>
@@ -97,31 +97,15 @@
       document.getElementById('grand-total').innerText = `₹${subtotal + 40}`;
     }
 
-    // 2. Remove Item
+    // 2. প্রোডাক্ট রিমুভ করার ফাংশন
     function removeItem(index) {
       let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       cart.splice(index, 1);
       localStorage.setItem('cartItems', JSON.stringify(cart));
-      renderCart();
-      // Optional: Refresh cart badge if app.js is included
-      if(typeof updateCartBadge === 'function') updateCartBadge();
+      renderCart(); // আবার কার্ট রেন্ডার করবে
     }
 
-    // 3. WhatsApp Checkout
-    function checkoutOnWhatsApp() {
-      const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
-      if (cart.length === 0) return;
-
-      let msg = "Hello, I want to order these items:\n\n";
-      cart.forEach((item, i) => {
-        msg += `${i+1}. ${item.name} (Size: ${item.size}) - ₹${item.price}\n`;
-      });
-      msg += `\nTotal: ₹${document.getElementById('grand-total').innerText.replace('₹','')}`;
-      
-      const whatsappUrl = `https://wa.me/918536891441?text=${encodeURIComponent(msg)}`;
-      window.open(whatsappUrl, '_blank');
-    }
-
+    // পেজ লোড হওয়া মাত্রই ফাংশনটি চলবে
     window.addEventListener('DOMContentLoaded', renderCart);
   </script>
 </body>
