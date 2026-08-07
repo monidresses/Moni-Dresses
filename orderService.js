@@ -1,6 +1,6 @@
 // orderService.js
 import { db } from "./db.js";
-import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 export async function saveCompleteOrder(orderData) {
     try {
