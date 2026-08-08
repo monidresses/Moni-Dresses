@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Shared Products — MONI DRESSES</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: "#b3006a", surface: "#fbf9f8" },
+          fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"], brand: ["Bodoni Moda", "serif"] }
+        }
+      }
+    }
+  </script>
+  <style> body { -webkit-tap-highlight-color: transparent; } </style>
+</head>
+<body class="bg-surface text-zinc-900 font-sans min-h-screen pb-24">
+
+  <!-- TOP HEADER -->
+  <header class="fixed top-0 left-0 w-full z-40 flex items-center justify-between px-4 py-3 bg-white border-b border-zinc-100 shadow-sm">
+    <button onclick="window.location.href='account.html'" aria-label="Back" class="p-1 text-zinc-700 active:scale-95">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <a href="home.html" class="font-brand text-lg font-bold text-primary tracking-wider">MONI DRESSES</a>
+    <a href="cart.html" aria-label="Cart" class="p-1 text-zinc-700 active:scale-95">
+      <span class="material-symbols-outlined">shopping_cart</span>
+    </a>
+  </header>
+
+  <main class="max-w-[600px] mx-auto pt-20 px-4 space-y-4">
+
+    <!-- PAGE TITLE -->
+    <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-sm flex items-center justify-between">
+      <div>
+        <h1 class="text-sm font-extrabold text-zinc-900 uppercase tracking-wider">Shared Products</h1>
+        <p class="text-[10px] text-zinc-400 mt-0.5">Products you have shared with friends & family</p>
+      </div>
+      <span id="shared-count-badge" class="bg-primary/10 text-primary text-xs font-black px-3 py-1 rounded-full">0 Items</span>
+    </div>
+
+    <!-- SHARED PRODUCTS CONTAINER -->
+    <div id="shared-products-container" class="space-y-3">
+      <!-- Dynamic shared items will load here -->
+      <div class="text-center py-12 bg-white rounded-2xl border border-zinc-200/80 shadow-sm">
+        <span class="material-symbols-outlined text-4xl text-zinc-300">share_off</span>
+        <p class="text-xs text-zinc-500 font-medium mt-2">You haven't shared any products yet.</p>
+        <a href="home.html" class="inline-block mt-3 px-4 py-2 bg-primary text-white text-xs font-bold rounded-xl">Start Sharing & Earning</a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- SUCCESS MODAL (CHECKMARK) -->
+  <div id="success-modal" class="fixed inset-0 z-[200] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity">
+    <div class="bg-white w-full max-w-[280px] rounded-3xl p-6 text-center shadow-2xl scale-95 transition-transform duration-200">
+      <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+        <span class="material-symbols-outlined text-4xl">check_circle</span>
+      </div>
+      <h3 class="text-sm font-bold text-zinc-900 mb-1">Success!</h3>
+      <p id="success-message" class="text-xs text-zinc-500 mb-6">Link copied to clipboard.</p>
+      <button onclick="closeModal()" class="w-full py-3 bg-primary text-white font-bold text-xs rounded-xl hover:opacity-90 transition-all uppercase tracking-wider">OK</button>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSharedProducts();
+    });
+
+    function loadSharedProducts() {
+      const sharedList = JSON.parse(localStorage.getItem('sharedProducts')) || [];
+      const container = document.getElementById('shared-products-container');
+      document.getElementById('shared-count-badge').innerText = sharedList.length + " Items";
+
+      if (sharedList.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 bg-white rounded-2xl border border-zinc-200/80 shadow-sm">
+            <span class="material-symbols-outlined text-4xl text-zinc-300">share_off</span>
+            <p class="text-xs text-zinc-500 font-medium mt-2">You haven't shared any products yet.</p>
+            <a href="home.html" class="inline-block mt-3 px-4 py-2 bg-primary text-white text-xs font-bold rounded-xl">Start Sharing & Earning</a>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = sharedList.map((item, index) => `
+        <div class="bg-white p-3 rounded-2xl border border-zinc-200/80 shadow-sm flex items-center gap-3.5">
+          <img src="${item.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200'}" alt="${item.name}" class="w-16 h-20 object-cover rounded-xl bg-zinc-100 border border-zinc-200 shrink-0">
+          <div class="flex-1 space-y-1">
+            <p class="text-xs font-extrabold text-zinc-900 line-clamp-1">${item.name}</p>
+            <p class="text-xs font-black text-primary">₹${item.price}</p>
+            <p class="text-[10px] text-zinc-400 font-medium">Shared via: <span class="text-zinc-700 font-bold">${item.platform || 'WhatsApp'}</span></p>
+          </div>
+          <div class="flex flex-col gap-2">
+            <button onclick="shareAgain('${item.name}', '${item.price}')" class="p-2 bg-emerald-50 text-emerald-700 rounded-xl hover:bg-emerald-100 active:scale-95 transition-all" title="Share Again">
+              <span class="material-symbols-outlined text-sm">share</span>
+            </button>
+            <button onclick="removeSharedItem(${index})" class="p-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 active:scale-95 transition-all" title="Remove">
+              <span class="material-symbols-outlined text-sm">delete</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function showModal(msg) {
+      document.getElementById('success-message').innerText = msg;
+      const modal = document.getElementById('success-modal');
+      modal.classList.remove('hidden');
+      setTimeout(() => modal.querySelector('div').classList.remove('scale-95'), 10);
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('success-modal');
+      modal.querySelector('div').classList.add('scale-95');
+      setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+
+    window.shareAgain = function(name, price) {
+      const text = encodeURIComponent(`Check out this amazing product from MONI DRESSES: *${name}* at just *₹${price}*! Shop now.`);
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+    };
+
+    window.removeSharedItem = function(index) {
+      let sharedList = JSON.parse(localStorage.getItem('sharedProducts')) || [];
+      sharedList.splice(index, 1);
+      localStorage.setItem('sharedProducts', JSON.stringify(sharedList));
+      loadSharedProducts();
+      showModal("Item removed from shared history.");
+    };
+  </script>
+</body>
+</html>
