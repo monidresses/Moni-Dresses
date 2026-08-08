@@ -78,7 +78,18 @@
       </a>
     </div>
 
-<!-- FIREBASE LIVE ORDERS & TRACKING -->
+    <!-- WISHLIST PREVIEW CONTAINER -->
+    <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-sm space-y-3">
+      <div class="flex justify-between items-center border-b border-zinc-100 pb-2">
+        <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">My Favorite Wishlist</h2>
+        <a href="cart.html" class="text-xs font-bold text-primary">View All</a>
+      </div>
+      <div id="wishlist-preview-container" class="flex gap-3 overflow-x-auto pb-2">
+        <p class="text-xs text-zinc-400 py-2">No items in wishlist.</p>
+      </div>
+    </div>
+
+    <!-- FIREBASE LIVE ORDERS & TRACKING -->
     <div id="orders-section" class="space-y-3 pt-2">
       <div class="flex justify-between items-center border-b border-zinc-200 pb-2">
         <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">My Live Orders & Tracking</h2>
@@ -241,7 +252,14 @@
           </div>
         </div>
 
-<!-- RATING & REVIEW MODAL -->
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-primary text-white font-extrabold text-xs shadow-md active:scale-95 transition-all mt-4 uppercase">
+          Save Profile Details
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- RATING & REVIEW MODAL -->
   <div id="rating-modal" class="fixed inset-0 z-[150] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-4 text-center">
       <h3 class="font-bold text-sm text-zinc-900">Rate Your Product</h3>
@@ -290,7 +308,7 @@
   <!-- FIREBASE & JAVASCRIPT LOGIC -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, doc, setDb, setDoc, addDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, query } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
     import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
     const firebaseConfig = {
@@ -350,7 +368,6 @@
     function loadUserData() {
       const savedUser = JSON.parse(localStorage.getItem("userProfile")) || {};
       
-      // Generate or assign UID
       if (!savedUser.customId) {
         savedUser.customId = "MD-" + Math.floor(100000 + Math.random() * 900000);
         localStorage.setItem("userProfile", JSON.stringify(savedUser));
@@ -501,7 +518,7 @@
       }
     }
 
-    // Modal controls for extra features
+    // Modal controls mapped to window for HTML access
     window.openCreatorModal = function() {
       document.getElementById('info-title').innerText = "Creator Profile";
       document.getElementById('info-content').innerHTML = "<p><b>MONI DRESSES</b> is managed by Avijit Chakraborty, specializing in exclusive cotton blouses and ethnic fashionwear.</p>";
@@ -561,7 +578,6 @@
     }
 
     window.submitProductRating = function() {
-      const comment = document.getElementById('review-comment').value;
       closeModal('rating-modal');
       showSuccessModal("Thank you! Your " + selectedRatingStars + "-star review has been added successfully.");
     }
@@ -569,10 +585,15 @@
     window.closeModal = function(modalId) {
       document.getElementById(modalId).classList.add('hidden');
     }
-    window.openEditProfileModal = function() { document.getElementById('edit-profile-modal').classList.remove('hidden'); }
-    window.closeEditProfileModal = function() { document.getElementById('edit-profile-modal').classList.add('hidden'); }
 
-    // Save profile details and update Firebase / LocalStorage
+    window.openEditProfileModal = function() { 
+      document.getElementById('edit-profile-modal').classList.remove('hidden'); 
+    }
+    
+    window.closeEditProfileModal = function() { 
+      document.getElementById('edit-profile-modal').classList.add('hidden'); 
+    }
+
     window.saveProfileDetails = function(e) {
       e.preventDefault();
       const savedUser = JSON.parse(localStorage.getItem("userProfile")) || {};
@@ -596,7 +617,6 @@
       showSuccessModal("Profile and Address Updated Successfully!");
     }
 
-    // Secure Logout
     window.logoutUser = async function() {
       if (confirm("Are you sure you want to log out?")) {
         try {
