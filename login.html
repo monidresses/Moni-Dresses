@@ -115,7 +115,7 @@
   <!-- FIREBASE AUTH SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBZdG23Io-oMElZ5XVmhVLd87-sq136dhY",
@@ -135,6 +135,30 @@
         'size': 'invisible',
         'callback': (response) => {}
       });
+
+      // Handle Google redirect result on load
+      getRedirectResult(auth)
+        .then((result) => {
+          if (result && result.user) {
+            const user = result.user;
+            const userProfile = {
+              phone: user.phoneNumber ? user.phoneNumber.replace("+91", "") : "",
+              email: user.email || "",
+              uid: user.uid,
+              name: user.displayName || "Customer",
+              photo: user.photoURL || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200"
+            };
+            localStorage.setItem('userProfile', JSON.stringify(userProfile));
+
+            showModal("Google Login Successful!", () => {
+              window.location.href = 'home.html';
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Google redirect error:", error);
+          showModal("Google Login Failed: " + error.message);
+        });
     });
 
     // Mode Switcher for Tabs
@@ -240,16 +264,13 @@
         return;
       }
 
-      // Mapping phone number to internal email format for Firebase Auth compatibility
       const pseudoEmail = phone + "@monidresses.app";
 
       try {
         let userCredential;
         try {
-          // Try logging in first
           userCredential = await signInWithEmailAndPassword(auth, pseudoEmail, password);
         } catch (loginError) {
-          // If user doesn't exist, automatically sign them up
           if (loginError.code === 'auth/user-not-found' || loginError.code === 'auth/invalid-credential') {
             userCredential = await createUserWithEmailAndPassword(auth, pseudoEmail, password);
           } else {
@@ -276,28 +297,9 @@
       }
     };
 
-    // 4. Google / Gmail Login
+    // 4. Google / Gmail Login (Using Redirect for Mobile Support)
     window.loginWithGoogle = function() {
-      signInWithPopup(auth, googleProvider)
-        .then((result) => {
-          const user = result.user;
-          const userProfile = {
-            phone: user.phoneNumber ? user.phoneNumber.replace("+91", "") : "",
-            email: user.email || "",
-            uid: user.uid,
-            name: user.displayName || "Customer",
-            photo: user.photoURL || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200"
-          };
-          localStorage.setItem('userProfile', JSON.stringify(userProfile));
-
-          showModal("Google Login Successful!", () => {
-            window.location.href = 'home.html';
-          });
-        })
-        .catch((error) => {
-          console.error("Google login error:", error);
-          showModal("Google Login Failed: " + error.message);
-        });
+      signInWithRedirect(auth, googleProvider);
     };
   </script>
 </body>
