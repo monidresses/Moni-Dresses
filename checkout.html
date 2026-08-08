@@ -63,7 +63,7 @@
           <span class="text-xs font-bold text-zinc-800">+ Add New Address</span>
         </label>
 
-        <!-- New Address Input Fields (Hidden by default if saved address exists) -->
+        <!-- New Address Input Fields -->
         <div id="address-inputs" class="space-y-3 pt-2 hidden">
           <div class="grid grid-cols-2 gap-2.5">
             <div>
@@ -169,82 +169,128 @@
   </main>
 
   <!-- ========================================== -->
-  <!-- OTP MODAL FOR COD VERIFICATION -->
+  <!-- FIREBASE OTP MODAL FOR COD VERIFICATION -->
   <!-- ========================================== -->
   <div id="otp-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-    <div class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-xl space-y-4 text-center">
-      <div class="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto">
-        <span class="material-symbols-outlined text-2xl">sms</span>
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-4 text-center">
+      <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto">
+        <span class="material-symbols-outlined text-4xl">sms</span>
       </div>
       <div>
-        <h3 class="text-sm font-bold text-zinc-800">Verify Mobile Number</h3>
-        <p class="text-xs text-zinc-500 mt-1">Enter OTP sent to <span id="otp-phone-display" class="font-bold text-zinc-800"></span></p>
+        <h3 class="text-sm font-bold text-zinc-900">Verify Mobile Number</h3>
+        <p class="text-xs text-zinc-500 mt-1">Enter 6-digit OTP sent to <span id="otp-phone-display" class="font-bold text-zinc-800"></span></p>
       </div>
-      <input type="text" id="otp-input" maxlength="4" placeholder="1 2 3 4" class="w-full text-center tracking-[0.8em] text-lg font-bold p-3 border border-zinc-300 rounded-xl focus:outline-primary bg-zinc-50">
-      <button onclick="verifyCODOTP()" class="w-full py-3 bg-primary text-white font-bold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase">Verify & Confirm</button>
+      <input type="text" id="otp-input" maxlength="6" placeholder="123456" class="w-full text-center tracking-[0.5em] text-lg font-bold p-3 border border-zinc-300 rounded-xl focus:outline-primary bg-zinc-50">
+      <button onclick="verifyCODOTP()" class="w-full py-3.5 bg-primary text-white font-extrabold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase">Verify & Confirm Order</button>
       <button onclick="closeModal('otp-modal')" class="text-xs font-bold text-zinc-400 hover:text-zinc-600 block mx-auto">Cancel</button>
     </div>
   </div>
 
   <!-- ========================================== -->
-  <!-- CORE JAVASCRIPT LOGIC -->
+  <!-- PROFESSIONAL SUCCESS MODAL (WITH CHECKMARK) -->
   <!-- ========================================== -->
-  <script>
-    let generatedOTP = "1234";
-    let finalOrderAmount = 0; // Stores the final amount the customer has to pay
+  <div id="success-modal" class="fixed inset-0 z-[200] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity">
+    <div class="bg-white w-full max-w-[280px] rounded-3xl p-6 text-center shadow-2xl scale-95 transition-transform duration-200">
+      <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+        <span class="material-symbols-outlined text-4xl">check_circle</span>
+      </div>
+      <h3 class="text-sm font-bold text-zinc-900 mb-1">Success!</h3>
+      <p id="success-message" class="text-xs text-zinc-500 mb-6">Order Placed Successfully!</p>
+      <button onclick="handleModalAction()" class="w-full py-3 bg-primary text-white font-bold text-xs rounded-xl hover:opacity-90 transition-all uppercase tracking-wider">OK</button>
+    </div>
+  </div>
 
-    // ==========================================
-    // 1. ADMIN DELIVERY CHARGES (DYNAMIC)
-    // ==========================================
-    // These charges are fetched from the Admin Panel via localStorage.
-    // If not configured, defaults are applied: Prepaid = 0 (Free), COD = 60.
+  <!-- Hidden reCAPTCHA Container for Firebase -->
+  <div id="recaptcha-container"></div>
+
+  <!-- ========================================== -->
+  <!-- CORE JAVASCRIPT & FIREBASE LOGIC -->
+  <!-- ========================================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZdG23Io-oMElZ5XVmhVLd87-sq136dhY",
+      authDomain: "moni-dresses-db.firebaseapp.com",
+      projectId: "moni-dresses-db",
+      storageBucket: "moni-dresses-db.firebasestorage.app",
+      messagingSenderId: "24076547918",
+      appId: "1:24076547918:web:6cae50157f9c6749ff501f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let finalOrderAmount = 0;
+    let windowConfirmationResult = null;
+    let successRedirectUrl = "order-success.html";
+
+    // Initialize invisible reCAPTCHA
+    window.addEventListener('DOMContentLoaded', () => {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible',
+        'callback': (response) => {}
+      });
+      loadSavedProfileAddress();
+      updateOrderSummary();
+    });
+
+    // Professional Modal Controller
+    function showSuccessModal(message, callback = null) {
+      document.getElementById('success-message').innerText = message;
+      const modal = document.getElementById('success-modal');
+      modal.classList.remove('hidden');
+      setTimeout(() => modal.querySelector('div').classList.remove('scale-95'), 10);
+      window.modalActionCallback = callback;
+    }
+
+    window.handleModalAction = function() {
+      const modal = document.getElementById('success-modal');
+      modal.querySelector('div').classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        if (window.modalActionCallback) window.modalActionCallback();
+      }, 200);
+    }
+
+    // 1. ADMIN DELIVERY CHARGES
     function getAdminDeliveryCharges() {
-      const adminSettings = JSON.parse(localStorage.getItem('adminSettings')) || {
+      return JSON.parse(localStorage.getItem('adminSettings')) || {
         prepaidDelivery: 0, 
         codDelivery: 60     
       };
-      return adminSettings;
     }
 
-    // ==========================================
-    // 2. ORDER CALCULATION & SUMMARY UPDATE
-    // ==========================================
+    // 2. ORDER CALCULATION
     function getCartSubtotal() {
       const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       return cart.reduce((sum, item) => sum + (Number(item.price) * (Number(item.qty) || 1)), 0);
     }
 
-    function updateOrderSummary() {
+    window.updateOrderSummary = function() {
       const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
       const charges = getAdminDeliveryCharges();
-      
       const subtotal = getCartSubtotal();
       
-      // Determine delivery fee based on selected payment method
       const deliveryFee = paymentMethod === 'razorpay' ? Number(charges.prepaidDelivery) : Number(charges.codDelivery);
-      
       finalOrderAmount = subtotal + deliveryFee;
 
-      // Update UI Elements
       document.getElementById('summary-subtotal').innerText = `₹${subtotal}`;
       
       if (deliveryFee === 0) {
         document.getElementById('summary-delivery').innerText = "FREE";
-        document.getElementById('summary-delivery').classList.add("text-emerald-600");
-        document.getElementById('summary-delivery').classList.remove("text-zinc-900");
+        document.getElementById('summary-delivery').className = "text-emerald-600 font-bold";
       } else {
         document.getElementById('summary-delivery').innerText = `+ ₹${deliveryFee}`;
-        document.getElementById('summary-delivery').classList.remove("text-emerald-600");
-        document.getElementById('summary-delivery').classList.add("text-zinc-900");
+        document.getElementById('summary-delivery').className = "text-zinc-900 font-bold";
       }
 
       document.getElementById('summary-total').innerText = `₹${finalOrderAmount}`;
       document.getElementById('submit-btn').innerText = `Pay ₹${finalOrderAmount} & Place Order`;
     }
 
-    // ==========================================
     // 3. PROFILE ADDRESS LOGIC
-    // ==========================================
     function loadSavedProfileAddress() {
       const savedUser = JSON.parse(localStorage.getItem('userProfile'));
       const savedSection = document.getElementById('saved-address-section');
@@ -270,7 +316,7 @@
       }
     }
 
-    function toggleAddressOption() {
+    window.toggleAddressOption = function() {
       const addressChoice = document.querySelector('input[name="addressSelect"]:checked')?.value;
       const addressInputsDiv = document.getElementById('address-inputs');
       const inputs = addressInputsDiv.querySelectorAll('input');
@@ -286,9 +332,7 @@
       }
     }
 
-    // ==========================================
-    // 4. SAVE ORDER TO HISTORY & REDIRECT
-    // ==========================================
+    // 4. SAVE ORDER TO HISTORY
     function saveOrderToHistory(orderId, totalPaid) {
       const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       if (cart.length === 0) return;
@@ -308,21 +352,21 @@
 
     function processOrderSuccess(orderId, totalPaid) {
       saveOrderToHistory(orderId, totalPaid);
-      localStorage.removeItem('cartItems'); // Clear the cart items
-      localStorage.setItem('latestOrderId', orderId); // Save Order ID for the success page
-      window.location.href = 'order-success.html'; // Redirect to success page
+      localStorage.removeItem('cartItems'); 
+      localStorage.setItem('latestOrderId', orderId); 
+      
+      showSuccessModal("Order Placed Successfully!", () => {
+        window.location.href = successRedirectUrl;
+      });
     }
 
-    // ==========================================
-    // 5. FORM SUBMIT (RAZORPAY & COD OTP)
-    // ==========================================
+    // 5. FORM SUBMIT & FIREBASE OTP TRIGGER
     document.getElementById('checkout-form').addEventListener('submit', function(e) {
       e.preventDefault();
 
       const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       if (cart.length === 0) {
-        alert("Your cart is empty!");
-        window.location.href = 'home.html';
+        showSuccessModal("Your cart is empty!");
         return;
       }
 
@@ -341,50 +385,34 @@
         nameInput = document.getElementById('cust-name').value;
       }
 
+      if (!phoneInput || phoneInput.length !== 10) {
+        showSuccessModal("Please provide a valid 10-digit mobile number!");
+        return;
+      }
+
       if (paymentMethod === 'razorpay') {
         const options = {
           "key": "YOUR_RAZORPAY_KEY", 
-          "amount": finalOrderAmount * 100, // Amount is in currency subunits (paise)
+          "amount": finalOrderAmount * 100,
           "currency": "INR",
           "name": "MONI DRESSES",
           "description": "Prepaid Order Payment",
           "handler": function (response) {
             const finalId = "MD-RZP-" + Math.floor(100000 + Math.random() * 900000);
             processOrderSuccess(finalId, finalOrderAmount);
-          },
-          "prefill": { "name": nameInput, "contact": phoneInput },
-          "theme": { "color": "#b3006a" }
-        };
-        const rzp = new Razorpay(options);
-        rzp.open();
+          })
+          .catch((error) => {
+            console.error("Invalid OTP:", error);
+            showSuccessModal("Invalid OTP! Please check and try again.");
+          });
       } else {
-        document.getElementById('otp-phone-display').innerText = "+91 " + phoneInput;
-        document.getElementById('otp-modal').classList.remove('hidden');
-      }
-    });
-
-    function verifyCODOTP() {
-      const userOTP = document.getElementById('otp-input').value.trim();
-      if (userOTP === generatedOTP) {
-        closeModal('otp-modal');
-        const finalId = "MD-COD-" + Math.floor(100000 + Math.random() * 900000);
-        processOrderSuccess(finalId, finalOrderAmount); // Pass the final amount including COD charge
-      } else {
-        alert("Invalid OTP! Please enter 1234 for testing.");
+        showSuccessModal("Session expired. Please try placing the order again.");
       }
     }
 
-    function closeModal(id) {
+    window.closeModal = function(id) {
       document.getElementById(id).classList.add('hidden');
     }
-
-    // Initialize Page Settings on Load
-    window.addEventListener('DOMContentLoaded', () => {
-      loadSavedProfileAddress();
-      updateOrderSummary(); // Calculate and display initial bill amounts
-    });
   </script>
-
-  <script type="module" src="checkout.js"></script>
 </body>
 </html>
