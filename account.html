@@ -83,16 +83,16 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- 4. DYNAMIC ORDER HISTORY & TRACKING -->
+    <!-- 4. FIREBASE DYNAMIC ORDER HISTORY & TRACKING -->
     <!-- ========================================== -->
     <div id="orders-section" class="space-y-3 pt-2">
       <div class="flex justify-between items-center border-b border-zinc-200 pb-2">
-        <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">My Recent Orders</h2>
+        <h2 class="text-xs font-bold text-zinc-500 uppercase tracking-wider">My Live Orders & Tracking</h2>
       </div>
       
-      <!-- Container where JS will inject orders -->
+      <!-- Container where Firebase orders will inject -->
       <div id="dynamic-order-container" class="space-y-4">
-        <!-- Loader / Placeholder -->
+        <p class="text-center text-zinc-400 text-xs py-6">Loading orders from database...</p>
       </div>
     </div>
 
@@ -134,7 +134,7 @@
   </main>
 
   <!-- ========================================== -->
-  <!-- 7. EDIT PROFILE MODAL (STRUCTURED ADDRESS) -->
+  <!-- 7. EDIT PROFILE MODAL -->
   <!-- ========================================== -->
   <div id="edit-profile-modal" class="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white w-full max-w-md rounded-2xl p-5 shadow-2xl relative space-y-4 my-8 max-h-[90vh] overflow-y-auto">
@@ -147,8 +147,6 @@
       </div>
 
       <form onsubmit="saveProfileDetails(event)" class="space-y-4">
-        
-        <!-- DIRECT IMAGE FILE UPLOAD -->
         <div>
           <label class="block text-[10px] font-bold text-zinc-500 uppercase mb-1">Profile Picture</label>
           <div class="flex items-center gap-3">
@@ -168,7 +166,6 @@
           </div>
         </div>
 
-        <!-- STRUCTURED ADDRESS FOR CHECKOUT COMPATIBILITY -->
         <h4 class="text-xs font-bold text-primary border-b border-zinc-100 pb-1 mt-4">Shipping Address</h4>
         
         <div>
@@ -218,12 +215,36 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 8. JAVASCRIPT LOGIC -->
+  <!-- 8. FIREBASE & JAVASCRIPT LOGIC -->
   <!-- ========================================== -->
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, query } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZdG23Io-oMElZ5XVmhVLd87-sq136dhY",
+      authDomain: "moni-dresses-db.firebaseapp.com",
+      projectId: "moni-dresses-db",
+      storageBucket: "moni-dresses-db.firebasestorage.app",
+      messagingSenderId: "24076547918",
+      appId: "1:24076547918:web:6cae50157f9c6749ff501f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
     let uploadedImageBase64 = "";
 
-    // 1. File Upload Logic
+    // Auth Guard: If not logged in, redirect to login page immediately
+    (function checkAuth() {
+      const savedUser = localStorage.getItem("userProfile");
+      if (!savedUser) {
+        window.location.href = "login.html";
+      }
+    })();
+
     function previewFile() {
       const file = document.getElementById('input-file').files[0];
       const reader = new FileReader();
@@ -233,114 +254,150 @@
       }
       if (file) reader.readAsDataURL(file);
     }
+    window.previewFile = previewFile;
 
-    // 2. Load User Profile Data
     function loadUserData() {
-      const savedUser = JSON.parse(localStorage.getItem("userProfile"));
-      if (savedUser) {
-        document.getElementById('profile-name').innerText = savedUser.name || "Customer";
-        document.getElementById('profile-phone').innerText = savedUser.phone ? "+91 " + savedUser.phone : "";
-        
-        const photoSrc = savedUser.photo || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200";
-        document.getElementById('user-profile-img').src = photoSrc;
-        document.getElementById('preview-image').src = photoSrc;
-        uploadedImageBase64 = photoSrc;
+      const savedUser = JSON.parse(localStorage.getItem("userProfile")) || {};
+      document.getElementById('profile-name').innerText = savedUser.name || "Customer";
+      document.getElementById('profile-phone').innerText = savedUser.phone ? "+91 " + savedUser.phone : "";
+      
+      const photoSrc = savedUser.photo || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200";
+      document.getElementById('user-profile-img').src = photoSrc;
+      document.getElementById('preview-image').src = photoSrc;
+      uploadedImageBase64 = photoSrc;
 
-        // Fill Form Inputs
-        document.getElementById('input-name').value = savedUser.name || "";
-        document.getElementById('input-phone').value = savedUser.phone || "";
+      document.getElementById('input-name').value = savedUser.name || "";
+      document.getElementById('input-phone').value = savedUser.phone || "";
+      
+      if(savedUser.address && typeof savedUser.address === 'object') {
+        const ad = savedUser.address;
+        document.getElementById('input-building').value = ad.building || "";
+        document.getElementById('input-area').value = ad.area || "";
+        document.getElementById('input-village').value = ad.village || "";
+        document.getElementById('input-city').value = ad.city || "";
+        document.getElementById('input-district').value = ad.district || "";
+        document.getElementById('input-state').value = ad.state || "";
+        document.getElementById('input-pin').value = ad.pin || "";
         
-        if(savedUser.address && typeof savedUser.address === 'object') {
-          const ad = savedUser.address;
-          document.getElementById('input-building').value = ad.building || "";
-          document.getElementById('input-area').value = ad.area || "";
-          document.getElementById('input-village').value = ad.village || "";
-          document.getElementById('input-city').value = ad.city || "";
-          document.getElementById('input-district').value = ad.district || "";
-          document.getElementById('input-state').value = ad.state || "";
-          document.getElementById('input-pin').value = ad.pin || "";
-          
-          const vText = ad.village ? `${ad.village}, ` : "";
-          document.getElementById('display-address').innerText = `${ad.building}, ${ad.area}, ${vText}${ad.city}, ${ad.district}, ${ad.state} - ${ad.pin}`;
-        }
+        const vText = ad.village ? `${ad.village}, ` : "";
+        document.getElementById('display-address').innerText = `${ad.building}, ${ad.area}, ${vText}${ad.city}, ${ad.district}, ${ad.state} - ${ad.pin}`;
       }
     }
 
-    // 3. Load Order History Dynamically
-    function loadOrderHistory() {
-      const orders = JSON.parse(localStorage.getItem('orderHistory')) || [];
+    // Load Firebase Orders Matching Logged-in User Phone
+    async function loadFirebaseOrders() {
       const container = document.getElementById('dynamic-order-container');
+      const savedUser = JSON.parse(localStorage.getItem("userProfile")) || {};
+      const userPhone = savedUser.phone || "";
 
-      if (orders.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-10 bg-white rounded-2xl border border-zinc-200/80 shadow-sm">
-            <span class="material-symbols-outlined text-4xl text-zinc-300">inventory_2</span>
-            <p class="text-zinc-500 font-medium text-xs mt-2">No orders found.</p>
-            <a href="home.html" class="inline-block mt-3 text-primary font-bold text-xs underline">Start Shopping</a>
-          </div>`;
-        return;
-      }
+      try {
+        const q = query(collection(db, "orders"));
+        const querySnapshot = await getDocs(q);
+        
+        container.innerHTML = "";
+        let foundOrders = false;
 
-      container.innerHTML = orders.map(order => `
-        <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-sm space-y-4">
-          <div class="flex justify-between items-start border-b border-zinc-100 pb-3">
-            <div>
-              <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">Order ID</p>
-              <p class="text-xs font-extrabold text-primary">${order.orderId}</p>
-            </div>
-            <div class="text-right">
-              <p class="text-[10px] text-zinc-400 font-semibold mb-1">${order.date || 'Today'}</p>
-              <span class="text-[9px] bg-sky-100 text-sky-700 font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">${order.status || 'Processing'}</span>
-            </div>
-          </div>
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
 
-          <div class="space-y-3">
-            ${order.items.map(item => `
-              <div class="flex items-center gap-3">
-                <img src="${item.image}" alt="${item.name}" class="w-12 h-14 object-cover rounded-lg bg-zinc-100 border border-zinc-200">
-                <div class="flex-1">
-                  <p class="text-xs font-bold text-zinc-800 line-clamp-1">${item.name}</p>
-                  <p class="text-[10px] text-zinc-500 mt-0.5">Size: ${item.size || '34'} | Qty: ${item.qty || 1}</p>
+          // Match order with current user's phone number
+          if (data.customer?.phone === userPhone) {
+            foundOrders = true;
+
+            let formattedDate = "N/A";
+            if (data.createdAt && data.createdAt.toDate) {
+              formattedDate = data.createdAt.toDate().toLocaleString('en-IN', {
+                day: '2-digit', month: 'short', year: 'numeric',
+                hour: '2-digit', minute: '2-digit', hour12: true
+              });
+            }
+
+            let itemsHtml = "";
+            if (data.items && Array.isArray(data.items)) {
+              data.items.forEach(item => {
+                itemsHtml += `
+                  <div class="flex items-center gap-3">
+                    <img src="${item.image || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200'}" alt="${item.name}" class="w-12 h-14 object-cover rounded-lg bg-zinc-100 border border-zinc-200">
+                    <div class="flex-1">
+                      <p class="text-xs font-bold text-zinc-800 line-clamp-1">${item.name || 'Product'}</p>
+                      <p class="text-[10px] text-zinc-500 mt-0.5">Size: ${item.size || 'Free'} | Qty: ${item.qty || 1}</p>
+                    </div>
+                    <div class="text-xs font-extrabold text-zinc-900">₹${(item.price || 0) * (item.qty || 1)}</div>
+                  </div>`;
+              });
+            }
+
+            let statusColor = "bg-amber-100 text-amber-700";
+            if (data.status === "Cancelled") statusColor = "bg-rose-100 text-rose-700";
+            if (data.status?.includes("Shipped") || data.status?.includes("Processing")) statusColor = "bg-emerald-100 text-emerald-700";
+
+            // Shiprocket Tracking Information Box
+            let trackingSection = "";
+            if (data.trackingId) {
+              trackingSection = `
+                <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-xl space-y-1">
+                  <div class="flex justify-between items-center">
+                    <span class="text-[11px] font-bold text-blue-800">Shiprocket Tracking ID:</span>
+                    <span class="text-xs font-black text-blue-900">${data.trackingId}</span>
+                  </div>
+                  <p class="text-[10px] text-blue-600">Your parcel is out for delivery / on the way.</p>
+                </div>`;
+            } else {
+              trackingSection = `
+                <div class="mt-3 p-2 bg-zinc-50 rounded-lg text-[10px] text-zinc-400 font-medium text-center">
+                  Tracking ID will appear once shipped by admin.
+                </div>`;
+            }
+
+            const card = document.createElement('div');
+            card.className = "bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-sm space-y-4";
+            card.innerHTML = `
+              <div class="flex justify-between items-start border-b border-zinc-100 pb-3">
+                <div>
+                  <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">Order ID</p>
+                  <p class="text-xs font-extrabold text-primary">${data.orderId || 'MD-ORDER'}</p>
                 </div>
-                <div class="text-xs font-extrabold text-zinc-900">₹${Number(item.price) * (Number(item.qty) || 1)}</div>
-              </div>
-            `).join('')}
-          </div>
-
-          <div class="flex justify-between items-center border-t border-zinc-100 pt-3">
-            <p class="text-[11px] text-zinc-500 font-bold">Total Amount Paid</p>
-            <p class="text-sm font-extrabold text-primary">₹${order.total}</p>
-          </div>
-
-          <!-- TRACKING UI -->
-          <div class="bg-zinc-50 p-3 rounded-xl border border-zinc-200 mt-2">
-            <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">Track Order</p>
-            <div class="flex items-center justify-between text-[9px] font-bold text-zinc-400 relative">
-              <div class="absolute top-1/2 left-0 w-full h-0.5 bg-zinc-200 -z-10 -translate-y-1/2"></div>
-              
-              <div class="flex flex-col items-center gap-1">
-                <div class="w-4 h-4 bg-primary text-white rounded-full flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-[10px]">check</span></div>
-                <span class="text-primary">Placed</span>
-              </div>
-              
-              <div class="flex flex-col items-center gap-1">
-                <div class="w-4 h-4 bg-primary text-white rounded-full flex items-center justify-center shadow-sm animate-pulse"><span class="material-symbols-outlined text-[10px]">inventory_2</span></div>
-                <span class="text-primary">Processing</span>
+                <div class="text-right">
+                  <p class="text-[10px] text-zinc-400 font-semibold mb-1">${formattedDate}</p>
+                  <span class="text-[9px] ${statusColor} font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">${data.status || 'Pending'}</span>
+                </div>
               </div>
 
-              <div class="flex flex-col items-center gap-1"><div class="w-4 h-4 bg-zinc-200 rounded-full"></div><span>Shipped</span></div>
-              <div class="flex flex-col items-center gap-1"><div class="w-4 h-4 bg-zinc-200 rounded-full"></div><span>Delivered</span></div>
-            </div>
-          </div>
-        </div>
-      `).join('');
+              <div class="space-y-3">
+                ${itemsHtml}
+              </div>
+
+              <div class="flex justify-between items-center border-t border-zinc-100 pt-3">
+                <p class="text-[11px] text-zinc-500 font-bold">Total Amount (${data.financials?.paymentMethod?.toUpperCase() || 'COD'})</p>
+                <p class="text-sm font-extrabold text-primary">₹${data.financials?.totalAmount || 0}</p>
+              </div>
+
+              ${trackingSection}
+            `;
+            container.appendChild(card);
+          }
+        });
+
+        if (!foundOrders) {
+          container.innerHTML = `
+            <div class="text-center py-10 bg-white rounded-2xl border border-zinc-200/80 shadow-sm">
+              <span class="material-symbols-outlined text-4xl text-zinc-300">inventory_2</span>
+              <p class="text-zinc-500 font-medium text-xs mt-2">No orders found in database.</p>
+              <a href="home.html" class="inline-block mt-3 text-primary font-bold text-xs underline">Start Shopping</a>
+            </div>`;
+        }
+
+      } catch (err) {
+        console.error("Error loading firebase orders:", err);
+        container.innerHTML = `<p class="text-center text-rose-500 text-xs py-6">Failed to load live orders.</p>`;
+      }
     }
 
-    // 4. Modal Controls
     function openEditProfileModal() { document.getElementById('edit-profile-modal').classList.remove('hidden'); }
     function closeEditProfileModal() { document.getElementById('edit-profile-modal').classList.add('hidden'); }
+    window.openEditProfileModal = openEditProfileModal;
+    window.closeEditProfileModal = closeEditProfileModal;
 
-    // 5. Save Profile & Address Object
     function saveProfileDetails(e) {
       e.preventDefault();
 
@@ -364,17 +421,27 @@
       closeEditProfileModal();
       alert("Profile and Address Updated Successfully!");
     }
+    window.saveProfileDetails = saveProfileDetails;
 
-    function logoutUser() {
+    // Secure Logout Function with Firebase and LocalStorage clearing
+    window.logoutUser = async function() {
       if (confirm("Are you sure you want to log out?")) {
-        localStorage.removeItem("isLoggedIn");
-        window.location.href = "home.html"; // Adjust to login.html if exists
+        try {
+          await signOut(auth);
+          localStorage.removeItem("userProfile");
+          alert("Logged out successfully!");
+          window.location.href = "login.html";
+        } catch (error) {
+          console.error("Logout error:", error);
+          localStorage.removeItem("userProfile");
+          window.location.href = "login.html";
+        }
       }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
       loadUserData();
-      loadOrderHistory();
+      loadFirebaseOrders();
     });
   </script>
 </body>
