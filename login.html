@@ -21,10 +21,10 @@
 </head>
 <body class="bg-surface text-zinc-900 font-sans min-h-screen flex items-center justify-center p-4">
 
-  <div class="bg-white w-full max-w-sm p-6 rounded-2xl border border-zinc-200 shadow-sm space-y-5">
+  <div class="bg-white w-full max-w-sm p-6 rounded-3xl border border-zinc-200 shadow-sm space-y-5">
     <div class="text-center space-y-1">
       <h1 class="text-base font-extrabold text-primary uppercase tracking-wider">Moni Dresses</h1>
-      <p class="text-xs text-zinc-400">Login with your mobile number</p>
+      <p class="text-xs text-zinc-400">Login to your account</p>
     </div>
 
     <!-- Phone Number Input Section -->
@@ -52,14 +52,44 @@
       </button>
     </div>
 
+    <!-- OR DIVIDER -->
+    <div class="relative flex py-1 items-center">
+      <div class="flex-grow border-t border-zinc-200"></div>
+      <span class="flex-shrink mx-4 text-zinc-400 text-[10px] font-bold uppercase tracking-wider">Or</span>
+      <div class="flex-grow border-t border-zinc-200"></div>
+    </div>
+
+    <!-- GOOGLE / GMAIL LOGIN BUTTON -->
+    <button onclick="loginWithGoogle()" class="w-full py-3 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 font-bold text-xs rounded-xl shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2.5">
+      <svg class="w-4 h-4" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+        <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.18v3.15C3.15 21.32 7.23 24 12 24z"/>
+        <path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.6H1.18C.43 8.12 0 9.82 0 12s.43 3.88 1.18 5.4l4.09-3.16z"/>
+        <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.15 2.68 1.18 6.6l4.09 3.16c.95-2.85 3.6-4.96 6.73-4.96z"/>
+      </svg>
+      Continue with Google (Gmail)
+    </button>
+
     <!-- Hidden reCAPTCHA Container -->
     <div id="recaptcha-container"></div>
+  </div>
+
+  <!-- CUSTOM PROFESSIONAL SUCCESS MODAL -->
+  <div id="success-modal" class="fixed inset-0 z-[200] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity">
+    <div class="bg-white w-full max-w-[280px] rounded-3xl p-6 text-center shadow-2xl scale-95 transition-transform duration-200">
+      <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+        <span class="material-symbols-outlined text-4xl">check_circle</span>
+      </div>
+      <h3 class="text-sm font-bold text-zinc-900 mb-1">Success!</h3>
+      <p id="success-message" class="text-xs text-zinc-500 mb-6">Login Successful!</p>
+      <button onclick="handleModalAction()" class="w-full py-3 bg-primary text-white font-bold text-xs rounded-xl hover:opacity-90 transition-all uppercase tracking-wider">OK</button>
+    </div>
   </div>
 
   <!-- FIREBASE AUTH SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBZdG23Io-oMElZ5XVmhVLd87-sq136dhY",
@@ -72,8 +102,9 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
 
-    // Initialize invisible reCAPTCHA
+    // Initialize invisible reCAPTCHA for Phone Auth
     window.addEventListener('DOMContentLoaded', () => {
       window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
         'size': 'invisible',
@@ -81,11 +112,29 @@
       });
     });
 
-    // Send OTP Function
+    // Custom Modal Controllers
+    function showModal(message, successCallback = null) {
+      document.getElementById('success-message').innerText = message;
+      const modal = document.getElementById('success-modal');
+      modal.classList.remove('hidden');
+      setTimeout(() => modal.querySelector('div').classList.remove('scale-95'), 10);
+      window.modalActionCallback = successCallback;
+    }
+
+    window.handleModalAction = function() {
+      const modal = document.getElementById('success-modal');
+      modal.querySelector('div').classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        if (window.modalActionCallback) window.modalActionCallback();
+      }, 200);
+    }
+
+    // 1. Phone OTP Send Function
     window.sendOTP = function() {
       const phoneNumberVal = document.getElementById('phone-input').value.trim();
       if (phoneNumberVal.length !== 10) {
-        alert("Please enter a valid 10-digit mobile number!");
+        showModal("Please enter a valid 10-digit mobile number!");
         return;
       }
 
@@ -95,41 +144,65 @@
       signInWithPhoneNumber(auth, phoneNumber, appVerifier)
         .then((confirmationResult) => {
           window.confirmationResult = confirmationResult;
-          alert("OTP sent successfully to " + phoneNumber);
+          showModal("OTP sent successfully to " + phoneNumber);
           document.getElementById('phone-section').classList.add('hidden');
           document.getElementById('otp-section').classList.remove('hidden');
         })
         .catch((error) => {
           console.error("Error during sending OTP:", error);
-          alert("Failed to send OTP: " + error.message);
+          showModal("Failed to send OTP: " + error.message);
         });
     };
 
-    // Verify OTP Function
+    // 2. Phone OTP Verify Function
     window.verifyOTP = function() {
       const otpCode = document.getElementById('otp-input').value.trim();
       if (otpCode.length < 6) {
-        alert("Please enter the complete 6-digit OTP!");
+        showModal("Please enter the complete 6-digit OTP!");
         return;
       }
 
       window.confirmationResult.confirm(otpCode)
         .then((result) => {
           const user = result.user;
-          alert("Login Successful!");
-
           const userProfile = {
-            phone: user.phoneNumber.replace("+91", ""),
+            phone: user.phoneNumber ? user.phoneNumber.replace("+91", "") : "",
             uid: user.uid,
             name: "Customer"
           };
           localStorage.setItem('userProfile', JSON.stringify(userProfile));
 
-          window.location.href = 'home.html';
+          showModal("Login Successful!", () => {
+            window.location.href = 'home.html';
+          });
         })
         .catch((error) => {
           console.error("Invalid OTP:", error);
-          alert("Invalid OTP! Please check and try again.");
+          showModal("Invalid OTP! Please check and try again.");
+        });
+    };
+
+    // 3. Google / Gmail Login Function
+    window.loginWithGoogle = function() {
+      signInWithPopup(auth, googleProvider)
+        .then((result) => {
+          const user = result.user;
+          const userProfile = {
+            phone: user.phoneNumber ? user.phoneNumber.replace("+91", "") : "",
+            email: user.email || "",
+            uid: user.uid,
+            name: user.displayName || "Customer",
+            photo: user.photoURL || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200"
+          };
+          localStorage.setItem('userProfile', JSON.stringify(userProfile));
+
+          showModal("Google Login Successful!", () => {
+            window.location.href = 'home.html';
+          });
+        })
+        .catch((error) => {
+          console.error("Google login error:", error);
+          showModal("Google Login Failed: " + error.message);
         });
     };
   </script>
