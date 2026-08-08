@@ -68,7 +68,7 @@
           <div class="grid grid-cols-2 gap-2.5">
             <div>
               <label class="text-[10px] font-bold text-zinc-500 uppercase">Full Name *</label>
-              <input type="text" id="cust-name" placeholder="E.g. Avijit Chakraborty" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
+              <input type="text" id="cust-name" placeholder="E.g. Full Name" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
             </div>
             <div>
               <label class="text-[10px] font-bold text-zinc-500 uppercase">Mobile Number *</label>
@@ -77,12 +77,12 @@
           </div>
           <div>
             <label class="text-[10px] font-bold text-zinc-500 uppercase">Flat / House No. / Building Name *</label>
-            <input type="text" id="cust-building" placeholder="House No. 12B" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
+            <input type="text" id="cust-building" placeholder="House/Building Name" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
           </div>
           <div class="grid grid-cols-2 gap-2.5">
             <div>
               <label class="text-[10px] font-bold text-zinc-500 uppercase">Street / Area *</label>
-              <input type="text" id="cust-area" placeholder="Station Road" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
+              <input type="text" id="cust-area" placeholder="Area" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
             </div>
             <div>
               <label class="text-[10px] font-bold text-zinc-500 uppercase">Village / Landmark</label>
@@ -92,7 +92,7 @@
           <div class="grid grid-cols-2 gap-2.5">
             <div>
               <label class="text-[10px] font-bold text-zinc-500 uppercase">City / Town *</label>
-              <input type="text" id="cust-city" placeholder="Kolkata" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
+              <input type="text" id="cust-city" placeholder="City" class="w-full p-2.5 border border-zinc-200 rounded-xl text-xs focus:outline-primary bg-zinc-50/50">
             </div>
             <div>
               <label class="text-[10px] font-bold text-zinc-500 uppercase">District *</label>
@@ -222,7 +222,7 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    let finalOrderAmount = 0;
+    let finalOrderAmount = 0; 
     let windowConfirmationResult = null;
     let successRedirectUrl = "order-success.html";
 
@@ -237,7 +237,7 @@
     });
 
     // Professional Modal Controller
-    function showSuccessModal(message, callback = null) {
+    function showSuccessMessageModal(message, callback = null) {
       document.getElementById('success-message').innerText = message;
       const modal = document.getElementById('success-modal');
       modal.classList.remove('hidden');
@@ -256,13 +256,14 @@
 
     // 1. ADMIN DELIVERY CHARGES
     function getAdminDeliveryCharges() {
-      return JSON.parse(localStorage.getItem('adminSettings')) || {
+      const adminSettings = JSON.parse(localStorage.getItem('adminSettings')) || {
         prepaidDelivery: 0, 
         codDelivery: 60     
       };
+      return adminSettings;
     }
 
-    // 2. ORDER CALCULATION
+    // 2. ORDER CALCULATION & SUMMARY UPDATE
     function getCartSubtotal() {
       const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       return cart.reduce((sum, item) => sum + (Number(item.price) * (Number(item.qty) || 1)), 0);
@@ -280,10 +281,12 @@
       
       if (deliveryFee === 0) {
         document.getElementById('summary-delivery').innerText = "FREE";
-        document.getElementById('summary-delivery').className = "text-emerald-600 font-bold";
+        document.getElementById('summary-delivery').classList.add("text-emerald-600");
+        document.getElementById('summary-delivery').classList.remove("text-zinc-900");
       } else {
         document.getElementById('summary-delivery').innerText = `+ ₹${deliveryFee}`;
-        document.getElementById('summary-delivery').className = "text-zinc-900 font-bold";
+        document.getElementById('summary-delivery').classList.remove("text-emerald-600");
+        document.getElementById('summary-delivery').classList.add("text-zinc-900");
       }
 
       document.getElementById('summary-total').innerText = `₹${finalOrderAmount}`;
@@ -332,7 +335,7 @@
       }
     }
 
-    // 4. SAVE ORDER TO HISTORY
+    // 4. SAVE ORDER TO HISTORY & REDIRECT
     function saveOrderToHistory(orderId, totalPaid) {
       const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       if (cart.length === 0) return;
@@ -355,18 +358,18 @@
       localStorage.removeItem('cartItems'); 
       localStorage.setItem('latestOrderId', orderId); 
       
-      showSuccessModal("Order Placed Successfully!", () => {
+      showSuccessMessageModal("Order Placed Successfully!", () => {
         window.location.href = successRedirectUrl;
       });
     }
 
-    // 5. FORM SUBMIT & FIREBASE OTP TRIGGER
+    // 5. FORM SUBMIT (RAZORPAY & FIREBASE COD OTP)
     document.getElementById('checkout-form').addEventListener('submit', function(e) {
       e.preventDefault();
 
       const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       if (cart.length === 0) {
-        showSuccessModal("Your cart is empty!");
+        showSuccessMessageModal("Your cart is empty!");
         return;
       }
 
@@ -386,27 +389,65 @@
       }
 
       if (!phoneInput || phoneInput.length !== 10) {
-        showSuccessModal("Please provide a valid 10-digit mobile number!");
+        showSuccessMessageModal("Please provide a valid 10-digit mobile number!");
         return;
       }
 
       if (paymentMethod === 'razorpay') {
         const options = {
           "key": "YOUR_RAZORPAY_KEY", 
-          "amount": finalOrderAmount * 100,
+          "amount": finalOrderAmount * 100, 
           "currency": "INR",
           "name": "MONI DRESSES",
           "description": "Prepaid Order Payment",
           "handler": function (response) {
             const finalId = "MD-RZP-" + Math.floor(100000 + Math.random() * 900000);
             processOrderSuccess(finalId, finalOrderAmount);
+          },
+          "prefill": { "name": nameInput, "contact": phoneInput },
+          "theme": { "color": "#b3006a" }
+        };
+        const rzp = new Razorpay(options);
+        rzp.open();
+      } else {
+        // Trigger Firebase OTP for COD to the customer's phone number
+        const fullPhone = "+91" + phoneInput;
+        document.getElementById('otp-phone-display').innerText = fullPhone;
+        
+        const appVerifier = window.recaptchaVerifier;
+        signInWithPhoneNumber(auth, fullPhone, appVerifier)
+          .then((confirmationResult) => {
+            windowConfirmationResult = confirmationResult;
+            document.getElementById('otp-modal').classList.remove('hidden');
+          })
+          .catch((error) => {
+            console.error("SMS OTP Error:", error);
+            showSuccessMessageModal("Failed to send OTP: " + error.message);
+          });
+      }
+    });
+
+    // 6. VERIFY COD OTP WITH FIREBASE
+    window.verifyCODOTP = function() {
+      const userOTP = document.getElementById('otp-input').value.trim();
+      if (userOTP.length < 6) {
+        showSuccessMessageModal("Please enter the complete 6-digit OTP!");
+        return;
+      }
+
+      if (windowConfirmationResult) {
+        windowConfirmationResult.confirm(userOTP)
+          .then((result) => {
+            closeModal('otp-modal');
+            const finalId = "MD-COD-" + Math.floor(100000 + Math.random() * 900000);
+            processOrderSuccess(finalId, finalOrderAmount);
           })
           .catch((error) => {
             console.error("Invalid OTP:", error);
-            showSuccessModal("Invalid OTP! Please check and try again.");
+            showSuccessMessageModal("Invalid OTP! Please check and try again.");
           });
       } else {
-        showSuccessModal("Session expired. Please try placing the order again.");
+        showSuccessMessageModal("Session expired. Please try placing the order again.");
       }
     }
 
@@ -416,3 +457,4 @@
   </script>
 </body>
 </html>
+    
