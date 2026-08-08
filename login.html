@@ -21,34 +21,60 @@
 </head>
 <body class="bg-surface text-zinc-900 font-sans min-h-screen flex items-center justify-center p-4">
 
-  <div class="bg-white w-full max-w-sm p-6 rounded-3xl border border-zinc-200 shadow-sm space-y-5">
+  <div class="bg-white w-full max-w-sm p-6 rounded-3xl border border-zinc-200 shadow-sm space-y-4">
     <div class="text-center space-y-1">
       <h1 class="text-base font-extrabold text-primary uppercase tracking-wider">Moni Dresses</h1>
       <p class="text-xs text-zinc-400">Login to your account</p>
     </div>
 
-    <!-- Phone Number Input Section -->
-    <div id="phone-section" class="space-y-3">
+    <!-- LOGIN MODE TABS (OTP vs Password) -->
+    <div class="grid grid-cols-2 gap-1 bg-zinc-100 p-1 rounded-xl">
+      <button onclick="switchMode('otp')" id="tab-otp" class="py-2 text-[11px] font-bold rounded-lg bg-white text-primary shadow-sm transition-all">Mobile OTP</button>
+      <button onclick="switchMode('password')" id="tab-password" class="py-2 text-[11px] font-bold rounded-lg text-zinc-500 hover:text-zinc-900 transition-all">Mobile Password</button>
+    </div>
+
+    <!-- ================= SECTION 1: PHONE OTP LOGIN ================= -->
+    <div id="mode-otp" class="space-y-3">
+      <div id="phone-section" class="space-y-3">
+        <div>
+          <label class="text-[10px] font-bold text-zinc-500 uppercase">Mobile Number *</label>
+          <div class="flex items-center border border-zinc-200 rounded-xl bg-zinc-50/50 mt-1">
+            <span class="pl-3 text-xs font-bold text-zinc-600">+91</span>
+            <input type="tel" id="phone-input" maxlength="10" placeholder="10 Digit Number" class="w-full p-2.5 text-xs bg-transparent focus:outline-none">
+          </div>
+        </div>
+        <button onclick="sendOTP()" class="w-full py-3.5 bg-primary text-white font-extrabold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase tracking-wider">
+          Send OTP
+        </button>
+      </div>
+
+      <!-- OTP Input Section (Hidden Initially) -->
+      <div id="otp-section" class="space-y-3 hidden">
+        <div>
+          <label class="text-[10px] font-bold text-zinc-500 uppercase">Enter 6-Digit OTP *</label>
+          <input type="text" id="otp-input" maxlength="6" placeholder="123456" class="w-full text-center tracking-[0.5em] text-lg font-bold p-3 border border-zinc-300 rounded-xl focus:outline-primary bg-zinc-50 mt-1">
+        </div>
+        <button onclick="verifyOTP()" class="w-full py-3.5 bg-primary text-white font-extrabold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase tracking-wider">
+          Verify & Login
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= SECTION 2: PHONE PASSWORD LOGIN ================= -->
+    <div id="mode-password" class="space-y-3 hidden">
       <div>
         <label class="text-[10px] font-bold text-zinc-500 uppercase">Mobile Number *</label>
         <div class="flex items-center border border-zinc-200 rounded-xl bg-zinc-50/50 mt-1">
           <span class="pl-3 text-xs font-bold text-zinc-600">+91</span>
-          <input type="tel" id="phone-input" maxlength="10" placeholder="10 Digit Number" class="w-full p-2.5 text-xs bg-transparent focus:outline-none">
+          <input type="tel" id="pwd-phone-input" maxlength="10" placeholder="10 Digit Number" class="w-full p-2.5 text-xs bg-transparent focus:outline-none">
         </div>
       </div>
-      <button onclick="sendOTP()" class="w-full py-3.5 bg-primary text-white font-extrabold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase tracking-wider">
-        Send OTP
-      </button>
-    </div>
-
-    <!-- OTP Input Section (Hidden Initially) -->
-    <div id="otp-section" class="space-y-3 hidden">
       <div>
-        <label class="text-[10px] font-bold text-zinc-500 uppercase">Enter 6-Digit OTP *</label>
-        <input type="text" id="otp-input" maxlength="6" placeholder="123456" class="w-full text-center tracking-[0.5em] text-lg font-bold p-3 border border-zinc-300 rounded-xl focus:outline-primary bg-zinc-50 mt-1">
+        <label class="text-[10px] font-bold text-zinc-500 uppercase">Password *</label>
+        <input type="password" id="pwd-input" placeholder="Enter Password (min 6 chars)" class="w-full p-2.5 text-xs border border-zinc-200 rounded-xl bg-zinc-50/50 mt-1 focus:outline-primary">
       </div>
-      <button onclick="verifyOTP()" class="w-full py-3.5 bg-primary text-white font-extrabold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase tracking-wider">
-        Verify & Login
+      <button onclick="loginWithPassword()" class="w-full py-3.5 bg-primary text-white font-extrabold text-xs rounded-xl shadow-md active:scale-95 transition-all uppercase tracking-wider">
+        Login / Register
       </button>
     </div>
 
@@ -89,7 +115,7 @@
   <!-- FIREBASE AUTH SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBZdG23Io-oMElZ5XVmhVLd87-sq136dhY",
@@ -104,7 +130,6 @@
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
-    // Initialize invisible reCAPTCHA for Phone Auth
     window.addEventListener('DOMContentLoaded', () => {
       window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
         'size': 'invisible',
@@ -112,7 +137,26 @@
       });
     });
 
-    // Custom Modal Controllers
+    // Mode Switcher for Tabs
+    window.switchMode = function(mode) {
+      const tabOtp = document.getElementById('tab-otp');
+      const tabPwd = document.getElementById('tab-password');
+      const modeOtp = document.getElementById('mode-otp');
+      const modePwd = document.getElementById('mode-password');
+
+      if (mode === 'otp') {
+        tabOtp.className = "py-2 text-[11px] font-bold rounded-lg bg-white text-primary shadow-sm transition-all";
+        tabPwd.className = "py-2 text-[11px] font-bold rounded-lg text-zinc-500 hover:text-zinc-900 transition-all";
+        modeOtp.classList.remove('hidden');
+        modePwd.classList.add('hidden');
+      } else {
+        tabPwd.className = "py-2 text-[11px] font-bold rounded-lg bg-white text-primary shadow-sm transition-all";
+        tabOtp.className = "py-2 text-[11px] font-bold rounded-lg text-zinc-500 hover:text-zinc-900 transition-all";
+        modePwd.classList.remove('hidden');
+        modeOtp.classList.add('hidden');
+      }
+    }
+
     function showModal(message, successCallback = null) {
       document.getElementById('success-message').innerText = message;
       const modal = document.getElementById('success-modal');
@@ -130,7 +174,7 @@
       }, 200);
     }
 
-    // 1. Phone OTP Send Function
+    // 1. Phone OTP Send
     window.sendOTP = function() {
       const phoneNumberVal = document.getElementById('phone-input').value.trim();
       if (phoneNumberVal.length !== 10) {
@@ -149,12 +193,12 @@
           document.getElementById('otp-section').classList.remove('hidden');
         })
         .catch((error) => {
-          console.error("Error during sending OTP:", error);
+          console.error("Error sending OTP:", error);
           showModal("Failed to send OTP: " + error.message);
         });
     };
 
-    // 2. Phone OTP Verify Function
+    // 2. Phone OTP Verify
     window.verifyOTP = function() {
       const otpCode = document.getElementById('otp-input').value.trim();
       if (otpCode.length < 6) {
@@ -182,7 +226,57 @@
         });
     };
 
-    // 3. Google / Gmail Login Function
+    // 3. Mobile Number + Password Login / Signup
+    window.loginWithPassword = async function() {
+      const phone = document.getElementById('pwd-phone-input').value.trim();
+      const password = document.getElementById('pwd-input').value.trim();
+
+      if (phone.length !== 10) {
+        showModal("Please enter a valid 10-digit mobile number!");
+        return;
+      }
+      if (password.length < 6) {
+        showModal("Password must be at least 6 characters!");
+        return;
+      }
+
+      // Mapping phone number to internal email format for Firebase Auth compatibility
+      const pseudoEmail = phone + "@monidresses.app";
+
+      try {
+        let userCredential;
+        try {
+          // Try logging in first
+          userCredential = await signInWithEmailAndPassword(auth, pseudoEmail, password);
+        } catch (loginError) {
+          // If user doesn't exist, automatically sign them up
+          if (loginError.code === 'auth/user-not-found' || loginError.code === 'auth/invalid-credential') {
+            userCredential = await createUserWithEmailAndPassword(auth, pseudoEmail, password);
+          } else {
+            throw loginError;
+          }
+        }
+
+        const user = userCredential.user;
+        const userProfile = {
+          phone: phone,
+          email: pseudoEmail,
+          uid: user.uid,
+          name: "Customer"
+        };
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));
+
+        showModal("Login Successful!", () => {
+          window.location.href = 'home.html';
+        });
+
+      } catch (error) {
+        console.error("Password auth error:", error);
+        showModal("Authentication Failed: " + error.message);
+      }
+    };
+
+    // 4. Google / Gmail Login
     window.loginWithGoogle = function() {
       signInWithPopup(auth, googleProvider)
         .then((result) => {
