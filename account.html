@@ -127,7 +127,7 @@
         <span class="material-symbols-outlined text-zinc-400 text-sm">chevron_right</span>
       </div>
 
-      <div onclick="openReferModal()" class="flex items-center justify-between p-3.5 hover:bg-zinc-50 cursor-pointer">
+      <div onclick="window.location.href='refer.html'" class="flex items-center justify-between p-3.5 hover:bg-zinc-50 cursor-pointer">
         <div class="flex items-center gap-3">
           <span class="material-symbols-outlined text-amber-500">card_giftcard</span>
           <span>Refer and Earn</span>
@@ -135,7 +135,7 @@
         <span class="material-symbols-outlined text-zinc-400 text-sm">chevron_right</span>
       </div>
 
-      <div onclick="openSharedModal()" class="flex items-center justify-between p-3.5 hover:bg-zinc-50 cursor-pointer">
+      <div onclick="window.location.href='refer.html'" class="flex items-center justify-between p-3.5 hover:bg-zinc-50 cursor-pointer">
         <div class="flex items-center gap-3">
           <span class="material-symbols-outlined text-blue-500">share</span>
           <span>Shared Products</span>
@@ -526,9 +526,6 @@
       document.getElementById('info-modal').classList.remove('hidden');
     }
 
-    window.openReferModal = function() {
-      document.getElementById('info-title').innerText = "Refer and Earn";
-      document.getElementById('info-content').innerHTML = "<p>Share your referral code <b>MONI100</b> with friends. Get ₹100 wallet cash when they complete their first purchase!</p>";
       document.getElementById('info-modal').classList.remove('hidden');
     }
 
