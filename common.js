@@ -50,14 +50,14 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 // Role-based Access Control Utility
-window.checkAccess = function(allowedRoles) {
+export function checkAccess(allowedRoles) {
     if (!allowedRoles.includes(userRole)) {
         window.location.href = "login.html";
     }
-};
+}
 
 // Global Cart Management
-window.CartManager = {
+export const CartManager = {
     get: () => JSON.parse(localStorage.getItem('cartItems')) || [],
     save: (items) => localStorage.setItem('cartItems', JSON.stringify(items)),
     add: (product) => {
@@ -70,7 +70,7 @@ window.CartManager = {
 };
 
 // Global Wishlist Management
-window.WishlistManager = {
+export const WishlistManager = {
     get: () => JSON.parse(localStorage.getItem('wishlistItems')) || [],
     toggle: (productId) => {
         let wishlist = WishlistManager.get();
@@ -84,23 +84,34 @@ window.WishlistManager = {
         }
         localStorage.setItem('wishlistItems', JSON.stringify(wishlist));
         updateHeaderCounters();
+        return wishlist.includes(productId);
     }
 };
 
 // Toast Notification Helper
-window.showToast = function(message) {
+export function showToast(message) {
     const container = document.getElementById('toast-container');
     if (!container) return;
     
     const toast = document.createElement('div');
-    toast.className = "fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-zinc-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-zinc-800 transition-all duration-300";
-    toast.innerHTML = `<span class="material-symbols-outlined text-emerald-400">check</span> <span class="text-xs font-medium">${message}</span>`;
+    toast.className = "pointer-events-auto bg-zinc-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-zinc-800 transition-all duration-300 transform translate-y-4 opacity-0";
+    toast.innerHTML = `
+        <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-sm font-bold">check</span>
+        </div>
+        <span class="text-xs font-medium tracking-wide">${message}</span>
+    `;
     container.appendChild(toast);
-    setTimeout(() => toast.remove(), 2500);
-};
+    
+    setTimeout(() => toast.classList.remove('translate-y-4', 'opacity-0'), 10);
+    setTimeout(() => {
+        toast.classList.add('translate-y-4', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+    }, 2500);
+}
 
 // Update Header Counters for Cart and Wishlist
-function updateHeaderCounters() {
+export function updateHeaderCounters() {
     const cart = CartManager.get();
     const wishlist = WishlistManager.get();
     
@@ -125,8 +136,3 @@ function updateHeaderCounters() {
         }
     }
 }
-
-// Initialize on DOM Load
-window.addEventListener('DOMContentLoaded', () => {
-    updateHeaderCounters();
-});
