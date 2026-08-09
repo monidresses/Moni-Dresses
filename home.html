@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>MONI DRESSES — Home</title>
+  <title id="page-title">MONI DRESSES — Home</title>
   
   <!-- Tailwind CSS & Google Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -35,7 +35,7 @@
 <body class="bg-surface text-zinc-900 font-sans min-h-screen">
 
   <!-- ========================================== -->
-  <!-- 🛍️ 1. TOP NAVIGATION HEADER WITH DYNAMIC CART -->
+  <!-- 🛍️ 1. TOP NAVIGATION HEADER WITH DYNAMIC COUNTERS -->
   <!-- ========================================== -->
   <header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-3 bg-white border-b border-zinc-100 shadow-sm">
     
@@ -45,20 +45,27 @@
     </button>
 
     <!-- Brand Logo -->
-    <a href="home.html" class="font-brand text-lg font-extrabold text-primary tracking-wider uppercase">
+    <a href="home.html" id="header-brand-name" class="font-brand text-lg font-extrabold text-primary tracking-wider uppercase">
       MONI DRESSES
     </a>
 
-    <!-- Account & Dynamic Cart Icon -->
+    <!-- Account, Wishlist & Cart Icons -->
     <div class="flex items-center gap-3">
+      <!-- Wishlist Icon -->
+      <a href="wishlist.html" aria-label="Wishlist" class="text-primary hover:opacity-80 transition-all active:scale-95 relative inline-flex items-center justify-center">
+        <span class="material-symbols-outlined text-2xl">favorite</span>
+        <span id="wishlist-count" class="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full border border-white hidden min-w-[18px] text-center leading-none shadow-sm">0</span>
+      </a>
+
+      <!-- Account Icon -->
       <a href="account.html" aria-label="Account" class="text-primary hover:opacity-80 transition-all active:scale-95">
         <span class="material-symbols-outlined text-2xl">person</span>
       </a>
 
-      <!-- Dynamic Cart Icon (Hidden by default when 0) -->
+      <!-- Dynamic Cart Icon -->
       <a href="cart.html" aria-label="Cart" class="text-primary hover:opacity-80 transition-all active:scale-95 relative inline-flex items-center justify-center">
         <span class="material-symbols-outlined text-2xl">shopping_cart</span>
-        <span id="cart-count" class="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full border border-white hidden min-w-[18px] text-center leading-none shadow-sm"></span>
+        <span id="cart-count" class="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full border border-white hidden min-w-[18px] text-center leading-none shadow-sm">0</span>
       </a>
     </div>
   </header>
@@ -89,15 +96,15 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- 📢 4. FESTIVE SALE BANNER -->
+    <!-- 📢 4. DYNAMIC FESTIVE SALE BANNER -->
     <!-- ========================================== -->
     <section class="px-4">
       <div class="bg-gradient-to-r from-primary to-[#dc1985] rounded-2xl p-5 text-white shadow-md space-y-2 relative overflow-hidden">
-        <span class="bg-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider inline-block">Limited Offer</span>
-        <h2 class="font-brand text-2xl font-black leading-tight tracking-wide">FESTIVE<br/>SALE</h2>
-        <p class="text-xs text-white/90">Get Extra 10% OFF on Readymade Blouses</p>
+        <span id="banner-tag" class="bg-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider inline-block">Limited Offer</span>
+        <h2 id="banner-title" class="font-brand text-2xl font-black leading-tight tracking-wide">FESTIVE<br/>SALE</h2>
+        <p id="banner-subtitle" class="text-xs text-white/90">Get Extra 10% OFF on Readymade Blouses</p>
         <div class="pt-2">
-          <a href="#all-products" class="inline-block bg-white text-primary font-bold text-xs px-4 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Shop Collection</a>
+          <a id="banner-btn" href="#all-products" class="inline-block bg-white text-primary font-bold text-xs px-4 py-2.5 rounded-xl shadow-md active:scale-95 transition-all">Shop Collection</a>
         </div>
       </div>
     </section>
@@ -170,8 +177,8 @@
           <ul class="space-y-2 text-zinc-400">
             <li><a href="home.html" class="hover:text-white transition-colors">Home Page</a></li>
             <li><a href="#all-products" class="hover:text-white transition-colors">All Blouses</a></li>
+            <li><a href="wishlist.html" class="hover:text-white transition-colors">My Wishlist</a></li>
             <li><a href="cart.html" class="hover:text-white transition-colors">Shopping Cart</a></li>
-            <li><a href="account.html" class="hover:text-white transition-colors">My Profile & Orders</a></li>
           </ul>
         </div>
 
@@ -197,10 +204,15 @@
   </footer>
 
   <!-- ========================================== -->
-  <!-- ⚙️ JAVASCRIPT LOGIC (FIXED CART & SHOW MORE) -->
+  <!-- 🟢 CUSTOM CHECKMARK TOAST NOTIFICATION CONTAINER -->
+  <!-- ========================================== -->
+  <div id="toast-container" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ========================================== -->
+  <!-- ⚙️ DYNAMIC JAVASCRIPT & UI LOGIC -->
   <!-- ========================================== -->
   <script>
-    // Sample Products Data
+    // Default Fallback Products Data
     const defaultProducts = [
       { id: "P1", name: "Designer Readymade Cotton Blouse", price: 449, originalPrice: 899, size: "34", image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500" },
       { id: "P2", name: "Printed Silk Festival Blouse", price: 599, originalPrice: 1199, size: "36", image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500" },
@@ -210,9 +222,67 @@
       { id: "P6", name: "Black Velvet Sleeveless Blouse", price: 549, originalPrice: 1099, size: "36", image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500" }
     ];
 
-    let displayLimit = 4; // শুরুতে ৪টি প্রোডাক্ট শো করবে
+    let displayLimit = 4; // Initial display limit for all-products grid
 
-    // 1. Load Categories
+    /**
+     * Display a modern checkmark toast popup instead of alerts
+     */
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = "pointer-events-auto bg-zinc-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-zinc-800 transition-all duration-300 transform translate-y-4 opacity-0";
+      toast.innerHTML = `
+        <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-sm font-bold">check</span>
+        </div>
+        <span class="text-xs font-medium tracking-wide">${message}</span>
+      `;
+      container.appendChild(toast);
+      
+      // Animate In
+      setTimeout(() => {
+        toast.classList.remove('translate-y-4', 'opacity-0');
+      }, 10);
+
+      // Animate Out & Remove
+      setTimeout(() => {
+        toast.classList.add('translate-y-4', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 2500);
+    }
+
+    /**
+     * Load dynamic site configuration and banner data from Admin storage
+     */
+    function loadAdminConfig() {
+      // General Site Identity
+      const siteConfig = JSON.parse(localStorage.getItem('adminSiteConfig')) || {};
+      if (siteConfig.brandName) {
+        document.getElementById('header-brand-name').innerText = siteConfig.brandName;
+        document.getElementById('page-title').innerText = siteConfig.brandName + " — Home";
+      }
+
+      // Banner Configuration
+      const defaultBanner = {
+        tag: "Limited Offer",
+        title: "FESTIVE<br/>SALE",
+        subtitle: "Get Extra 10% OFF on Readymade Blouses",
+        buttonText: "Shop Collection",
+        buttonLink: "#all-products"
+      };
+      const banner = JSON.parse(localStorage.getItem('adminBanner')) || defaultBanner;
+      
+      document.getElementById('banner-tag').innerText = banner.tag;
+      document.getElementById('banner-title').innerHTML = banner.title;
+      document.getElementById('banner-subtitle').innerText = banner.subtitle;
+      const btn = document.getElementById('banner-btn');
+      btn.innerText = banner.buttonText;
+      btn.href = banner.buttonLink;
+    }
+
+    /**
+     * Load Categories dynamically
+     */
     function loadCategories() {
       const container = document.getElementById('category-container');
       const adminCategories = JSON.parse(localStorage.getItem('adminCategories')) || [
@@ -232,57 +302,76 @@
       `).join('');
     }
 
-    // 2. Load Products & Handle "Show More"
+    /**
+     * Load Recommended and All Products with Wishlist & Cart integration
+     */
     function loadProducts() {
       const products = JSON.parse(localStorage.getItem('adminProducts')) || defaultProducts;
+      const wishlist = JSON.parse(localStorage.getItem('wishlistItems')) || [];
       
       const recContainer = document.getElementById('recommended-container');
       const allGrid = document.getElementById('all-products-grid');
       const showMoreBtn = document.getElementById('show-more-btn');
 
-      // Recommended Section (First 4)
-      recContainer.innerHTML = products.slice(0, 4).map(p => `
-        <div class="w-40 shrink-0 bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm flex flex-col justify-between">
-          <div class="relative aspect-[3/4] bg-zinc-100 overflow-hidden">
-            <span class="absolute top-2 left-2 z-10 bg-primary text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded shadow-sm">Hot Fit</span>
-            <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover"/>
-          </div>
-          <div class="p-2.5 space-y-1">
-            <h3 class="text-xs font-bold text-zinc-800 line-clamp-1">${p.name}</h3>
-            <div class="flex items-baseline gap-1">
-              <span class="text-xs font-extrabold text-zinc-900">₹${p.price}</span>
-              <span class="text-[9px] text-zinc-400 line-through">₹${p.originalPrice || p.price * 2}</span>
-            </div>
-            <button onclick="addToCart('${p.id}')" class="w-full py-1.5 bg-primary/10 text-primary font-bold text-[11px] rounded-lg hover:bg-primary hover:text-white transition-all active:scale-95">
-              Add
+      // 1. Recommended Section (First 4 Products)
+      recContainer.innerHTML = products.slice(0, 4).map(p => {
+        const isWishlisted = wishlist.includes(p.id);
+        return `
+          <div class="w-40 shrink-0 bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm flex flex-col justify-between relative">
+            <!-- Wishlist Heart Button -->
+            <button onclick="toggleWishlist('${p.id}')" aria-label="Wishlist" class="absolute top-2 right-2 z-10 w-7 h-7 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-primary shadow-sm hover:scale-110 transition-all">
+              <span class="material-symbols-outlined text-base ${isWishlisted ? 'font-variation-settings-fill text-primary' : 'text-zinc-600'}">favorite</span>
             </button>
+            
+            <div class="relative aspect-[3/4] bg-zinc-100 overflow-hidden">
+              <span class="absolute top-2 left-2 z-10 bg-primary text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded shadow-sm">Hot Fit</span>
+              <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover"/>
+            </div>
+            <div class="p-2.5 space-y-1">
+              <h3 class="text-xs font-bold text-zinc-800 line-clamp-1">${p.name}</h3>
+              <div class="flex items-baseline gap-1">
+                <span class="text-xs font-extrabold text-zinc-900">₹${p.price}</span>
+                <span class="text-[9px] text-zinc-400 line-through">₹${p.originalPrice || p.price * 2}</span>
+              </div>
+              <button onclick="addToCart('${p.id}')" class="w-full py-1.5 bg-primary/10 text-primary font-bold text-[11px] rounded-lg hover:bg-primary hover:text-white transition-all active:scale-95">
+                Add
+              </button>
+            </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
-      // All Products Section (Paginated by displayLimit)
+      // 2. All Products Section (Paginated Grid)
       const visibleProducts = products.slice(0, displayLimit);
 
-      allGrid.innerHTML = visibleProducts.map(p => `
-        <div class="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm flex flex-col justify-between relative group">
-          <div class="relative aspect-[3/4] bg-zinc-100 overflow-hidden">
-            <span class="absolute top-2 left-2 z-10 bg-yellow-400 text-zinc-900 text-[9px] font-extrabold px-2 py-0.5 rounded-md shadow-sm">Lowest Price</span>
-            <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
-          </div>
-          <div class="p-3 space-y-1.5">
-            <h3 class="text-xs font-bold text-zinc-800 line-clamp-1">${p.name}</h3>
-            <div class="flex items-baseline gap-1.5">
-              <span class="text-sm font-extrabold text-zinc-900">₹${p.price}</span>
-              <span class="text-[10px] text-zinc-400 line-through">₹${p.originalPrice || p.price * 2}</span>
-            </div>
-            <button onclick="addToCart('${p.id}')" class="w-full py-2 bg-primary/10 text-primary font-bold text-xs rounded-xl hover:bg-primary hover:text-white transition-all active:scale-95 mt-1">
-              Add to Cart
+      allGrid.innerHTML = visibleProducts.map(p => {
+        const isWishlisted = wishlist.includes(p.id);
+        return `
+          <div class="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm flex flex-col justify-between relative group">
+            <!-- Wishlist Heart Button -->
+            <button onclick="toggleWishlist('${p.id}')" aria-label="Wishlist" class="absolute top-2 right-2 z-10 w-8 h-8 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-primary shadow-sm hover:scale-110 transition-all">
+              <span class="material-symbols-outlined text-lg ${isWishlisted ? 'font-variation-settings-fill text-primary' : 'text-zinc-600'}">favorite</span>
             </button>
-          </div>
-        </div>
-      `).join('');
 
-      // Hide "Show More" Button if all products are displayed
+            <div class="relative aspect-[3/4] bg-zinc-100 overflow-hidden">
+              <span class="absolute top-2 left-2 z-10 bg-yellow-400 text-zinc-900 text-[9px] font-extrabold px-2 py-0.5 rounded-md shadow-sm">Lowest Price</span>
+              <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
+            </div>
+            <div class="p-3 space-y-1.5">
+              <h3 class="text-xs font-bold text-zinc-800 line-clamp-1">${p.name}</h3>
+              <div class="flex items-baseline gap-1.5">
+                <span class="text-sm font-extrabold text-zinc-900">₹${p.price}</span>
+                <span class="text-[10px] text-zinc-400 line-through">₹${p.originalPrice || p.price * 2}</span>
+              </div>
+              <button onclick="addToCart('${p.id}')" class="w-full py-2 bg-primary/10 text-primary font-bold text-xs rounded-xl hover:bg-primary hover:text-white transition-all active:scale-95 mt-1">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Toggle Show More button visibility
       if (displayLimit >= products.length) {
         showMoreBtn.classList.add('hidden');
       } else {
@@ -295,23 +384,33 @@
       loadProducts();
     }
 
-    // 3. Real-Time Cart Badge Update
-    function updateCartBadge() {
-      const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
-      const countBadge = document.getElementById('cart-count');
+    /**
+     * Toggle item in/out of Wishlist with Toast notification
+     */
+    function toggleWishlist(productId) {
+      let wishlist = JSON.parse(localStorage.getItem('wishlistItems')) || [];
+      const index = wishlist.indexOf(productId);
       
-      if (countBadge) {
-        if (cart.length > 0) {
-          countBadge.innerText = cart.length;
-          countBadge.classList.remove('hidden');
-        } else {
-          countBadge.innerText = '';
-          countBadge.classList.add('hidden');
-        }
+      const products = JSON.parse(localStorage.getItem('adminProducts')) || defaultProducts;
+      const product = products.find(p => p.id === productId);
+      const productName = product ? product.name : "Product";
+
+      if (index > -1) {
+        wishlist.splice(index, 1);
+        showToast("Removed from Wishlist");
+      } else {
+        wishlist.push(productId);
+        showToast("Added to Wishlist ❤️");
       }
+
+      localStorage.setItem('wishlistItems', JSON.stringify(wishlist));
+      updateCounters();
+      loadProducts();
     }
 
-    // 4. Fixed Add to Cart Function (Proper JSON structure for cart.html)
+    /**
+     * Add item to Cart with Checkmark Toast notification
+     */
     function addToCart(productId) {
       const products = JSON.parse(localStorage.getItem('adminProducts')) || defaultProducts;
       const productToAdd = products.find(p => p.id === productId);
@@ -320,7 +419,6 @@
 
       let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
       
-      // কার্টে অবজেক্ট পুশ করা
       cart.push({
         id: productToAdd.id,
         name: productToAdd.name,
@@ -331,15 +429,49 @@
       });
 
       localStorage.setItem('cartItems', JSON.stringify(cart));
-      updateCartBadge();
-      alert(productToAdd.name + " added to your cart!");
+      updateCounters();
+      showToast("Added to Cart Successfully!");
     }
 
-    // Initialize Page
+    /**
+     * Update Header Badges for Cart and Wishlist
+     */
+    function updateCounters() {
+      const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+      const wishlist = JSON.parse(localStorage.getItem('wishlistItems')) || [];
+      
+      const cartBadge = document.getElementById('cart-count');
+      const wishlistBadge = document.getElementById('wishlist-count');
+      
+      // Cart badge
+      if (cartBadge) {
+        if (cart.length > 0) {
+          cartBadge.innerText = cart.length;
+          cartBadge.classList.remove('hidden');
+        } else {
+          cartBadge.innerText = '';
+          cartBadge.classList.add('hidden');
+        }
+      }
+
+      // Wishlist badge
+      if (wishlistBadge) {
+        if (wishlist.length > 0) {
+          wishlistBadge.innerText = wishlist.length;
+          wishlistBadge.classList.remove('hidden');
+        } else {
+          wishlistBadge.innerText = '';
+          wishlistBadge.classList.add('hidden');
+        }
+      }
+    }
+
+    // Initialize Page on DOM Load
     window.addEventListener('DOMContentLoaded', () => {
+      loadAdminConfig();
       loadCategories();
       loadProducts();
-      updateCartBadge();
+      updateCounters();
     });
   </script>
 
