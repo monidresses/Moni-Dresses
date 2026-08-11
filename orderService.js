@@ -5,25 +5,42 @@ export async function saveCompleteOrder(orderData) {
   const user = auth.currentUser;
   if (!user) return { success: false, error: "Please sign in before placing an order." };
 
+  if (!Array.isArray(orderData.items) || orderData.items.length === 0) {
+    return { success: false, error: "Your cart is empty." };
+  }
+
+  const totalAmount = Number(orderData.totalAmount);
+  if (!Number.isFinite(totalAmount) || totalAmount <= 0) {
+    return { success: false, error: "Invalid order total." };
+  }
+
   try {
     const orderRef = await addDoc(collection(db, "orders"), {
       customerId: user.uid,
       orderId: orderData.orderId || `MD-${Date.now()}`,
       customer: {
-        name: orderData.name || "",
-        phone: orderData.phone || "",
-        address: orderData.address || "",
-        city: orderData.city || "",
-        pinCode: orderData.pinCode || ""
+        name: String(orderData.name || "").trim(),
+        phone: String(orderData.phone || "").trim(),
+        address: String(orderData.address || "").trim(),
+        city: String(orderData.city || "").trim(),
+        pinCode: String(orderData.pinCode || "").trim()
       },
-      items: Array.isArray(orderData.items) ? orderData.items : [],
+      items: orderData.items.map((item) => ({
+        productId: item.productId || item.id || null,
+        name: String(item.name || ""),
+        quantity: Math.max(1, Number(item.quantity || 1)),
+        price: Number(item.price || 0),
+        size: item.size || null,
+        color: item.color || null,
+        image: item.image || null
+      })),
       financials: {
-        totalAmount: Number(orderData.totalAmount || 0),
-        paymentMethod: orderData.paymentMethod || ""
+        totalAmount,
+        paymentMethod: orderData.paymentMethod || "cod"
       },
       payment: {
         provider: orderData.paymentMethod === "razorpay" ? "razorpay" : "cod",
-        status: "pending"
+        status: orderData.paymentMethod === "cod" ? "pending" : "created"
       },
       shipping: { provider: "shiprocket", status: "pending" },
       status: "Pending",
