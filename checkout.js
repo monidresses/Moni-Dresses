@@ -1,76 +1,49 @@
 import { saveCompleteOrder } from "./orderService.js";
+import { auth } from "./common.js";
 
-// Save the original processOrderSuccess function from HTML
 const originalProcessOrderSuccess = window.processOrderSuccess;
 
-// Override processOrderSuccess to send order data to Firebase before redirecting
-window.processOrderSuccess = async function(orderId, totalPaid) {
-    const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
-    const addressChoice = document.querySelector('input[name="addressSelect"]:checked').value;
-    
-    let customerData = {};
-    if (addressChoice === 'saved') {
-        const savedUser = JSON.parse(localStorage.getItem('userProfile')) || {};
-        customerData = {
-            name: savedUser.name || "Customer",
-            phone: savedUser.phone || "",
-            address: (savedUser.address?.building || "") + ", " + (savedUser.address?.area || ""),
-            city: savedUser.address?.city || "",
-            pinCode: savedUser.address?.pin || ""
-        };
-    } else {
-        customerData = {
-            name: document.getElementById('cust-name').value,
-            phone: document.getElementById('cust-phone').value,
-            address: (document.getElementById('cust-building').value || "") + ", " + (document.getElementById('cust-area').value || ""),
-            city: document.getElementById('cust-city').value,
-            pinCode: document.getElementById('cust-pin').value
-        };
+function readCart() {
+  return JSON.parse(localStorage.getItem('cartItems') || '[]');
+}
+
+function getAddress() {
+  const choice = document.querySelector('input[name="addressSelect"]:checked')?.value;
+  if (choice === 'saved') {
+    const user = JSON.parse(localStorage.getItem('userProfile') || '{}');
+    const address = user.address || {};
+    return { name: user.name || '', phone: user.phone || '', address: [address.building, address.area, address.village].filter(Boolean).join(', '), city: address.city || '', pinCode: address.pin || '' };
+  }
+  return {
+    name: document.getElementById('cust-name')?.value.trim() || '',
+    phone: document.getElementById('cust-phone')?.value.trim() || '',
+    address: [document.getElementById('cust-building')?.value, document.getElementById('cust-area')?.value, document.getElementById('cust-village')?.value].filter(Boolean).join(', '),
+    city: document.getElementById('cust-city')?.value.trim() || '',
+    pinCode: document.getElementById('cust-pin')?.value.trim() || ''
+  };
+}
+
+async function persistOrder(orderId, totalPaid, paymentMethod, payment = {}) {
+  const address = getAddress();
+  const result = await saveCompleteOrder({ orderId, ...address, items: readCart(), totalAmount: totalPaid, paymentMethod, payment });
+  if (!result.success) throw new Error(result.error || 'Unable to save order.');
+  return result;
+}
+
+window.processOrderSuccess = async function(orderId, totalPaid, payment = {}) {
+  const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value || 'cod';
+  try {
+    await persistOrder(orderId, totalPaid, paymentMethod, payment);
+    if (typeof originalProcessOrderSuccess === 'function') originalProcessOrderSuccess(orderId, totalPaid);
+    else {
+      localStorage.setItem('latestOrderId', orderId);
+      localStorage.removeItem('cartItems');
+      window.location.href = 'order-success.html';
     }
-
-    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-
-    // Order payload structure matching orderService.js
-    const orderData = {
-        orderId: orderId,
-        name: customerData.name,
-        phone: customerData.phone,
-        address: customerData.address,
-        city: customerData.city,
-        pinCode: customerData.pinCode,
-        items: cart,
-        totalAmount: totalPaid,
-        paymentMethod: paymentMethod
-    };
-
-    // Send data to Firebase Firestore
-    try {
-        const result = await saveCompleteOrder(orderData);
-        if (result.success) {
-            console.log("Order successfully saved to Firebase! ID:", result.id);
-        } else {
-            console.error("Failed to save order to Firebase:", result.error);
-        }
-    } catch (error) {
-        console.error("Firebase connection error during order placement:", error);
-    }
-
-    // Proceed with the original local success flow (Local Storage & Redirection)
-    if (typeof originalProcessOrderSuccess === 'function') {
-        originalProcessOrderSuccess(orderId, totalPaid);
-    } else {
-        const newOrder = {
-            orderId: orderId,
-            date: new Date().toLocaleDateString('en-IN'),
-            items: cart,
-            total: totalPaid,
-            status: "Processing"
-        };
-        let orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || [];
-        orderHistory.unshift(newOrder);
-        localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
-        localStorage.removeItem('cartItems');
-        localStorage.setItem('latestOrderId', orderId);
-        window.location.href = 'order-success.html';
-    }
+  } catch (error) {
+    console.error('Order persistence failed:', error);
+    alert(error.message || 'Order could not be completed.');
+  }
 };
+
+export { persistOrder };
