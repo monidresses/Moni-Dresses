@@ -1,5 +1,5 @@
 // Moni Dresses B2C runtime configuration.
-// Keep cross-application URLs centralized so each repository can live on its own subdomain.
+// Public Firebase web config is safe to ship; private provider secrets are server-side only.
 export const APP_CONFIG = Object.freeze({
   app: 'b2c',
   brandName: 'Moni Dresses',
@@ -18,7 +18,14 @@ export const APP_CONFIG = Object.freeze({
     storageBucket: 'moni-dresses-db.firebasestorage.app',
     messagingSenderId: '24076547918',
     appId: '1:24076547918:web:6cae50157f9c6749ff501f'
-  }
+  },
+  collections: Object.freeze({
+    products: 'products', categories: 'categories', orders: 'orders', users: 'users', siteConfig: 'siteConfig'
+  }),
+  functions: Object.freeze({
+    createRazorpayOrder: 'createRazorpayOrder',
+    verifyRazorpayPayment: 'verifyRazorpayPayment'
+  })
 });
 
 export const B2C_BASE_URL = APP_CONFIG.domains.b2c;
