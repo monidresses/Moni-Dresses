@@ -1,138 +1,106 @@
 /**
- * Moni Dresses - Common Utility Script
- * Firebase Integration & Global State Management
+ * Moni Dresses B2C shared runtime.
+ * Customer UI only; administration is handled by the separate admin application.
  */
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, getDocs, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+import { APP_CONFIG } from './app-config.js';
 
-// Firebase Configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyBZdG23Io-oMElZ5XVmhVLd87-sq136dhY",
-    authDomain: "moni-dresses-db.firebaseapp.com",
-    projectId: "moni-dresses-db",
-    storageBucket: "moni-dresses-db.firebasestorage.app",
-    messagingSenderId: "24076547918",
-    appId: "1:24076547918:web:6cae50157f9c6749ff501f"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(APP_CONFIG.firebase);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export { collection, getDocs, doc, getDoc, query, where, orderBy, limit };
 
-// Global User & Role State
 let currentUser = null;
 let userRole = 'guest';
 
-// Monitor Auth State and fetch user role from Firestore database
 onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        currentUser = user;
-        try {
-            const userDocRef = doc(db, "users", user.uid);
-            const userDoc = await getDoc(userDocRef);
-            if (userDoc.exists()) {
-                userRole = userDoc.data().role || 'client';
-            } else {
-                userRole = 'client';
-            }
-        } catch (error) {
-            console.error("Error fetching user role:", error);
-            userRole = 'client';
-        }
-    } else {
-        currentUser = null;
-        userRole = 'guest';
+  currentUser = user || null;
+  userRole = 'guest';
+  if (user) {
+    try {
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      userRole = userDoc.exists() ? (userDoc.data().role || 'client') : 'client';
+    } catch (error) {
+      console.error('Unable to load customer profile:', error);
+      userRole = 'client';
     }
-    updateHeaderCounters();
+  }
+  updateHeaderCounters();
+  document.dispatchEvent(new CustomEvent('moni:auth-ready', { detail: { user: currentUser, role: userRole } }));
 });
 
-// Role-based Access Control Utility
-export function checkAccess(allowedRoles) {
-    if (!allowedRoles.includes(userRole)) {
-        window.location.href = "login.html";
-    }
+export const getCurrentUser = () => currentUser;
+export const getCurrentRole = () => userRole;
+
+// Customer pages may use this for account-only screens. Admin authorization is never based on this function.
+export function requireCustomerAuth(redirect = 'login.html') {
+  if (!currentUser) window.location.href = redirect;
+  return currentUser;
 }
 
-// Global Cart Management
 export const CartManager = {
-    get: () => JSON.parse(localStorage.getItem('cartItems')) || [],
-    save: (items) => localStorage.setItem('cartItems', JSON.stringify(items)),
-    add: (product) => {
-        let cart = CartManager.get();
-        cart.push(product);
-        CartManager.save(cart);
-        updateHeaderCounters();
-        showToast("Added to Cart Successfully!");
-    }
+  get: () => JSON.parse(localStorage.getItem('cartItems') || '[]'),
+  save: (items) => localStorage.setItem('cartItems', JSON.stringify(items)),
+  add: (product) => {
+    const cart = CartManager.get();
+    const existing = cart.find(item => item.id === product.id && item.size === product.size);
+    if (existing) existing.qty = (existing.qty || 1) + (product.qty || 1);
+    else cart.push({ ...product, qty: product.qty || 1 });
+    CartManager.save(cart);
+    updateHeaderCounters();
+    showToast('Added to Cart Successfully!');
+  }
 };
 
-// Global Wishlist Management
 export const WishlistManager = {
-    get: () => JSON.parse(localStorage.getItem('wishlistItems')) || [],
-    toggle: (productId) => {
-        let wishlist = WishlistManager.get();
-        const index = wishlist.indexOf(productId);
-        if (index > -1) {
-            wishlist.splice(index, 1);
-            showToast("Removed from Wishlist");
-        } else {
-            wishlist.push(productId);
-            showToast("Added to Wishlist ❤️");
-        }
-        localStorage.setItem('wishlistItems', JSON.stringify(wishlist));
-        updateHeaderCounters();
-        return wishlist.includes(productId);
+  get: () => JSON.parse(localStorage.getItem('wishlistItems') || '[]'),
+  toggle: (productId) => {
+    const wishlist = WishlistManager.get();
+    const index = wishlist.indexOf(productId);
+    if (index > -1) {
+      wishlist.splice(index, 1);
+      showToast('Removed from Wishlist');
+    } else {
+      wishlist.push(productId);
+      showToast('Added to Wishlist ❤️');
     }
+    localStorage.setItem('wishlistItems', JSON.stringify(wishlist));
+    updateHeaderCounters();
+    return wishlist.includes(productId);
+  }
 };
 
-// Toast Notification Helper
 export function showToast(message) {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
-    
-    const toast = document.createElement('div');
-    toast.className = "pointer-events-auto bg-zinc-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-zinc-800 transition-all duration-300 transform translate-y-4 opacity-0";
-    toast.innerHTML = `
-        <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-          <span class="material-symbols-outlined text-sm font-bold">check</span>
-        </div>
-        <span class="text-xs font-medium tracking-wide">${message}</span>
-    `;
-    container.appendChild(toast);
-    
-    setTimeout(() => toast.classList.remove('translate-y-4', 'opacity-0'), 10);
-    setTimeout(() => {
-        toast.classList.add('translate-y-4', 'opacity-0');
-        setTimeout(() => toast.remove(), 300);
-    }, 2500);
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = 'pointer-events-auto bg-zinc-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-zinc-800 transition-all duration-300 transform translate-y-4 opacity-0';
+  const text = document.createElement('span');
+  text.className = 'text-xs font-medium tracking-wide';
+  text.textContent = message;
+  toast.appendChild(text);
+  container.appendChild(toast);
+  setTimeout(() => toast.classList.remove('translate-y-4', 'opacity-0'), 10);
+  setTimeout(() => { toast.classList.add('translate-y-4', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 2500);
 }
 
-// Update Header Counters for Cart and Wishlist
 export function updateHeaderCounters() {
-    const cart = CartManager.get();
-    const wishlist = WishlistManager.get();
-    
-    const cartBadge = document.getElementById('cart-count');
-    const wishlistBadge = document.getElementById('wishlist-count');
-    
-    if (cartBadge) {
-        if (cart.length > 0) {
-            cartBadge.innerText = cart.length;
-            cartBadge.classList.remove('hidden');
-        } else {
-            cartBadge.classList.add('hidden');
-        }
-    }
+  const cart = CartManager.get();
+  const wishlist = WishlistManager.get();
+  const cartBadge = document.getElementById('cart-count');
+  const wishlistBadge = document.getElementById('wishlist-count');
+  if (cartBadge) {
+    cartBadge.innerText = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+    cartBadge.classList.toggle('hidden', cart.length === 0);
+  }
+  if (wishlistBadge) {
+    wishlistBadge.innerText = wishlist.length;
+    wishlistBadge.classList.toggle('hidden', wishlist.length === 0);
+  }
+}
 
-    if (wishlistBadge) {
-        if (wishlist.length > 0) {
-            wishlistBadge.innerText = wishlist.length;
-            wishlistBadge.classList.remove('hidden');
-        } else {
-            wishlistBadge.classList.add('hidden');
-        }
-    }
+export function goToAdmin() {
+  window.location.href = APP_CONFIG.domains.admin;
 }
