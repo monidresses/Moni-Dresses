@@ -1,0 +1,39 @@
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+import { app, db } from "./db.js";
+
+const auth = getAuth(app);
+const ADMIN_ROLES = new Set(["owner", "admin", "manager"]);
+
+export async function requireAdmin({ redirect = "admin-login.html" } = {}) {
+  return new Promise((resolve) => {
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) return window.location.replace(redirect);
+      try {
+        const snap = await getDoc(doc(db, "staff", user.uid));
+        const role = snap.exists() ? snap.data().role : null;
+        if (!ADMIN_ROLES.has(role)) {
+          await signOut(auth);
+          return window.location.replace(`${redirect}?error=unauthorized`);
+        }
+        resolve({ user, role });
+      } catch (error) {
+        console.error("Admin authorization failed", error);
+        window.location.replace(`${redirect}?error=authorization`);
+      }
+    });
+  });
+}
+
+export async function adminLogin(email, password) {
+  const credential = await signInWithEmailAndPassword(auth, email.trim(), password);
+  const snap = await getDoc(doc(db, "staff", credential.user.uid));
+  const role = snap.exists() ? snap.data().role : null;
+  if (!ADMIN_ROLES.has(role)) {
+    await signOut(auth);
+    throw new Error("This account does not have admin access.");
+  }
+  return { user: credential.user, role };
+}
+
+export function adminLogout() { return signOut(auth); }
